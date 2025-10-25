@@ -12,7 +12,7 @@ const translations = {
         nav_contact: "Contact",
 
         // Hero
-        hero_badge: "Contributeur Principal OKDP",
+        hero_badge: "Principal Contributeur OKDP",
         hero_title_1: "Construisons ensemble",
         hero_title_2: "votre plateforme",
         hero_title_3: "Data & IA",
@@ -39,7 +39,7 @@ const translations = {
         expertise_4_desc: "Moteurs de requêtes performants pour l'analyse de vos données",
 
         // OKDP
-        okdp_badge: "Contributeur Principal",
+        okdp_badge: "Principal Contributeur",
         okdp_title: "OKDP - Open Kubernetes Data Platform",
         okdp_lead: "Nous sommes fiers d'être parmi les contributeurs principaux du projet OKDP, la plateforme de données open-source et cloud-native de référence.",
         okdp_feature_1_title: "Open Source",
