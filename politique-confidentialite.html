@@ -236,6 +236,33 @@
         </div>
     </footer>
 
-    <script src="i18n.js"></script>
+    <script>
+        // Language switcher for legal pages
+        document.addEventListener('DOMContentLoaded', () => {
+            const langButtons = document.querySelectorAll('.lang-btn');
+
+            langButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const lang = btn.getAttribute('data-lang');
+                    localStorage.setItem('lang', lang);
+
+                    // Redirect to corresponding page
+                    if (lang === 'en') {
+                        window.location.href = 'privacy-policy.html';
+                    }
+                });
+            });
+
+            // Mobile menu toggle
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const navRight = document.querySelector('.nav-right');
+
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    navRight.classList.toggle('active');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

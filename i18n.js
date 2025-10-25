@@ -76,6 +76,8 @@ const translations = {
         footer_links: "Liens",
         footer_contact: "Contact",
         footer_rights: "Tous droits réservés.",
+        footer_legal: "Mentions légales",
+        footer_privacy: "Politique de confidentialité",
     },
 
     en: {
@@ -151,11 +153,13 @@ const translations = {
         footer_links: "Links",
         footer_contact: "Contact",
         footer_rights: "All rights reserved.",
+        footer_legal: "Legal Notice",
+        footer_privacy: "Privacy Policy",
     }
 };
 
 // État actuel de la langue
-let currentLang = localStorage.getItem('lang') || 'fr';
+let currentLang = localStorage.getItem('lang') || 'en';
 
 // Fonction pour obtenir la traduction
 function t(key) {
@@ -184,8 +188,25 @@ function updateContent() {
         }
     });
 
+    // Update legal pages links based on language
+    updateLegalLinks();
+
     // Update HTML lang attribute
     document.documentElement.lang = currentLang;
+}
+
+// Fonction pour mettre à jour les liens vers les pages légales
+function updateLegalLinks() {
+    const legalLink = document.getElementById('legal-link');
+    const privacyLink = document.getElementById('privacy-link');
+
+    if (legalLink) {
+        legalLink.href = currentLang === 'fr' ? 'mentions-legales.html' : 'legal-notice.html';
+    }
+
+    if (privacyLink) {
+        privacyLink.href = currentLang === 'fr' ? 'politique-confidentialite.html' : 'privacy-policy.html';
+    }
 }
 
 // Fonction pour mettre à jour l'apparence des boutons de langue
