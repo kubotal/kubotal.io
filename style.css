@@ -90,7 +90,6 @@ header {
     width: 100%;
     top: 0;
     z-index: 1000;
-    border-bottom: 1px solid var(--border-gray);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -220,13 +219,16 @@ nav {
    ========================================== */
 
 .hero {
-    margin-top: 80px;
+    margin-top: 0;
+    padding-top: calc(80px + 4rem);
     min-height: 85vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
     gap: 4rem;
-    padding: 4rem 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 4rem;
     background:
         radial-gradient(at 10% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
         radial-gradient(at 90% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
@@ -982,8 +984,11 @@ footer {
 
     .hero {
         min-height: auto;
-        padding: 2rem 1rem;
-        margin-top: 70px;
+        margin-top: 0;
+        padding-top: calc(70px + 2rem);
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-bottom: 2rem;
     }
 
     .hero-content {
