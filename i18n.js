@@ -217,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const navRight = document.querySelector('.nav-right');
     const navLinks = document.querySelectorAll('.nav-links a');
+    const navContactBtn = document.querySelector('.nav-contact-btn');
 
     if (mobileMenuToggle) {
         mobileMenuToggle.addEventListener('click', () => {
@@ -229,6 +230,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 navRight.classList.remove('active');
             });
         });
+
+        // Close menu when clicking on contact button
+        if (navContactBtn) {
+            navContactBtn.addEventListener('click', () => {
+                navRight.classList.remove('active');
+            });
+        }
 
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
