@@ -991,49 +991,54 @@ footer {
     }
 
     .hero-visual {
-        height: 300px;
+        height: 450px;
         margin-top: 2rem;
     }
 
     .floating-card {
-        padding: 0.8rem 1.2rem;
-        font-size: 0.85rem;
+        padding: 0.7rem 1rem;
+        font-size: 0.75rem;
+        gap: 0.4rem;
     }
 
     .floating-card .icon {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
     }
 
-    /* Reposition floating cards for mobile */
+    /* Reposition floating cards for mobile - avoid overlaps */
+    /* Row 1: Top */
     .floating-card.card-1 {
-        top: 5%;
-        left: 5%;
+        top: 3%;
+        left: 3%;
     }
 
     .floating-card.card-2 {
-        top: 5%;
-        right: 5%;
+        top: 3%;
+        right: 3%;
     }
 
+    /* Row 2: Middle-top */
+    .floating-card.card-4 {
+        top: 22%;
+        left: 3%;
+    }
+
+    /* Row 3: Middle */
     .floating-card.card-3 {
-        bottom: 40%;
+        top: 41%;
         left: 50%;
         transform: translateX(-50%);
     }
 
-    .floating-card.card-4 {
-        top: 35%;
-        left: 5%;
+    /* Row 4: Bottom */
+    .floating-card.card-6 {
+        bottom: 22%;
+        left: 3%;
     }
 
     .floating-card.card-5 {
-        bottom: 15%;
-        right: 5%;
-    }
-
-    .floating-card.card-6 {
-        top: 35%;
-        right: 5%;
+        bottom: 3%;
+        right: 3%;
     }
 
     /* Sections */
