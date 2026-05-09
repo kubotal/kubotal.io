@@ -1,0 +1,24 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="black" x1="10" x2="54" y1="18" y2="72" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#20262A"/>
+      <stop offset="1" stop-color="#05080B"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="36" x2="82" y1="30" y2="70" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38B7FF"/>
+      <stop offset="0.48" stop-color="#1685FF"/>
+      <stop offset="1" stop-color="#004EDB"/>
+    </linearGradient>
+    <linearGradient id="blueSoft" x1="24" x2="70" y1="60" y2="86" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7FD5FF"/>
+      <stop offset="1" stop-color="#0B63F6"/>
+    </linearGradient>
+  </defs>
+  <path d="M18 24 42 10l24 14v8L42 46 18 32V24Z" fill="#071317" opacity=".08"/>
+  <path d="M18 24 42 10l24 14-24 14v38L18 62V24Z" fill="url(#black)"/>
+  <path d="M42 38 66 24v14L42 52V38Z" fill="#fff" opacity=".1"/>
+  <path d="M28 54 42 46v30L28 68V54Z" fill="#071317" opacity=".16"/>
+  <path d="M42 40 66 26l18 10-42 25-18-10 18-11Z" fill="#38B7FF"/>
+  <path d="M24 54 66 30l18 10v18L42 82 24 72V54Z" fill="url(#blue)"/>
+  <path d="M42 62 66 48l18 10-24 14-18-10Z" fill="url(#blueSoft)"/>
+</svg>

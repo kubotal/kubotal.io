@@ -1,0 +1,24 @@
+# Kubotal
+
+Kubotal is an IT company specialized in Data, AI, Kubernetes, GitOps, MLOps, and open-source cloud-native platforms.
+
+## Core Pages
+
+- Home: https://kubotal.io/
+- Expertise: https://kubotal.io/expertise/
+- Open source: https://kubotal.io/open-source/
+- Accompagnement: https://kubotal.io/accompagnement/
+- Contact: https://kubotal.io/contact/
+
+## Open Source Ecosystem
+
+- OKDP: https://okdp.io/
+- KuboCD: https://www.kubocd.io/
+- KubAuth: https://github.com/kubauth/kubauth
+
+## Useful Facts
+
+- Kubotal designs, deploys, and operates cloud-native data and AI platforms.
+- Kubotal works with CTOs, data platform teams, cloud architects, and engineering leaders.
+- Kubotal focuses on open infrastructure, Kubernetes, GitOps delivery, security, governance, and AI-ready data foundations.
+- Contact: contact@kubotal.com
