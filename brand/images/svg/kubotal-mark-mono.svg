@@ -1,0 +1,8 @@
+<svg viewBox="-2 -2 100 100" width="512" height="512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kubotal">
+  <!-- currentColor : blanc sur fond sombre, #0B1220 sur fond clair -->
+  <path d="M28 20v60" stroke="currentColor" stroke-width="13" stroke-linecap="round" fill="none"/>
+  <g fill="currentColor">
+    <path d="M35 34C52 34 60 27 74 15 65 33 53 42 35 48Z" opacity=".65"/>
+    <path d="M35 52C53 58 64 67 74 82 61 68 51 62 35 66Z" opacity=".88"/>
+  </g>
+</svg>

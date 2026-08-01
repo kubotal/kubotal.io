@@ -1,9 +1,5 @@
 <svg viewBox="-2 -2 100 100" width="64" height="64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kubotal">
-  <style>
-    .stem{stroke:#0B1220}
-    @media (prefers-color-scheme: dark){ .stem{stroke:#FFFFFF} }
-  </style>
-  <path class="stem" d="M27 17v66" stroke-width="17" stroke-linecap="round" fill="none"/>
+  <path d="M27 17v66" stroke="#fff" stroke-width="17" stroke-linecap="round" fill="none"/>
   <path d="M34 29C50 29 58 23 72 13L77 22C62 32 50 40 34 46Z" fill="#38B7FF"/>
   <path d="M34 54C52 59 63 68 72 82L66 89C56 74 48 66 34 71Z" fill="#1685FF"/>
 </svg>

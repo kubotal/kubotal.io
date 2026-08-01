@@ -1,0 +1,13 @@
+<svg viewBox="-2 -2 100 100" width="512" height="512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kubotal">
+  <defs>
+    <linearGradient id="up" x1="34" y1="48" x2="74" y2="15" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00966A"/><stop offset="1" stop-color="#34D399"/>
+    </linearGradient>
+    <linearGradient id="dn" x1="34" y1="52" x2="74" y2="82" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00966A"/><stop offset="1" stop-color="#00B37E"/>
+    </linearGradient>
+  </defs>
+  <path d="M28 20v60" stroke="#0B1220" stroke-width="13" stroke-linecap="round" fill="none"/>
+  <path d="M35 34C52 34 60 27 74 15 65 33 53 42 35 48Z" fill="url(#up)"/>
+  <path d="M35 52C53 58 64 67 74 82 61 68 51 62 35 66Z" fill="url(#dn)"/>
+</svg>

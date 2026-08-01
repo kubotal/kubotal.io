@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ============ TOKENS ============ */
+:root{
+  --bg:#F7F9FD;
+  --ink:#0B1220;
+  --ink-soft:#55637A;
+  --primary:#1685FF;
+  --primary-deep:#0B63F6;
+  --cyan:#38B7FF;
+  --violet:#5B3DF5;
+  --green:#00966A;
+  --amber:#D97706;
+  --line:rgba(11,18,32,.09);
+
+  --space-2:16px; --space-3:24px; --space-4:32px;
+  --space-5:48px; --space-6:64px; --space-7:96px;
+
+  --r-md:20px; --r-lg:28px; --r-xl:36px;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --shadow-sm:0 2px 8px rgba(11,18,32,.06);
+  --shadow-md:0 14px 36px rgba(11,18,32,.09);
+  --shadow-lg:0 30px 72px rgba(11,18,32,.15);
+
+  --glass:rgba(255,255,255,.66);
+  --glass-strong:rgba(255,255,255,.86);
+  --glass-line:rgba(255,255,255,.94);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.62 'DM Sans',system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+/* halo + trame technique */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(40rem 40rem at 14% 6%, rgba(22,133,255,.16), transparent 62%),
+    radial-gradient(34rem 34rem at 88% 22%, rgba(56,183,255,.14), transparent 60%),
+    radial-gradient(30rem 30rem at 62% 98%, rgba(91,61,245,.09), transparent 62%),
+    linear-gradient(90deg,rgba(11,18,32,.035) 1px,transparent 1px),
+    linear-gradient(0deg,rgba(11,18,32,.03) 1px,transparent 1px);
+  background-size:auto,auto,auto,112px 112px,112px 112px;
+}
+h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;letter-spacing:-.028em;line-height:1.05}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--primary);outline-offset:3px;border-radius:6px}
+
+/* Largeur utile : plafond relevé pour ne pas laisser d'immenses marges sur grand écran. */
+/* Largeur utile : gouttière fluide mais bornée — assez large sur mobile,
+   sans laisser d'immenses marges sur grand écran. */
+.wrap{--gutter:clamp(28px,7.6vw,200px);
+  width:min(var(--wrap,1760px),calc(100% - 2*var(--gutter)));
+  margin-inline:auto;position:relative;z-index:1}
+.section{padding:var(--space-7) 0}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:12.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--primary-deep);
+}
+.eyebrow::before{content:'';width:22px;height:2px;border-radius:2px;background:var(--primary)}
+.section-head{max-width:56ch;margin-bottom:var(--space-5)}
+.section-head h2{font-size:clamp(30px,4vw,58px);margin:16px 0 0;max-width:24ch}
+.lead{color:var(--ink-soft);font-size:clamp(17px,1.35vw,22px);margin:18px 0 0}
+
+/* ============ GLASS ============ */
+.glass{
+  background:var(--glass);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+  border:1px solid var(--glass-line);border-radius:var(--r-lg);box-shadow:var(--shadow-md);
+}
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:52px;padding:0 26px;border-radius:999px;border:1px solid transparent;font-weight:700;
+  transition:transform .22s var(--ease),box-shadow .22s var(--ease),background-color .22s var(--ease);
+}
+.btn svg{width:19px;height:19px;flex:none}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:0 10px 26px rgba(11,18,32,.24)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(11,18,32,.32)}
+/* Fond assombri : blanc sur #1685FF ne donnait que 3,60:1, sous le seuil AA (4,5).
+   #0B63F6 monte à 5,03:1. */
+.btn-accent{background:var(--primary-deep);color:#fff;box-shadow:0 10px 26px rgba(22,133,255,.36)}
+.btn-accent:hover{transform:translateY(-3px);background:#0A55D0;box-shadow:0 18px 44px rgba(22,133,255,.46)}
+.btn-ghost{background:var(--glass-strong);border-color:var(--glass-line);box-shadow:var(--shadow-sm);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.btn-ghost:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.btn-sm{min-height:44px;padding:0 20px;font-size:15px}
+
+/* ============ NAV ============ */
+.nav{position:sticky;top:0;z-index:50;padding:13px 0;
+  background:rgba(247,249,253,.74);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line)}
+.nav-inner{display:flex;align-items:center;gap:var(--space-4)}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px}
+.brand svg{width:38px;height:38px;flex:none}
+.brand .t{color:var(--primary)}
+.nav-links{display:flex;gap:var(--space-3);margin-left:auto;font-weight:500;color:var(--ink-soft)}
+.nav-links a{padding:11px 4px;position:relative;transition:color .2s var(--ease);display:inline-block}
+.nav-links a::after{content:'';position:absolute;left:4px;right:4px;bottom:2px;height:2px;border-radius:2px;
+  background:var(--primary);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover::after{transform:scaleX(1)}
+
+/* ============ HERO ============ */
+.hero{padding:var(--space-6) 0 var(--space-4)}
+/* Répartition 60 / 40 : le texte porte la page, l'image l'accompagne. */
+.hero-grid{display:grid;grid-template-columns:60fr 40fr;
+  gap:var(--space-5);align-items:center}
+.hero h1{font-size:clamp(40px,6.4vw,112px);margin:20px 0 0}
+.hero h1 .hl{
+  background:linear-gradient(98deg,var(--primary-deep) 0%,var(--primary) 42%,var(--cyan) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero .lead{max-width:52ch}   /* la grille avance sur la gauche : le texte ne doit pas passer dessous */
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:var(--space-4)}
+.stats{display:flex;gap:var(--space-5);margin-top:var(--space-5);flex-wrap:wrap}
+.stat b{display:block;font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,2.4vw,40px);line-height:1}
+.stat span{font-size:14px;color:var(--ink-soft)}
+
+/* ============ GRILLE ISOMETRIQUE ============ */
+.iso-stage{position:relative;aspect-ratio:1/.82;display:grid;place-items:center;
+  perspective:1400px;perspective-origin:50% 50%}
+.iso-glow{position:absolute;inset:10%;border-radius:50%;
+  background:radial-gradient(circle,rgba(22,133,255,.20),transparent 66%);filter:blur(30px)}
+.iso-plane{position:relative;width:84%;aspect-ratio:1/1;transform-style:preserve-3d;
+  --rx:56deg; --rz:45deg;
+  /* Calage optique de la masse dans son cadre. Deux variables pour ajuster
+     sans toucher au reste : négatif = vers la gauche / vers le haut. */
+  --nudge-x:-2%; --nudge-y:-1%;
+  transform:translate(var(--nudge-x),var(--nudge-y)) rotateX(var(--rx)) rotateZ(var(--rz))}
+.iso-links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.iso-links line{stroke:rgba(22,133,255,.34);stroke-width:1.4;stroke-dasharray:2 5;stroke-linecap:round;
+  vector-effect:non-scaling-stroke;animation:dash-flow 3.4s linear infinite}
+@keyframes dash-flow{to{stroke-dashoffset:-14}}
+.iso-grid{position:absolute;inset:0;display:grid;
+  grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:9%;transform-style:preserve-3d}
+
+.tile{position:relative;transform-style:preserve-3d;border:0;padding:0;background:none;cursor:pointer;
+  transform:scale(var(--s,1))}
+/* La zone de survol reste immobile ; c'est l'intérieur qui monte.
+   Sinon la tuile sort de sous le curseur, le survol se perd, elle retombe : ça clignote. */
+.tile-lift{position:absolute;inset:0;transform-style:preserve-3d;
+  transform:translateZ(var(--z,0px));transition:transform .38s var(--ease)}
+.tile:hover,.tile:focus-visible,.tile.is-held{--z:52px}
+.tile.is-hub{--z:26px}
+.tile.is-hub:hover,.tile.is-hub:focus-visible,.tile.is-hub.is-held{--z:70px}
+.tile-face{position:absolute;inset:0;border-radius:22%;
+  background:var(--glass-strong);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid var(--glass-line);
+  box-shadow:0 18px 34px rgba(11,18,32,.15), inset 0 1px 0 rgba(255,255,255,.95);
+  display:grid;place-items:center;transition:box-shadow .38s var(--ease)}
+.tile:hover .tile-face,.tile:focus-visible .tile-face{box-shadow:0 40px 62px rgba(11,18,32,.2), inset 0 1px 0 #fff}
+.tile.is-held .tile-face{box-shadow:0 40px 62px rgba(11,18,32,.2), inset 0 1px 0 #fff, 0 0 0 2px var(--tint,var(--primary))}
+
+.tile.is-hub .tile-face{background:linear-gradient(150deg,#fff,#EFF6FF);
+  box-shadow:0 26px 46px rgba(22,133,255,.28), inset 0 1px 0 #fff}
+.tile-icon{width:48%;aspect-ratio:1;display:grid;place-items:center;
+  transform:rotateZ(calc(-1 * var(--rz,45deg))) rotateX(calc(-1 * var(--rx,56deg)))}
+.tile-icon svg{width:100%;height:100%;display:block;color:var(--tint,var(--primary))}
+.tile.is-hub .tile-icon{width:92%}   /* la marque a du blanc dans son viewBox : on compense */
+
+/* ============ CARTES EXPERTISE ============ */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-3)}
+.card{padding:var(--space-4);display:flex;flex-direction:column;gap:12px;
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+.card-ico{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--tint,var(--primary)),color-mix(in srgb,var(--tint,var(--primary)) 60%,#fff));
+  box-shadow:0 10px 22px color-mix(in srgb,var(--tint,var(--primary)) 34%,transparent)}
+.card-ico svg{width:24px;height:24px;color:#fff}
+.card h3{font-size:19px;margin:4px 0 0}
+.card p{margin:0;color:var(--ink-soft);font-size:14.5px}
+
+/* ============ OPEN SOURCE ============ */
+.os{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3)}
+.os-card{padding:var(--space-4);display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.os-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+.os-card::before{content:'';position:absolute;inset:-40% -30% auto auto;width:64%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,color-mix(in srgb,var(--tint) 22%,transparent),transparent 68%)}
+.os-mark{width:56px;height:56px;position:relative}
+.os-card h3{font-size:22px;margin:0;position:relative}
+.os-card p{margin:0;color:var(--ink-soft);font-size:15px;position:relative;flex:1}
+.os-link{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--tint);position:relative}
+.os-link svg{width:18px;height:18px;transition:transform .25s var(--ease)}
+.os-card:hover .os-link svg{transform:translateX(4px)}
+
+/* ============ CTA ============ */
+.cta{position:relative;overflow:hidden;border-radius:var(--r-xl);padding:var(--space-7) var(--space-5);
+  text-align:center;color:#fff;
+  background:linear-gradient(140deg,#0B1220,#132A52 52%,#0B63F6);box-shadow:var(--shadow-lg)}
+.cta::before{content:'';position:absolute;inset:-34% -12% auto auto;width:54%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(56,183,255,.34),transparent 66%)}
+.cta h2{font-size:clamp(32px,4.6vw,64px);margin:0;position:relative}
+.cta p{position:relative;color:rgba(255,255,255,.78);margin:16px auto 0;max-width:48ch}
+.cta-actions{position:relative;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:var(--space-4)}
+.cta .btn-primary{background:#fff;color:var(--ink)}
+
+/* ============ FOOTER ============ */
+.footer{padding:var(--space-5) 0;border-top:1px solid var(--line);margin-top:var(--space-7)}
+.footer-inner{display:flex;flex-wrap:wrap;gap:var(--space-3);align-items:center;justify-content:space-between;
+  color:var(--ink-soft);font-size:14px}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1080px){ .cards{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:var(--space-5)}
+  .iso-stage{max-width:520px;width:100%;margin-inline:auto}
+  .os{grid-template-columns:1fr;max-width:460px;margin-inline:auto}
+  .nav-links{display:none}
+}
+@media (max-width:560px){
+  :root{--space-7:64px;--space-6:48px}
+  .cards{grid-template-columns:1fr}
+  .stats{gap:var(--space-3)}
+  /* tourné à 45°, le plan occupe ~1.41x sa largeur : on le rétrécit pour éviter le scroll horizontal */
+  .iso-plane{width:70%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+/* wordmark : un seul flex item, sinon le gap coupe le mot en deux */
+.brand .wm{display:inline-block;white-space:nowrap}
+.brand .wm .t{font-style:normal;color:var(--primary)}
+
+/* ============ LOCKUP : ACCORD MARQUE / MOT ============ */
+/* La marque a un viewBox resserré sur son encre : sa hauteur CSS = sa hauteur réelle.
+   On la cale sur la hauteur de capitale du mot (rapport ~1,3), centres alignés.       */
+.brand{
+  --wm-size: 22px;                 /* capitale ≈ 15,7 px */
+  --mark-h: 21px;                  /* encre ≈ 20 px, soit ~1,27 × la capitale */
+  gap: 10px;
+}
+.brand .brand-mark{
+  height: var(--mark-h);
+  width: auto;                     /* la marque est haute et étroite : on pilote par la hauteur */
+  flex: none;
+  overflow: visible;               /* la jambe qui pivote ne doit pas être rognée */
+}
+.brand .wm{ font-size: var(--wm-size); line-height: 1 }
+.footer .brand{ --wm-size: 19px; --mark-h: 18px }
+
+/* jambes animées */
+.brand-mark{ will-change: transform }
+
+/* ============ LA MARQUE TIENT LIEU DE « K » ============ */
+/* Le mot ne porte plus son K initial : c'est la marque qui le fournit.
+   Elle se cale donc sur la hauteur de capitale, comme une vraie lettre,
+   et l'espace qui la sépare du mot est une chasse de lettre, pas une marge. */
+.brand{ --mark-h: 23px; gap: 2px }        /* encre ≈ 1,40 × la capitale */
+.footer .brand{ --mark-h: 20px; gap: 2px }
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
+}
+
+/* ============ TUILES : LOGOS OFFICIELS + RELIEF ============ */
+/* Les tracés simple-icons sont monochromes : on les colore par --tint. */
+.tile-icon svg{ fill: var(--tint, var(--primary)); }
+.tile.is-hub .tile-icon svg{ fill: none; }   /* la marque porte ses propres dégradés */
+
+
+
+
+.tile-icon{ width: 46% }
+.tile.is-hub .tile-icon{ width: 52% }
+
+/* la tuile centrale domine la grille, comme dans la référence */
+.tile.is-hub{ --s: 1.26; z-index: 4 }
+
+/* ============ VRAIE ÉPAISSEUR : LE CORPS DU BLOC ============ */
+/* Chaque tuile est un solide : des plans empilés en Z, pas une ombre.
+   Quand la scène tourne, on voit vraiment la tranche.                */
+.tile{ --depth: 16px; --body: #DCE4EF }
+
+.tile-body{
+  position:absolute; inset:0; border-radius:22%;
+  background:var(--body);
+  transform-style:preserve-3d;
+  pointer-events:none;
+}
+.tile-face{ transform:translateZ(1px) }   /* la face repose sur le corps */
+
+.iso-stage{ perspective:1100px }          /* perspective plus courte : le relief se voit */
+
+/* pilotage au curseur */
+.iso-stage{ cursor:grab }
+.iso-stage.is-dragging{ cursor:grabbing }
+.iso-hint{
+  position:absolute; left:50%; bottom:2%; transform:translateX(-50%);
+  font-size:12px; color:var(--ink-soft); white-space:nowrap; pointer-events:none;
+  opacity:.85; transition:opacity .3s var(--ease);
+}
+.iso-stage.is-dragging .iso-hint{ opacity:0 }
+
+/* ============ HERO : ÉCART TEXTE / GRILLE STABLE ============ */
+/* La grille était centrée dans sa colonne : plus l'écran s'élargit, plus elle
+   s'éloigne du texte. On l'ancre à gauche et on plafonne sa largeur : l'écart
+   ne dépend plus de la taille de l'écran. */
+.hero-grid > div:last-child{ justify-self:center; width:min(100%, 540px) }
+
+/* ============ CIBLES TACTILES ============ */
+/* Repérées sous les 44 px recommandés : le lien de marque et les liens open source. */
+.brand{ min-height:44px }
+.os-link{ min-height:44px; align-items:center }
+
+/* ============ NAV : PAGE COURANTE ============ */
+/* Le lien de la page affichée reste souligné et en couleur d'encre. */
+.nav-links a[aria-current="page"]{ color:var(--ink) }
+.nav-links a[aria-current="page"]::after{ transform:scaleX(1) }
