@@ -8,7 +8,12 @@
   var hasGSAP = typeof window.gsap !== 'undefined';
 
   /* ---------- 1. Révélations ---------- */
-  if (hasGSAP && !reduce) {
+  /* gsap.from() pose immédiatement l'état de départ (opacity:0), mais son
+     horloge est gelée tant que l'onglet est en arrière-plan : la page resterait
+     blanche jusqu'à ce que le visiteur y revienne. On n'arme donc la révélation
+     que lorsque la page est réellement visible ; avant, le HTML s'affiche tel
+     quel, c'est-à-dire complet. */
+  function reveler() {
     if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
     gsap.from('.hero-copy [data-anim]', {
@@ -34,12 +39,50 @@
       if (window.ScrollTrigger) ScrollTrigger.refresh();
     });
 
+    /* Depuis la suppression du pied de page, les pages intérieures tiennent
+       entièrement dans la fenêtre et ne défilent plus. Un ScrollTrigger n'a
+       alors aucun défilement pour se déclencher : tout le contenu restait à
+       opacity:0. On ne confie donc au défilement que ce qui est réellement
+       sous la ligne de flottaison ; le reste s'anime au chargement. */
+    var dedans = [], dessous = [];
     gsap.utils.toArray('.section [data-anim]').forEach(function (el) {
+      (el.getBoundingClientRect().top < window.innerHeight * .9 ? dedans : dessous).push(el);
+    });
+
+    if (dedans.length) {
+      gsap.from(dedans, {
+        opacity: 0, y: 24, duration: .45, stagger: .06, ease: 'power2.out'
+      });
+    }
+    dessous.forEach(function (el) {
       gsap.from(el, {
         opacity: 0, y: 24, duration: .45, ease: 'power2.out',
         scrollTrigger: { trigger: el, start: 'top 88%', once: true }
       });
     });
+
+    /* Filet de sécurité : quoi qu'il arrive en amont, aucun contenu ne doit
+       rester invisible. Une page blanche est un défaut bien pire qu'une
+       animation manquée. */
+    setTimeout(function () {
+      document.querySelectorAll('[data-anim]').forEach(function (el) {
+        if (parseFloat(getComputedStyle(el).opacity) < .99) {
+          gsap.set(el, { opacity: 1, y: 0, clearProps: 'transform' });
+        }
+      });
+    }, 1600);
+  }
+
+  if (hasGSAP && !reduce) {
+    if (document.visibilityState === 'visible') {
+      reveler();
+    } else {
+      document.addEventListener('visibilitychange', function onVisible() {
+        if (document.visibilityState !== 'visible') return;
+        document.removeEventListener('visibilitychange', onVisible);
+        reveler();
+      });
+    }
   }
 
   /* ---------- 2. Compteurs ---------- */
