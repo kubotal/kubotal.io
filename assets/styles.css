@@ -108,7 +108,8 @@ button{font:inherit;cursor:pointer}
 .nav-links a:hover::after{transform:scaleX(1)}
 
 /* ============ HERO ============ */
-.hero{padding:var(--space-6) 0 var(--space-4)}
+/* main centre déjà le hero : une marge dissymétrique le ferait descendre. */
+.hero{padding:var(--space-5) 0}
 /* Répartition 60 / 40 : le texte porte la page, l'image l'accompagne. */
 .hero-grid{display:grid;grid-template-columns:60fr 40fr;
   gap:var(--space-5);align-items:center}
@@ -203,24 +204,15 @@ button{font:inherit;cursor:pointer}
 .cta .btn-primary{background:#fff;color:var(--ink)}
 
 /* ============ FOOTER ============ */
-/* Pied collant : sur une page courte il se cale en bas de la fenêtre au lieu
-   de créer 68 px de défilement pour rien ; sur une page longue il suit le contenu. */
+/* Pas de pied de page : le contenu occupe exactement la fenêtre.
+   main devient une colonne centrée, donc rien ne traîne en bas sur une page courte
+   et le défilement ne démarre que si le contenu dépasse vraiment. */
 body{min-height:100dvh;display:flex;flex-direction:column}
-main{flex:1 0 auto}
-.footer{flex:none;border-top:1px solid var(--line);padding:0;margin-top:var(--space-4)}
-.footer-bar{display:flex;align-items:center;justify-content:space-between;
-  gap:var(--space-3);flex-wrap:wrap;min-height:52px}
-/* Le logo doit rester cliquable sur 44 px sans pour autant grossir la barre.
-   Un pseudo-élément étend la zone de clic au-delà du visuel, sans effet sur la mise en page. */
-.footer-bar .brand{min-height:0;position:relative}
-.footer-bar .brand::after{content:'';position:absolute;inset:-13px -8px}
-.footer-bar .brand{font-size:15px;--mark-h:17px}
-.footer-copy{color:var(--ink-soft);font-size:14px}
-.footer-fr{display:inline-flex;align-items:center}
-.footer-fr svg{width:24px;height:16px;border-radius:2px;display:block}
-@media (max-width:560px){
-  .footer-bar{justify-content:center;text-align:center;padding:var(--space-3) 0}
-}
+main{flex:1 0 auto;display:flex;flex-direction:column;
+  justify-content:center;
+  /* « safe » : si le contenu dépasse (petit écran), on repart du haut
+     au lieu de le centrer et d'en rendre le début inatteignable. */
+  justify-content:safe center}
 
 
 /* ============ RESPONSIVE ============ */
@@ -262,7 +254,6 @@ main{flex:1 0 auto}
   overflow: visible;               /* la jambe qui pivote ne doit pas être rognée */
 }
 .brand .wm{ font-size: var(--wm-size); line-height: 1 }
-.footer .brand{ --wm-size: 19px; --mark-h: 18px }
 
 /* jambes animées */
 .brand-mark{ will-change: transform }
@@ -272,7 +263,6 @@ main{flex:1 0 auto}
    Elle se cale donc sur la hauteur de capitale, comme une vraie lettre,
    et l'espace qui la sépare du mot est une chasse de lettre, pas une marge. */
 .brand{ --mark-h: 23px; gap: 2px }        /* encre ≈ 1,40 × la capitale */
-.footer .brand{ --mark-h: 20px; gap: 2px }
 
 .sr-only{
   position:absolute;width:1px;height:1px;padding:0;margin:-1px;

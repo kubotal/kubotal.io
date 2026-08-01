@@ -17,7 +17,6 @@ const page = (n) => readFileSync(join(ROOT, 'src/pages', n + '.html'), 'utf8');
 
 const SPRITE = part('sprite');
 const NAV = part('nav');
-const FOOTER = part('footer');
 const SCRIPTS = part('scripts');
 
 const SITE = 'https://kubotal.io';
@@ -141,8 +140,6 @@ ${navFor(p.nav)}
 <main id="top">
 ${rebase(page(p.id), p.depth)}
 </main>
-
-${FOOTER}
 
 ${rebase(SCRIPTS, p.depth)}
 </body>
