@@ -91,7 +91,7 @@ const jsonLd = (p) =>
       name: 'Kubotal',
       url: `${SITE}/`,
       logo: `${SITE}/kubotal-logo-mark.png`,
-      email: 'contact@kubotal.com',
+      email: 'contact@kubotal.io',
       description:
         'Kubotal conçoit, déploie et opère des plateformes Data, IA, Kubernetes et GitOps pour les équipes cloud-native.',
       sameAs: ['https://okdp.io/', 'https://www.kubocd.io/', 'https://github.com/kubauth/kubauth'],

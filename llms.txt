@@ -21,4 +21,4 @@ Kubotal is an IT company specialized in Data, AI, Kubernetes, GitOps, MLOps, and
 - Kubotal designs, deploys, and operates cloud-native data and AI platforms.
 - Kubotal works with CTOs, data platform teams, cloud architects, and engineering leaders.
 - Kubotal focuses on open infrastructure, Kubernetes, GitOps delivery, security, governance, and AI-ready data foundations.
-- Contact: contact@kubotal.com
+- Contact: contact@kubotal.io

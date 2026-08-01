@@ -203,9 +203,25 @@ button{font:inherit;cursor:pointer}
 .cta .btn-primary{background:#fff;color:var(--ink)}
 
 /* ============ FOOTER ============ */
-.footer{padding:var(--space-5) 0;border-top:1px solid var(--line);margin-top:var(--space-7)}
-.footer-inner{display:flex;flex-wrap:wrap;gap:var(--space-3);align-items:center;justify-content:space-between;
-  color:var(--ink-soft);font-size:14px}
+/* Pied collant : sur une page courte il se cale en bas de la fenêtre au lieu
+   de créer 68 px de défilement pour rien ; sur une page longue il suit le contenu. */
+body{min-height:100dvh;display:flex;flex-direction:column}
+main{flex:1 0 auto}
+.footer{flex:none;border-top:1px solid var(--line);padding:0;margin-top:var(--space-4)}
+.footer-bar{display:flex;align-items:center;justify-content:space-between;
+  gap:var(--space-3);flex-wrap:wrap;min-height:52px}
+/* Le logo doit rester cliquable sur 44 px sans pour autant grossir la barre.
+   Un pseudo-élément étend la zone de clic au-delà du visuel, sans effet sur la mise en page. */
+.footer-bar .brand{min-height:0;position:relative}
+.footer-bar .brand::after{content:'';position:absolute;inset:-13px -8px}
+.footer-bar .brand{font-size:15px;--mark-h:17px}
+.footer-copy{color:var(--ink-soft);font-size:14px}
+.footer-fr{display:inline-flex;align-items:center}
+.footer-fr svg{width:24px;height:16px;border-radius:2px;display:block}
+@media (max-width:560px){
+  .footer-bar{justify-content:center;text-align:center;padding:var(--space-3) 0}
+}
+
 
 /* ============ RESPONSIVE ============ */
 @media (max-width:1080px){ .cards{grid-template-columns:repeat(2,1fr)} }
