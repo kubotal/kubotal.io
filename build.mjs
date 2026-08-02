@@ -60,6 +60,31 @@ const PAGES = [
     desc: 'Du cadrage à l’exploitation : quatre façons de travailler avec Kubotal sur votre plateforme data et IA.',
   },
   {
+    id: 'articles',
+    out: 'articles/index.html',
+    depth: 1,
+    nav: 'articles',
+    url: '/articles/',
+    title: 'Articles — Kubotal',
+    desc: 'Notes de terrain sur les plateformes data, Kubernetes, le GitOps et l’open source, par l’équipe Kubotal.',
+  },
+  {
+    id: 'article-kubocd',
+    out: 'articles/kubocd-deployer-sans-maitriser-helm/index.html',
+    depth: 2,
+    nav: 'articles',
+    url: '/articles/kubocd-deployer-sans-maitriser-helm/',
+    /* `flow` : la page se lit en défilant, son contenu ne doit pas être centré. */
+    flow: true,
+    article: {
+      published: '2026-08-02',
+      section: 'GitOps',
+      readingTime: 'PT8M',
+    },
+    title: 'KuboCD : déployer sur Kubernetes sans maîtriser Helm — Kubotal',
+    desc: 'KuboCD emballe un chart Helm dans une image OCI et le rend déployable via une simple ressource Release. Ce qu’il fait, ce qu’il ne fait pas, et quand il vaut le détour.',
+  },
+  {
     id: 'contact',
     out: 'contact/index.html',
     depth: 1,
@@ -96,17 +121,33 @@ const jsonLd = (p) =>
       sameAs: ['https://okdp.io/', 'https://www.kubocd.io/', 'https://github.com/kubauth/kubauth'],
       knowsAbout: ['Data platform', 'Artificial intelligence', 'Kubernetes', 'GitOps', 'MLOps', 'Open source'],
     },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'WebPage',
-      '@id': `${SITE}${p.url}#webpage`,
-      url: `${SITE}${p.url}`,
-      name: p.title,
-      description: p.desc,
-      isPartOf: {'@id': `${SITE}/#website`},
-      about: {'@id': `${SITE}/#organization`},
-      inLanguage: 'fr-FR',
-    },
+    p.article
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          '@id': `${SITE}${p.url}#article`,
+          url: `${SITE}${p.url}`,
+          headline: p.title.replace(/ — Kubotal$/, ''),
+          description: p.desc,
+          datePublished: p.article.published,
+          dateModified: p.article.published,
+          articleSection: p.article.section,
+          timeRequired: p.article.readingTime,
+          author: {'@id': `${SITE}/#organization`},
+          publisher: {'@id': `${SITE}/#organization`},
+          inLanguage: 'fr-FR',
+        }
+      : {
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          '@id': `${SITE}${p.url}#webpage`,
+          url: `${SITE}${p.url}`,
+          name: p.title,
+          description: p.desc,
+          isPartOf: {'@id': `${SITE}/#website`},
+          about: {'@id': `${SITE}/#organization`},
+          inLanguage: 'fr-FR',
+        },
   ]);
 
 const render = (p) => `<!doctype html>
@@ -137,7 +178,7 @@ ${SPRITE}
 
 ${navFor(p.nav)}
 
-<main id="top">
+<main id="top"${p.flow ? ' data-flow' : ''}>
 ${rebase(page(p.id), p.depth)}
 </main>
 

@@ -248,7 +248,48 @@
     });
   })();
 
-  /* ---------- 5. Clic : maintien de l'élévation ---------- */
+  /* ---------- 5. Menu mobile ---------- */
+  /* Sous 980px la barre de liens se replie dans un panneau. Sans ce bouton,
+     les pages du site n'étaient atteignables sur aucun téléphone. */
+  (function () {
+    var bouton = document.querySelector('.nav-toggle');
+    var menu = document.getElementById('nav-menu');
+    if (!bouton || !menu) return;
+
+    function fermer() {
+      menu.classList.remove('is-open');
+      bouton.setAttribute('aria-expanded', 'false');
+      bouton.querySelector('.sr-only').textContent = 'Ouvrir le menu';
+    }
+    function basculer() {
+      var ouvert = menu.classList.toggle('is-open');
+      bouton.setAttribute('aria-expanded', String(ouvert));
+      bouton.querySelector('.sr-only').textContent = ouvert ? 'Fermer le menu' : 'Ouvrir le menu';
+    }
+
+    bouton.addEventListener('click', basculer);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menu.classList.contains('is-open')) {
+        fermer();
+        bouton.focus();
+      }
+    });
+
+    // un clic hors du panneau le referme
+    document.addEventListener('click', function (e) {
+      if (!menu.classList.contains('is-open')) return;
+      if (menu.contains(e.target) || bouton.contains(e.target)) return;
+      fermer();
+    });
+
+    // si la fenêtre repasse au-dessus du seuil, le panneau n'a plus lieu d'être
+    window.matchMedia('(min-width:981px)').addEventListener('change', function (m) {
+      if (m.matches) fermer();
+    });
+  })();
+
+  /* ---------- 6. Clic : maintien de l'élévation ---------- */
   document.querySelectorAll('[data-tile]').forEach(function (tile) {
     tile.addEventListener('click', function () {
       var was = tile.classList.contains('is-held');

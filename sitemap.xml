@@ -21,6 +21,17 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://kubotal.io/articles/</loc>
+    <priority>0.85</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/</loc>
+    <lastmod>2026-08-02</lastmod>
+    <priority>0.8</priority>
+    <changefreq>yearly</changefreq>
+  </url>
+  <url>
     <loc>https://kubotal.io/contact/</loc>
     <priority>0.7</priority>
     <changefreq>yearly</changefreq>
