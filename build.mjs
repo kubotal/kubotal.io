@@ -10,6 +10,7 @@
 import {readFileSync, writeFileSync, mkdirSync} from 'node:fs';
 import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {ARTICLES, PAR_PAGE, dateFr} from './src/articles.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const part = (n) => readFileSync(join(ROOT, 'src/parts', n + '.html'), 'utf8');
@@ -20,6 +21,155 @@ const NAV = part('nav');
 const SCRIPTS = part('scripts');
 
 const SITE = 'https://kubotal.io';
+
+const echappe = (t) =>
+  String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+const NB_PAGES_LISTE = Math.max(1, Math.ceil(ARTICLES.length / PAR_PAGE));
+
+/* Une ligne de la liste. Le résumé est tronqué à deux lignes en CSS : la hauteur
+   d'une ligne ne dépend donc pas de la longueur du texte, et cent articles
+   s'empilent aussi régulièrement que trois. */
+const ligneArticle = (a, prefixe) => `
+        <a class="glass post" href="${prefixe}articles/${a.slug}/" style="--tint:${a.tint}"
+           data-recherche="${echappe((a.titre + ' ' + a.resume + ' ' + a.tag).toLowerCase())}">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">${echappe(a.tag)}</span>
+              <time datetime="${a.date}">${dateFr(a.date)}</time>
+              <span aria-hidden="true">·</span>
+              <span>${a.minutes} min de lecture</span>
+            </div>
+            <h3>${echappe(a.titre)}</h3>
+            <p>${echappe(a.resume)}</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>`;
+
+/* Pagination rendue au build : les pages 2 et suivantes sont de vraies URL,
+   partageables et indexables, et la liste fonctionne sans JavaScript. */
+const pagination = (num, prefixe) => {
+  if (NB_PAGES_LISTE < 2) return '';
+  const lien = (n) => (n === 1 ? `${prefixe}articles/` : `${prefixe}articles/page/${n}/`);
+  const pages = Array.from({length: NB_PAGES_LISTE}, (_, i) => i + 1)
+    .map((n) =>
+      n === num
+        ? `<span class="page-num is-current" aria-current="page">${n}</span>`
+        : `<a class="page-num" href="${lien(n)}">${n}</a>`)
+    .join('\n          ');
+  return `
+      <nav class="pagination" aria-label="Pagination des articles">
+        <a class="page-fleche${num === 1 ? ' is-off' : ''}" href="${lien(Math.max(1, num - 1))}"
+           ${num === 1 ? 'aria-disabled="true" tabindex="-1"' : ''} rel="prev">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg><span class="sr-only">Page précédente</span>
+        </a>
+        <div class="page-nums">
+          ${pages}
+        </div>
+        <a class="page-fleche${num === NB_PAGES_LISTE ? ' is-off' : ''}" href="${lien(Math.min(NB_PAGES_LISTE, num + 1))}"
+           ${num === NB_PAGES_LISTE ? 'aria-disabled="true" tabindex="-1"' : ''} rel="next">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg><span class="sr-only">Page suivante</span>
+        </a>
+      </nav>`;
+};
+
+/* Le corps de la page de liste. Le champ de recherche est injecté par app.js :
+   sans JavaScript il ne ferait rien, autant ne pas l'afficher du tout. */
+const pageListe = (num, prefixe) => {
+  const debut = (num - 1) * PAR_PAGE;
+  const lot = ARTICLES.slice(debut, debut + PAR_PAGE);
+  return `  <section class="section" id="articles">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-anim>Articles</span>
+        <h2 data-anim>Notes de terrain.</h2>
+        <p class="lead" data-anim>Ce qu'on lit, ce qu'on teste et ce qu'on retient sur les plateformes
+          data, Kubernetes et le GitOps.</p>
+      </div>
+
+      <div class="posts-tete">
+        <p class="posts-compte" id="posts-compte">${ARTICLES.length} articles<span class="posts-page">
+          · page ${num} sur ${NB_PAGES_LISTE}</span></p>
+      </div>
+
+      <div class="posts" id="posts">${lot.map((a) => ligneArticle(a, prefixe)).join('\n')}
+      </div>
+
+      <p class="posts-vide" id="posts-vide" hidden>Aucun article ne correspond à cette recherche.</p>
+${pagination(num, prefixe)}
+    </div>
+  </section>
+
+  <script type="application/json" id="articles-data">${JSON.stringify(
+    ARTICLES.map((a) => ({
+      s: a.slug, t: a.titre, r: a.resume, g: a.tag, c: a.tint,
+      d: a.date, f: dateFr(a.date), m: a.minutes,
+    })))}</script>`;
+};
+
+/* Page d'un sujet prévu mais pas encore rédigé : mieux vaut une page honnête
+   qu'un lien mort dans la liste. Elle porte un noindex, pour ne pas peupler
+   l'index des moteurs de pages sans contenu. */
+const pageBrouillon = (a) => `  <section class="section" id="article">
+    <div class="wrap">
+      <article class="article">
+        <header class="article-head">
+          <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Tous les articles</a>
+          <h1>${echappe(a.titre)}</h1>
+          <p class="article-sub">${echappe(a.resume)}</p>
+          <div class="post-meta" style="--tint:${a.tint};margin-top:22px">
+            <span class="post-tag">${echappe(a.tag)}</span>
+            <span>${a.minutes} min de lecture</span>
+          </div>
+        </header>
+        <div class="article-body">
+          <div class="article-note">
+            <p><strong>Article en préparation.</strong> Le sujet est au programme, le texte n'est
+              pas encore écrit. Si le sujet vous concerne aujourd'hui, écrivez-nous : on répondra
+              plus vite que la publication.</p>
+          </div>
+          <div class="article-end">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Tous les articles</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre plateforme</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>`;
+
+/** Les entrées de PAGES correspondant aux listes paginées et aux articles. */
+const pagesArticles = () => {
+  const listes = Array.from({length: NB_PAGES_LISTE}, (_, i) => i + 1).map((num) => ({
+    id: `liste-articles-${num}`,
+    corpsHtml: pageListe(num, num === 1 ? '/' : '/'),
+    out: num === 1 ? 'articles/index.html' : `articles/page/${num}/index.html`,
+    depth: num === 1 ? 1 : 3,
+    nav: 'articles',
+    url: num === 1 ? '/articles/' : `/articles/page/${num}/`,
+    noindex: num > 1,
+    title: num === 1 ? 'Articles — Kubotal' : `Articles, page ${num} — Kubotal`,
+    desc: 'Notes de terrain sur les plateformes data, Kubernetes, le GitOps et l’open source, par l’équipe Kubotal.',
+  }));
+
+  const articles = ARTICLES.map((a) => ({
+    id: a.corps || `brouillon-${a.slug}`,
+    corpsHtml: a.corps ? null : pageBrouillon(a),
+    out: `articles/${a.slug}/index.html`,
+    depth: 2,
+    nav: 'articles',
+    url: `/articles/${a.slug}/`,
+    /* `flow` : la page se lit en défilant, son contenu ne doit pas être centré. */
+    flow: true,
+    noindex: !a.corps,
+    article: a.corps
+      ? {published: a.date, section: a.tag, readingTime: `PT${a.minutes}M`}
+      : null,
+    title: `${a.titre} — Kubotal`,
+    desc: a.resume,
+  }));
+
+  return [...listes, ...articles];
+};
 
 /** `out` : chemin du fichier généré. `depth` : nombre de « ../ » pour remonter à la racine. */
 const PAGES = [
@@ -59,31 +209,7 @@ const PAGES = [
     title: 'Accompagnement : cadrage, build, run, transfert — Kubotal',
     desc: 'Du cadrage à l’exploitation : quatre façons de travailler avec Kubotal sur votre plateforme data et IA.',
   },
-  {
-    id: 'articles',
-    out: 'articles/index.html',
-    depth: 1,
-    nav: 'articles',
-    url: '/articles/',
-    title: 'Articles — Kubotal',
-    desc: 'Notes de terrain sur les plateformes data, Kubernetes, le GitOps et l’open source, par l’équipe Kubotal.',
-  },
-  {
-    id: 'article-kubocd',
-    out: 'articles/kubocd-deployer-sans-maitriser-helm/index.html',
-    depth: 2,
-    nav: 'articles',
-    url: '/articles/kubocd-deployer-sans-maitriser-helm/',
-    /* `flow` : la page se lit en défilant, son contenu ne doit pas être centré. */
-    flow: true,
-    article: {
-      published: '2026-08-02',
-      section: 'GitOps',
-      readingTime: 'PT8M',
-    },
-    title: 'KuboCD : déployer sur Kubernetes sans maîtriser Helm — Kubotal',
-    desc: 'KuboCD emballe un chart Helm dans une image OCI et le rend déployable via une simple ressource Release. Ce qu’il fait, ce qu’il ne fait pas, et quand il vaut le détour.',
-  },
+  ...pagesArticles(),
   {
     id: 'contact',
     out: 'contact/index.html',
@@ -157,9 +283,9 @@ const render = (p) => `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${p.title}</title>
 <meta name="description" content="${p.desc}">
-<link rel="canonical" href="${SITE}${p.url}">
+<link rel="canonical" href="${SITE}${p.url}">${p.noindex ? '\n<meta name="robots" content="noindex,follow">' : ''}
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<meta property="og:type" content="website">
+<meta property="og:type" content="${p.article ? 'article' : 'website'}">
 <meta property="og:site_name" content="Kubotal">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:title" content="${p.title}">
@@ -179,13 +305,30 @@ ${SPRITE}
 ${navFor(p.nav)}
 
 <main id="top"${p.flow ? ' data-flow' : ''}>
-${rebase(page(p.id), p.depth)}
+${rebase(p.corpsHtml ?? page(p.id), p.depth)}
 </main>
 
 ${rebase(SCRIPTS, p.depth)}
 </body>
 </html>
 `;
+
+/* Le sitemap est dérivé de PAGES : ajouter un article suffit, il n'y a pas de
+   liste à tenir à jour en parallèle — et donc pas de sitemap qui dérive. */
+const sitemap = () => {
+  const prio = (p) =>
+    p.url === '/' ? '1.0' : p.article ? '0.8' : p.url === '/articles/' ? '0.85' : '0.9';
+  const entrees = PAGES.filter((p) => !p.noindex).map((p) => `  <url>
+    <loc>${SITE}${p.url}</loc>${p.article ? `\n    <lastmod>${p.article.published}</lastmod>` : ''}
+    <priority>${prio(p)}</priority>
+    <changefreq>${p.article ? 'yearly' : 'monthly'}</changefreq>
+  </url>`).join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${entrees}
+</urlset>
+`;
+};
 
 let n = 0;
 for (const p of PAGES) {
@@ -195,4 +338,7 @@ for (const p of PAGES) {
   console.log('  écrit  ' + p.out);
   n++;
 }
+writeFileSync(join(ROOT, 'sitemap.xml'), sitemap(), 'utf8');
+console.log('  écrit  sitemap.xml');
+
 console.log(`\n${n} pages générées.`);

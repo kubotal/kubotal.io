@@ -185,7 +185,94 @@
     });
   })();
 
-  /* ---------- 5. Sommaire d'article ---------- */
+  /* ---------- 5. Recherche dans les articles ---------- */
+  /* Le champ est injecté ici et non écrit dans le HTML : sans JavaScript il
+     n'aurait rien à filtrer, et un champ inerte est pire que pas de champ.
+     La liste paginée reste servie par le serveur ; dès qu'une recherche est
+     saisie, on cherche dans le catalogue complet et on masque la pagination. */
+  (function () {
+    var data = document.getElementById('articles-data');
+    var liste = document.getElementById('posts');
+    var tete = document.querySelector('.posts-tete');
+    if (!data || !liste || !tete) return;
+
+    var articles;
+    try { articles = JSON.parse(data.textContent); } catch (e) { return; }
+    if (!articles.length) return;
+
+    var vide = document.getElementById('posts-vide');
+    var compte = document.getElementById('posts-compte');
+    var pagination = document.querySelector('.pagination');
+    var listeInitiale = liste.innerHTML;
+    var compteInitial = compte ? compte.innerHTML : '';
+
+    var boite = document.createElement('div');
+    boite.className = 'recherche';
+    boite.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>' +
+      '<label class="sr-only" for="q">Rechercher un article</label>' +
+      '<input id="q" type="search" placeholder="Rechercher un article" autocomplete="off">' +
+      '<button class="recherche-vider" type="button">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" ' +
+      'stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+      '<span class="sr-only">Effacer la recherche</span></button>';
+    tete.appendChild(boite);
+
+    var champ = boite.querySelector('input');
+    var vider = boite.querySelector('.recherche-vider');
+
+    /* Comparaison sans accents ni casse : « securite » doit trouver « sécurité ». */
+    function pliage(t) {
+      return t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+
+    function ligne(a) {
+      return '<a class="glass post" href="/articles/' + a.s + '/" style="--tint:' + a.c + '">' +
+        '<div><div class="post-meta"><span class="post-tag">' + a.g + '</span>' +
+        '<time datetime="' + a.d + '">' + a.f + '</time>' +
+        '<span aria-hidden="true">·</span><span>' + a.m + ' min de lecture</span></div>' +
+        '<h3>' + a.t + '</h3><p>' + a.r + '</p></div>' +
+        '<span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span></a>';
+    }
+
+    function chercher() {
+      var q = pliage(champ.value.trim());
+      boite.classList.toggle('a-du-texte', q.length > 0);
+
+      if (!q) {                       // retour à la page servie par le serveur
+        liste.innerHTML = listeInitiale;
+        if (compte) compte.innerHTML = compteInitial;
+        if (pagination) pagination.hidden = false;
+        if (vide) vide.hidden = true;
+        return;
+      }
+
+      var mots = q.split(/\s+/);
+      var trouves = articles.filter(function (a) {
+        var champs = pliage(a.t + ' ' + a.r + ' ' + a.g);
+        return mots.every(function (m) { return champs.indexOf(m) !== -1; });
+      });
+
+      liste.innerHTML = trouves.map(ligne).join('');
+      if (pagination) pagination.hidden = true;
+      if (vide) vide.hidden = trouves.length > 0;
+      if (compte) {
+        compte.textContent = trouves.length === 0 ? 'Aucun résultat'
+          : trouves.length + (trouves.length > 1 ? ' articles trouvés' : ' article trouvé');
+      }
+    }
+
+    champ.addEventListener('input', chercher);
+    champ.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && champ.value) { champ.value = ''; chercher(); }
+    });
+    vider.addEventListener('click', function () {
+      champ.value = ''; chercher(); champ.focus();
+    });
+  })();
+
+  /* ---------- 6. Sommaire d'article ---------- */
   /* Construit à partir des <h2> : un nouvel article n'a rien à déclarer.
      Sans JS le conteneur reste masqué et l'article s'affiche en une colonne. */
   (function () {
@@ -237,7 +324,7 @@
     titres.forEach(function (h) { obs.observe(h); });
   })();
 
-  /* ---------- 6. Menu mobile ---------- */
+  /* ---------- 7. Menu mobile ---------- */
   /* Sous 980px la barre de liens se replie dans un panneau. Sans ce bouton,
      les pages du site n'étaient atteignables sur aucun téléphone. */
   (function () {
@@ -278,7 +365,7 @@
     });
   })();
 
-  /* ---------- 6. Clic : maintien de l'élévation ---------- */
+  /* ---------- 8. Clic : maintien de l'élévation ---------- */
   document.querySelectorAll('[data-tile]').forEach(function (tile) {
     tile.addEventListener('click', function () {
       var was = tile.classList.contains('is-held');

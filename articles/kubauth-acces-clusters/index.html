@@ -3,19 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KuboCD : déployer sur Kubernetes sans maîtriser Helm — Kubotal</title>
-<meta name="description" content="Un chart Helm emballé dans une image OCI, déployé par une ressource de quelques lignes. Ce que fait vraiment KuboCD, ce qu’il délègue à Flux, et ce qu’il faut savoir avant de s’y mettre.">
-<link rel="canonical" href="https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/">
+<title>KubAuth : donner accès à vos clusters sans kubeconfig baladeur — Kubotal</title>
+<meta name="description" content="Le fichier kubeconfig qui circule par messagerie reste la faille la plus banale. Une approche fondée sur l’identité, et ce qu’elle change à l’exploitation.">
+<link rel="canonical" href="https://kubotal.io/articles/kubauth-acces-clusters/">
+<meta name="robots" content="noindex,follow">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:site_name" content="Kubotal">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:title" content="KuboCD : déployer sur Kubernetes sans maîtriser Helm — Kubotal">
-<meta property="og:description" content="Un chart Helm emballé dans une image OCI, déployé par une ressource de quelques lignes. Ce que fait vraiment KuboCD, ce qu’il délègue à Flux, et ce qu’il faut savoir avant de s’y mettre.">
-<meta property="og:url" content="https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/">
+<meta property="og:title" content="KubAuth : donner accès à vos clusters sans kubeconfig baladeur — Kubotal">
+<meta property="og:description" content="Le fichier kubeconfig qui circule par messagerie reste la faille la plus banale. Une approche fondée sur l’identité, et ce qu’elle change à l’exploitation.">
+<meta property="og:url" content="https://kubotal.io/articles/kubauth-acces-clusters/">
 <meta property="og:image" content="https://kubotal.io/kubotal-logo-hero.png">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","@id":"https://kubotal.io/#organization","name":"Kubotal","url":"https://kubotal.io/","logo":"https://kubotal.io/kubotal-logo-mark.png","email":"contact@kubotal.io","description":"Kubotal conçoit, déploie et opère des plateformes Data, IA, Kubernetes et GitOps pour les équipes cloud-native.","sameAs":["https://okdp.io/","https://www.kubocd.io/","https://github.com/kubauth/kubauth"],"knowsAbout":["Data platform","Artificial intelligence","Kubernetes","GitOps","MLOps","Open source"]},{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/#article","url":"https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/","headline":"KuboCD : déployer sur Kubernetes sans maîtriser Helm","description":"Un chart Helm emballé dans une image OCI, déployé par une ressource de quelques lignes. Ce que fait vraiment KuboCD, ce qu’il délègue à Flux, et ce qu’il faut savoir avant de s’y mettre.","datePublished":"2026-08-02","dateModified":"2026-08-02","articleSection":"GitOps","timeRequired":"PT8M","author":{"@id":"https://kubotal.io/#organization"},"publisher":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","@id":"https://kubotal.io/#organization","name":"Kubotal","url":"https://kubotal.io/","logo":"https://kubotal.io/kubotal-logo-mark.png","email":"contact@kubotal.io","description":"Kubotal conçoit, déploie et opère des plateformes Data, IA, Kubernetes et GitOps pour les équipes cloud-native.","sameAs":["https://okdp.io/","https://www.kubocd.io/","https://github.com/kubauth/kubauth"],"knowsAbout":["Data platform","Artificial intelligence","Kubernetes","GitOps","MLOps","Open source"]},{"@context":"https://schema.org","@type":"WebPage","@id":"https://kubotal.io/articles/kubauth-acces-clusters/#webpage","url":"https://kubotal.io/articles/kubauth-acces-clusters/","name":"KubAuth : donner accès à vos clusters sans kubeconfig baladeur — Kubotal","description":"Le fichier kubeconfig qui circule par messagerie reste la faille la plus banale. Une approche fondée sur l’identité, et ce qu’elle change à l’exploitation.","isPartOf":{"@id":"https://kubotal.io/#website"},"about":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"}]</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../../assets/styles.css">
@@ -95,205 +96,32 @@
 </header>
 
 <main id="top" data-flow>
-  <!-- ============== ARTICLE : KuboCD ============== -->
   <section class="section" id="article">
     <div class="wrap">
       <article class="article">
-
         <header class="article-head">
           <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Tous les articles</a>
-          <h1>KuboCD : déployer sur Kubernetes sans maîtriser Helm</h1>
-          <p class="article-sub">Un chart Helm emballé dans une image OCI, déployé par une ressource de
-            quelques lignes. Ce que fait vraiment KuboCD, ce qu'il délègue à Flux, et ce qu'il faut
-            savoir avant de s'y mettre.</p>
-          <div class="post-meta" style="--tint:#00966A;margin-top:22px">
-            <span class="post-tag">GitOps</span>
-            <time datetime="2026-08-02">2 août 2026</time>
-            <span aria-hidden="true">·</span>
-            <span>8 min de lecture</span>
+          <h1>KubAuth : donner accès à vos clusters sans kubeconfig baladeur</h1>
+          <p class="article-sub">Le fichier kubeconfig qui circule par messagerie reste la faille la plus banale. Une approche fondée sur l’identité, et ce qu’elle change à l’exploitation.</p>
+          <div class="post-meta" style="--tint:#5B3DF5;margin-top:22px">
+            <span class="post-tag">Open source</span>
+            <span>7 min de lecture</span>
           </div>
         </header>
-
-        <!-- rempli par assets/app.js à partir des <h2> ; sans JS, il reste masqué
-             et l'article s'affiche simplement en une colonne centrée. -->
-        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
-
         <div class="article-body">
-
-          <p>Presque toutes les applications prêtes pour Kubernetes sont livrées avec un chart Helm.
-            Et presque tous ces charts sont conçus pour couvrir le plus grand nombre de cas possible :
-            c'est leur qualité, et c'est aussi leur problème. La documentation de KuboCD le pose
-            sans détour — ces charts sont « conçus pour être très flexibles et couvrir un large
-            éventail de cas d'usage, ce qui rend souvent leur configuration complexe ».</p>
-
-          <p>La conséquence est connue de toutes les équipes plateforme : déployer une application
-            suppose de comprendre l'écosystème Kubernetes en profondeur, donc le déploiement finit
-            par retomber sur les administrateurs. Et même pour eux, la verbosité des valeurs Helm et
-            la répétition des mêmes variables d'un environnement à l'autre restent, toujours selon la
-            documentation, « fastidieuses et sources d'erreurs ».</p>
-
-          <p><a href="https://www.kubocd.io/" target="_blank" rel="noopener">KuboCD</a> attaque ce
-            problème par le packaging. L'idée : qu'un ingénieur plateforme emballe une fois pour
-            toutes un chart et ses réglages, et qu'un développeur puisse ensuite le déployer sans
-            connaître Helm.</p>
-
-          <h2>Deux objets, et c'est tout</h2>
-
-          <p>Le modèle tient en deux concepts.</p>
-
-          <p>Un <strong>Package</strong> est une image de conteneur conforme à OCI qui embarque un
-            descripteur d'application et un ou plusieurs charts Helm. Point important, souvent mal
-            compris : ce n'est pas une ressource Kubernetes. La documentation l'écrit noir sur blanc
-            — <em>« A KuboCD Package is NOT a native Kubernetes resource »</em>. On l'écrit en YAML,
-            on le construit, et on le pousse dans un registre d'images comme n'importe quelle image.</p>
-
-          <p>Une <strong>Release</strong>, elle, est bien un objet Kubernetes : une ressource
-            personnalisée du groupe <code>kubocd.kubotal.io/v1alpha1</code>. Elle désigne un Package
-            par son dépôt OCI et son tag, lui passe des paramètres, et représente son déploiement
-            dans le cluster.</p>
-
-          <p>Un Package contient une liste de <strong>modules</strong>, un par chart Helm à déployer.
-            La source de chaque chart doit être l'une de quatre origines exactement :
-            <code>helmRepository</code>, <code>git</code>, <code>oci</code> ou <code>local</code>.
-            Le champ <code>values</code> d'un module n'est pas un fichier de valeurs figé mais un
-            gabarit : KuboCD le rend lui-même, en y injectant les paramètres de la Release, puis
-            transmet le YAML obtenu au chart.</p>
-
-          <p>Ce sont ces paramètres qui font tout l'intérêt de l'exercice. Le Package déclare sous
-            <code>schema.parameters</code> ce qu'il accepte — un schéma JSON/OpenAPI standard, ou le
-            format simplifié de KuboCD. Un Package sans schéma n'accepte aucun paramètre. Autrement
-            dit : l'ingénieur plateforme décide exactement quels boutons il expose, et le reste du
-            chart devient un détail d'implémentation.</p>
-
-          <h2>Ce qui se passe réellement dans le cluster</h2>
-
-          <p>KuboCD ne déploie rien lui-même. C'est le point le plus utile à comprendre, et celui qui
-            rassure quand quelque chose ne marche pas : son contrôleur se contente de fabriquer des
-            ressources Flux, qui font le travail.</p>
-
-          <p>Pour une Release nommée <code>podinfo1</code>, il crée :</p>
-
-          <ul>
-            <li>une <code>OCIRepository</code> et une <code>HelmRepository</code>, toutes deux
-              préfixées <code>kcd-</code> — donc <code>kcd-podinfo1</code> ;</li>
-            <li>une <code>HelmRelease</code> par module, nommée <code>&lt;release&gt;-&lt;module&gt;</code>,
-              soit <code>podinfo1-main</code>. Celle-là ne porte pas le préfixe.</li>
-          </ul>
-
-          <p>Le chart étant enfermé dans l'image OCI du Package, KuboCD l'expose à Flux via une
-            <code>HelmRepository</code> interne qui pointe vers son propre service. Tout reste
-            inspectable avec les outils habituels :</p>
-
-<pre><code>kubectl describe release podinfo1
-
-Events:
-  Type    Reason                 Age   From     Message
-  ----    ------                 ----  ----     -------
-  Normal  OCIRepositoryCreated   49s   release  Created OCIRepository "kcd-podinfo1"
-  Normal  HelmRepositoryCreated  45s   release  Created HelmRepository "kcd-podinfo1"
-  Normal  HelmReleaseCreated     44s   release  Created HelmRelease "podinfo1-main"</code></pre>
-
-          <p>Quand un déploiement se bloque, le statut dit où regarder : <code>WAIT_OCI</code> renvoie
-            à l'<code>OCIRepository</code> — URL erronée ou image privée — et <code>WAIT_HREL</code>
-            à la <code>HelmRelease</code>. Le délai d'attente de Helm vaut par défaut la valeur de
-            configuration <code>defaultHelmTimeout</code>, fixée à 3 minutes, et se surcharge aussi
-            bien dans le Package que dans la Release.</p>
-
-          <p>Un détail de confort qui en dit long sur la maturité de l'outil : un module nommé
-            <code>noname</code> supprime le suffixe dans les noms générés, ce qui évite les
-            <code>podinfo1-podinfo1</code>. Comme les noms de modules doivent être uniques, un Package
-            ne peut en contenir qu'un seul.</p>
-
-          <h2>Le Context, ou comment un même Package tourne partout</h2>
-
-          <p>Reste le problème qui fait échouer la plupart des tentatives de standardisation : le
-            même déploiement doit s'adapter au cluster où il atterrit. Domaine d'ingress, classe de
-            stockage, émetteur de certificats — rien de tout cela n'est portable.</p>
-
-          <p>KuboCD isole ça dans une troisième ressource, le <strong>Context</strong>. C'est un objet
-            Kubernetes à part entière dont le champ <code>spec.context</code> est un dictionnaire
-            libre, sans schéma imposé. Une Release peut y puiser, en ajouter, ou ignorer les contextes
-            par défaut. Dans la section <code>parameters</code> d'une Release, le templating est
-            volontairement restreint : seule la racine <code>.Context</code> est disponible.</p>
-
-          <p>Le résultat est net : le Package décrit <em>quoi</em> déployer, le Context décrit
-            <em>où</em>, et la Release ne fait que les marier.</p>
-
           <div class="article-note">
-            <p><strong>À noter :</strong> la documentation de référence comporte une quatrième
-              ressource, <code>Config</code>, que le tableau comparatif de la page d'accueil ne
-              mentionne pas. Si vous cartographiez les CRD du projet, ne vous fiez pas à ce tableau
-              seul.</p>
+            <p><strong>Article en préparation.</strong> Le sujet est au programme, le texte n'est
+              pas encore écrit. Si le sujet vous concerne aujourd'hui, écrivez-nous : on répondra
+              plus vite que la publication.</p>
           </div>
-
-          <h2>Ce qu'il faut savoir avant de s'y mettre</h2>
-
-          <p>Quelques points ne sautent pas aux yeux à la lecture de la page d'accueil.</p>
-
-          <p><strong>Flux n'est pas une option, c'est une dépendance.</strong> La documentation range
-            KuboCD parmi les compagnons des outils GitOps « comme Flux ou ArgoCD », ce qui peut
-            laisser croire à une neutralité. En pratique, l'installation commence par
-            <code>flux install</code> et le contrôleur ne sait produire que des ressources Flux.
-            ArgoCD peut au mieux synchroniser depuis Git les manifestes de Release ; l'exécution du
-            déploiement, elle, passe obligatoirement par Flux.</p>
-
-          <p><strong>L'API est en alpha.</strong> Les ressources sont en
-            <code>v1alpha1</code>, et le manifeste de Package utilise même un <code>apiVersion</code>
-            nu, sans groupe. À traiter comme tel : les schémas peuvent bouger.</p>
-
-          <p><strong>Tous les registres ne conviennent pas.</strong> Les registres testés et cités
-            sont quay.io, ghcr.io et <em>distribution</em>. Les autres registres conformes OCI
-            devraient fonctionner, mais Docker Hub n'est explicitement pas supporté à ce jour.</p>
-
-          <p><strong>La protection contre la suppression exige le webhook.</strong> Le drapeau
-            <code>protected</code>, sur une Release comme sur un Context, ne fait rien si le webhook
-            de KuboCD n'est pas installé.</p>
-
-          <p>Côté ergonomie, la CLI offre l'outil qu'on espère : <code>kubocd render</code> permet de
-            tester une Release et d'inspecter les valeurs produites sans rien déployer. La
-            documentation le recommande d'ailleurs plutôt que d'écrire le contexte résolu dans le
-            statut, qui devient vite volumineux. Pour les tags de Packages, la convention proposée
-            reprend la version du chart principal suivie d'une révision de packaging —
-            <code>6.7.1-p01</code> pour le chart podinfo 6.7.1.</p>
-
-          <h2>Alors, pour qui ?</h2>
-
-          <p>KuboCD n'essaie pas de remplacer Helm — la documentation insiste sur ce point, et le
-            fonctionnement le confirme puisque tout finit en <code>HelmRelease</code>. Il ajoute une
-            couche au-dessus : Helm reste le moteur de templating, Flux reste le contrôleur GitOps,
-            et KuboCD devient la couche de packaging et d'abstraction entre les deux.</p>
-
-          <p>Le calcul devient intéressant quand plusieurs équipes déploient les mêmes briques sur
-            plusieurs environnements, et qu'on souhaite exposer trois paramètres plutôt que trois
-            cents lignes de valeurs. Il l'est encore davantage pour amorcer un cluster de zéro :
-            l'outil sait aussi provisionner les composants système — contrôleur d'ingress,
-            répartiteur de charge, opérateurs — ce qui ouvre la voie à un bootstrap intégralement
-            automatisé.</p>
-
-          <p>À l'inverse, si une seule équipe déploie une seule application, la couche supplémentaire
-            coûtera plus qu'elle ne rapporte. Un chart Helm et un <code>values.yaml</code> restent la
-            bonne réponse.</p>
-
-          <div class="article-note">
-            <p><strong>Sur le projet :</strong> KuboCD est publié en Apache-2.0 par l'organisation
-              GitHub <a href="https://github.com/kubocd/kubocd" target="_blank" rel="noopener">kubocd</a>,
-              où se trouve le dépôt de référence. Le groupe d'API de ses ressources,
-              <code>kubocd.kubotal.io</code>, porte le nom de domaine de Kubotal, et son principal
-              contributeur déclare Kubotal comme employeur — mais aucune page publique du projet
-              n'en fait un logiciel édité par la société. Cet article est une lecture de la
-              documentation, pas une communication du projet.</p>
-          </div>
-
           <div class="article-end">
             <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Tous les articles</a>
             <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre plateforme</a>
           </div>
-
         </div>
       </article>
     </div>
   </section>
-
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>

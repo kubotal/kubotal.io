@@ -95,7 +95,6 @@
 </header>
 
 <main id="top">
-  <!-- ============== ARTICLES ============== -->
   <section class="section" id="articles">
     <div class="wrap">
       <div class="section-head">
@@ -105,8 +104,14 @@
           data, Kubernetes et le GitOps.</p>
       </div>
 
-      <div class="posts">
-        <a class="glass post" href="/articles/kubocd-deployer-sans-maitriser-helm/" data-anim style="--tint:#00966A">
+      <div class="posts-tete">
+        <p class="posts-compte" id="posts-compte">11 articles<span class="posts-page">
+          · page 1 sur 2</span></p>
+      </div>
+
+      <div class="posts" id="posts">
+        <a class="glass post" href="/articles/kubocd-deployer-sans-maitriser-helm/" style="--tint:#00966A"
+           data-recherche="kubocd : déployer sur kubernetes sans maîtriser helm un chart helm emballé dans une image oci, déployé par une ressource de quelques lignes. ce que fait vraiment kubocd, ce qu’il délègue à flux, et ce qu’il faut savoir avant de s’y mettre. gitops">
           <div>
             <div class="post-meta">
               <span class="post-tag">GitOps</span>
@@ -115,16 +120,167 @@
               <span>8 min de lecture</span>
             </div>
             <h3>KuboCD : déployer sur Kubernetes sans maîtriser Helm</h3>
-            <p>Un chart Helm emballé dans une image OCI, déployé par une ressource de quelques lignes.
-              Ce que fait vraiment KuboCD, ce qu'il délègue à Flux, et ce qu'il faut savoir avant
-              de s'y mettre.</p>
+            <p>Un chart Helm emballé dans une image OCI, déployé par une ressource de quelques lignes. Ce que fait vraiment KuboCD, ce qu’il délègue à Flux, et ce qu’il faut savoir avant de s’y mettre.</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>
+
+        <a class="glass post" href="/articles/okdp-distribution-data-kubernetes/" style="--tint:#5B3DF5"
+           data-recherche="okdp : ce qu’apporte une distribution data sur kubernetes assembler spark, trino, superset et le reste à la main coûte cher en intégration. ce qu’une distribution prend en charge, et ce qu’elle vous laisse encore à faire. open source">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Open source</span>
+              <time datetime="2026-07-24">24 juillet 2026</time>
+              <span aria-hidden="true">·</span>
+              <span>7 min de lecture</span>
+            </div>
+            <h3>OKDP : ce qu’apporte une distribution data sur Kubernetes</h3>
+            <p>Assembler Spark, Trino, Superset et le reste à la main coûte cher en intégration. Ce qu’une distribution prend en charge, et ce qu’elle vous laisse encore à faire.</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>
+
+        <a class="glass post" href="/articles/trino-autoscaling-cout-reel/" style="--tint:#1685FF"
+           data-recherche="trino sur kubernetes : le coût réel de l’autoscaling ajouter des workers ne fait pas baisser la latence de la même façon selon la requête. où se situe vraiment le point d’équilibre entre temps de réponse et facture. data">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Data</span>
+              <time datetime="2026-07-15">15 juillet 2026</time>
+              <span aria-hidden="true">·</span>
+              <span>9 min de lecture</span>
+            </div>
+            <h3>Trino sur Kubernetes : le coût réel de l’autoscaling</h3>
+            <p>Ajouter des workers ne fait pas baisser la latence de la même façon selon la requête. Où se situe vraiment le point d’équilibre entre temps de réponse et facture.</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>
+
+        <a class="glass post" href="/articles/iceberg-catalogue-compaction/" style="--tint:#1685FF"
+           data-recherche="iceberg : le format compte moins que le catalogue le choix du format de table occupe les débats, mais ce sont le catalogue et la stratégie de compaction qui décident des performances au bout de six mois. data">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Data</span>
+              <time datetime="2026-07-03">3 juillet 2026</time>
+              <span aria-hidden="true">·</span>
+              <span>8 min de lecture</span>
+            </div>
+            <h3>Iceberg : le format compte moins que le catalogue</h3>
+            <p>Le choix du format de table occupe les débats, mais ce sont le catalogue et la stratégie de compaction qui décident des performances au bout de six mois.</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>
+
+        <a class="glass post" href="/articles/mlops-reproductibilite-registry/" style="--tint:#5B3DF5"
+           data-recherche="un registry de modèles ne suffit pas à la reproductibilité versionner les poids ne rejoue pas un entraînement. ce qu’il faut figer en plus pour qu’un modèle soit réellement reconstructible. mlops">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">MLOps</span>
+              <time datetime="2026-06-19">19 juin 2026</time>
+              <span aria-hidden="true">·</span>
+              <span>6 min de lecture</span>
+            </div>
+            <h3>Un registry de modèles ne suffit pas à la reproductibilité</h3>
+            <p>Versionner les poids ne rejoue pas un entraînement. Ce qu’il faut figer en plus pour qu’un modèle soit réellement reconstructible.</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>
+
+        <a class="glass post" href="/articles/rbac-kubernetes-erreurs-frequentes/" style="--tint:#D97706"
+           data-recherche="rbac kubernetes : cinq erreurs qu’on retrouve partout des clusterrole trop larges aux serviceaccount partagés entre équipes : la trame d’audit qu’on applique en début de mission. sécurité">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Sécurité</span>
+              <time datetime="2026-06-05">5 juin 2026</time>
+              <span aria-hidden="true">·</span>
+              <span>7 min de lecture</span>
+            </div>
+            <h3>RBAC Kubernetes : cinq erreurs qu’on retrouve partout</h3>
+            <p>Des ClusterRole trop larges aux ServiceAccount partagés entre équipes : la trame d’audit qu’on applique en début de mission.</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>
+
+        <a class="glass post" href="/articles/secrets-jobs-ephemeres-vault/" style="--tint:#D97706"
+           data-recherche="distribuer des secrets à des jobs éphémères pourquoi les secrets kubernetes statiques finissent toujours par fuiter, et à quoi ressemble une chaîne de distribution qui tient sur la durée. sécurité">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Sécurité</span>
+              <time datetime="2026-05-22">22 mai 2026</time>
+              <span aria-hidden="true">·</span>
+              <span>6 min de lecture</span>
+            </div>
+            <h3>Distribuer des secrets à des jobs éphémères</h3>
+            <p>Pourquoi les secrets Kubernetes statiques finissent toujours par fuiter, et à quoi ressemble une chaîne de distribution qui tient sur la durée.</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>
+
+        <a class="glass post" href="/articles/spark-kubernetes-dimensionnement/" style="--tint:#38B7FF"
+           data-recherche="spark sur kubernetes : dimensionner sans surpayer mémoire d’exécuteur, shuffle et instances spot : les trois réglages qui expliquent l’essentiel de l’écart de facture entre deux clusters identiques. data">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Data</span>
+              <time datetime="2026-05-09">9 mai 2026</time>
+              <span aria-hidden="true">·</span>
+              <span>9 min de lecture</span>
+            </div>
+            <h3>Spark sur Kubernetes : dimensionner sans surpayer</h3>
+            <p>Mémoire d’exécuteur, shuffle et instances spot : les trois réglages qui expliquent l’essentiel de l’écart de facture entre deux clusters identiques.</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>
+
+        <a class="glass post" href="/articles/observabilite-plateforme-data/" style="--tint:#0B63F6"
+           data-recherche="ce qu’on regarde quand une plateforme data ralentit quatre signaux expliquent la grande majorité des incidents. les tableaux de bord qu’on met en place en premier, et ceux qu’on ne met pas. exploitation">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">Exploitation</span>
+              <time datetime="2026-04-28">28 avril 2026</time>
+              <span aria-hidden="true">·</span>
+              <span>6 min de lecture</span>
+            </div>
+            <h3>Ce qu’on regarde quand une plateforme data ralentit</h3>
+            <p>Quatre signaux expliquent la grande majorité des incidents. Les tableaux de bord qu’on met en place en premier, et ceux qu’on ne met pas.</p>
+          </div>
+          <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
+        </a>
+
+        <a class="glass post" href="/articles/bootstrap-cluster-gitops/" style="--tint:#00966A"
+           data-recherche="bootstrapper un cluster de zéro, sans script maison ordre des dépendances, amorçage des secrets, problème de l’œuf et de la poule : comment amener un cluster vide à l’état de production de façon rejouable. gitops">
+          <div>
+            <div class="post-meta">
+              <span class="post-tag">GitOps</span>
+              <time datetime="2026-04-11">11 avril 2026</time>
+              <span aria-hidden="true">·</span>
+              <span>8 min de lecture</span>
+            </div>
+            <h3>Bootstrapper un cluster de zéro, sans script maison</h3>
+            <p>Ordre des dépendances, amorçage des secrets, problème de l’œuf et de la poule : comment amener un cluster vide à l’état de production de façon rejouable.</p>
           </div>
           <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
         </a>
       </div>
+
+      <p class="posts-vide" id="posts-vide" hidden>Aucun article ne correspond à cette recherche.</p>
+
+      <nav class="pagination" aria-label="Pagination des articles">
+        <a class="page-fleche is-off" href="/articles/"
+           aria-disabled="true" tabindex="-1" rel="prev">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg><span class="sr-only">Page précédente</span>
+        </a>
+        <div class="page-nums">
+          <span class="page-num is-current" aria-current="page">1</span>
+          <a class="page-num" href="/articles/page/2/">2</a>
+        </div>
+        <a class="page-fleche" href="/articles/page/2/"
+            rel="next">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg><span class="sr-only">Page suivante</span>
+        </a>
+      </nav>
     </div>
   </section>
 
+  <script type="application/json" id="articles-data">[{"s":"kubocd-deployer-sans-maitriser-helm","t":"KuboCD : déployer sur Kubernetes sans maîtriser Helm","r":"Un chart Helm emballé dans une image OCI, déployé par une ressource de quelques lignes. Ce que fait vraiment KuboCD, ce qu’il délègue à Flux, et ce qu’il faut savoir avant de s’y mettre.","g":"GitOps","c":"#00966A","d":"2026-08-02","f":"2 août 2026","m":8},{"s":"okdp-distribution-data-kubernetes","t":"OKDP : ce qu’apporte une distribution data sur Kubernetes","r":"Assembler Spark, Trino, Superset et le reste à la main coûte cher en intégration. Ce qu’une distribution prend en charge, et ce qu’elle vous laisse encore à faire.","g":"Open source","c":"#5B3DF5","d":"2026-07-24","f":"24 juillet 2026","m":7},{"s":"trino-autoscaling-cout-reel","t":"Trino sur Kubernetes : le coût réel de l’autoscaling","r":"Ajouter des workers ne fait pas baisser la latence de la même façon selon la requête. Où se situe vraiment le point d’équilibre entre temps de réponse et facture.","g":"Data","c":"#1685FF","d":"2026-07-15","f":"15 juillet 2026","m":9},{"s":"iceberg-catalogue-compaction","t":"Iceberg : le format compte moins que le catalogue","r":"Le choix du format de table occupe les débats, mais ce sont le catalogue et la stratégie de compaction qui décident des performances au bout de six mois.","g":"Data","c":"#1685FF","d":"2026-07-03","f":"3 juillet 2026","m":8},{"s":"mlops-reproductibilite-registry","t":"Un registry de modèles ne suffit pas à la reproductibilité","r":"Versionner les poids ne rejoue pas un entraînement. Ce qu’il faut figer en plus pour qu’un modèle soit réellement reconstructible.","g":"MLOps","c":"#5B3DF5","d":"2026-06-19","f":"19 juin 2026","m":6},{"s":"rbac-kubernetes-erreurs-frequentes","t":"RBAC Kubernetes : cinq erreurs qu’on retrouve partout","r":"Des ClusterRole trop larges aux ServiceAccount partagés entre équipes : la trame d’audit qu’on applique en début de mission.","g":"Sécurité","c":"#D97706","d":"2026-06-05","f":"5 juin 2026","m":7},{"s":"secrets-jobs-ephemeres-vault","t":"Distribuer des secrets à des jobs éphémères","r":"Pourquoi les secrets Kubernetes statiques finissent toujours par fuiter, et à quoi ressemble une chaîne de distribution qui tient sur la durée.","g":"Sécurité","c":"#D97706","d":"2026-05-22","f":"22 mai 2026","m":6},{"s":"spark-kubernetes-dimensionnement","t":"Spark sur Kubernetes : dimensionner sans surpayer","r":"Mémoire d’exécuteur, shuffle et instances spot : les trois réglages qui expliquent l’essentiel de l’écart de facture entre deux clusters identiques.","g":"Data","c":"#38B7FF","d":"2026-05-09","f":"9 mai 2026","m":9},{"s":"observabilite-plateforme-data","t":"Ce qu’on regarde quand une plateforme data ralentit","r":"Quatre signaux expliquent la grande majorité des incidents. Les tableaux de bord qu’on met en place en premier, et ceux qu’on ne met pas.","g":"Exploitation","c":"#0B63F6","d":"2026-04-28","f":"28 avril 2026","m":6},{"s":"bootstrap-cluster-gitops","t":"Bootstrapper un cluster de zéro, sans script maison","r":"Ordre des dépendances, amorçage des secrets, problème de l’œuf et de la poule : comment amener un cluster vide à l’état de production de façon rejouable.","g":"GitOps","c":"#00966A","d":"2026-04-11","f":"11 avril 2026","m":8},{"s":"kubauth-acces-clusters","t":"KubAuth : donner accès à vos clusters sans kubeconfig baladeur","r":"Le fichier kubeconfig qui circule par messagerie reste la faille la plus banale. Une approche fondée sur l’identité, et ce qu’elle change à l’exploitation.","g":"Open source","c":"#5B3DF5","d":"2026-03-27","f":"27 mars 2026","m":7}]</script>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
