@@ -8,81 +8,18 @@
   var hasGSAP = typeof window.gsap !== 'undefined';
 
   /* ---------- 1. Révélations ---------- */
-  /* gsap.from() pose immédiatement l'état de départ (opacity:0), mais son
-     horloge est gelée tant que l'onglet est en arrière-plan : la page resterait
-     blanche jusqu'à ce que le visiteur y revienne. On n'arme donc la révélation
-     que lorsque la page est réellement visible ; avant, le HTML s'affiche tel
-     quel, c'est-à-dire complet. */
-  function reveler() {
-    if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+  /* Les apparitions sont désormais en CSS (@keyframes kb-apparait / kb-tuile).
+     Une animation JS pose son état de départ tout de suite mais dépend de
+     requestAnimationFrame pour en sortir : si l'horloge ne tourne pas — onglet
+     en arrière-plan, rendu suspendu — le contenu reste invisible, et un filet
+     à base de setTimeout est lui-même sujet au bridage. Une animation CSS,
+     elle, se termine toujours seule dès que la page est peinte, et fonctionne
+     sans JavaScript. Voir « RÉVÉLATIONS » dans assets/styles.css.
 
-    gsap.from('.hero-copy [data-anim]', {
-      opacity: 0, y: 22, duration: .5, stagger: .07, ease: 'power2.out'
-    });
-
-    // Tuiles : vague depuis le centre
-    gsap.from('[data-tile]', {
-      opacity: 0, scale: .86, duration: .45,
-      stagger: { each: .05, from: 'center', grid: [3, 3] },
-      ease: 'back.out(1.4)', delay: .15,
-      // sans ça GSAP laisse un transform en ligne qui écrase le translateZ du CSS :
-      // le survol ne soulèverait plus rien.
-      clearProps: 'transform,opacity'
-    });
-
-    gsap.from('.iso-links line', {
-      opacity: 0, duration: .5, stagger: .03, delay: .5, ease: 'power1.out'
-    });
-
-    // les webfonts décalent la mise en page : on recalcule les positions
-    window.addEventListener('load', function () {
-      if (window.ScrollTrigger) ScrollTrigger.refresh();
-    });
-
-    /* Depuis la suppression du pied de page, les pages intérieures tiennent
-       entièrement dans la fenêtre et ne défilent plus. Un ScrollTrigger n'a
-       alors aucun défilement pour se déclencher : tout le contenu restait à
-       opacity:0. On ne confie donc au défilement que ce qui est réellement
-       sous la ligne de flottaison ; le reste s'anime au chargement. */
-    var dedans = [], dessous = [];
-    gsap.utils.toArray('.section [data-anim]').forEach(function (el) {
-      (el.getBoundingClientRect().top < window.innerHeight * .9 ? dedans : dessous).push(el);
-    });
-
-    if (dedans.length) {
-      gsap.from(dedans, {
-        opacity: 0, y: 24, duration: .45, stagger: .06, ease: 'power2.out'
-      });
-    }
-    dessous.forEach(function (el) {
-      gsap.from(el, {
-        opacity: 0, y: 24, duration: .45, ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true }
-      });
-    });
-
-    /* Filet de sécurité : quoi qu'il arrive en amont, aucun contenu ne doit
-       rester invisible. Une page blanche est un défaut bien pire qu'une
-       animation manquée. */
-    setTimeout(function () {
-      document.querySelectorAll('[data-anim]').forEach(function (el) {
-        if (parseFloat(getComputedStyle(el).opacity) < .99) {
-          gsap.set(el, { opacity: 1, y: 0, clearProps: 'transform' });
-        }
-      });
-    }, 1600);
-  }
-
-  if (hasGSAP && !reduce) {
-    if (document.visibilityState === 'visible') {
-      reveler();
-    } else {
-      document.addEventListener('visibilitychange', function onVisible() {
-        if (document.visibilityState !== 'visible') return;
-        document.removeEventListener('visibilitychange', onVisible);
-        reveler();
-      });
-    }
+     GSAP reste utilisé pour ce qui est réellement interactif : compteurs,
+     rotation du solide, marque animée. */
+  if (window.ScrollTrigger && typeof window.gsap !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
   }
 
   /* ---------- 2. Compteurs ---------- */
@@ -248,7 +185,59 @@
     });
   })();
 
-  /* ---------- 5. Menu mobile ---------- */
+  /* ---------- 5. Sommaire d'article ---------- */
+  /* Construit à partir des <h2> : un nouvel article n'a rien à déclarer.
+     Sans JS le conteneur reste masqué et l'article s'affiche en une colonne. */
+  (function () {
+    var toc = document.getElementById('toc');
+    if (!toc) return;
+    var titres = [].slice.call(document.querySelectorAll('.article-body h2'));
+    if (titres.length < 3) return;   // en dessous, un sommaire n'apporte rien
+
+    var ol = document.createElement('ol');
+    var liens = titres.map(function (h, i) {
+      if (!h.id) {
+        h.id = 'section-' + (i + 1) + '-' + h.textContent.trim().toLowerCase()
+          .normalize('NFD').replace(/[̀-ͯ]/g, '')
+          .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+      }
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent.trim();
+      li.appendChild(a);
+      ol.appendChild(li);
+      return a;
+    });
+
+    var titre = document.createElement('p');
+    titre.className = 'toc-titre';
+    titre.textContent = 'Sommaire';
+    toc.appendChild(titre);
+    toc.appendChild(ol);
+    toc.hidden = false;
+
+    /* Surlignage de la section courante. IntersectionObserver plutôt qu'un
+       écouteur de scroll : pas de calcul à chaque pixel parcouru. */
+    if (!('IntersectionObserver' in window)) return;
+    var vus = new Map();
+    var obs = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (e) { vus.set(e.target, e); });
+      var courant = null;
+      titres.forEach(function (h) {
+        var e = vus.get(h);
+        if (e && e.boundingClientRect.top <= window.innerHeight * .35) courant = h;
+      });
+      if (!courant) courant = titres[0];
+      liens.forEach(function (a, i) {
+        if (titres[i] === courant) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    }, {rootMargin: '-30% 0px -60% 0px', threshold: 0});
+    titres.forEach(function (h) { obs.observe(h); });
+  })();
+
+  /* ---------- 6. Menu mobile ---------- */
   /* Sous 980px la barre de liens se replie dans un panneau. Sans ce bouton,
      les pages du site n'étaient atteignables sur aucun téléphone. */
   (function () {
