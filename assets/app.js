@@ -263,13 +263,26 @@
       }
     }
 
-    champ.addEventListener('input', chercher);
+    /* La recherche est reportée dans l'URL : elle survit à un aller-retour vers
+       un article, se partage, et se retrouve dans l'historique du navigateur. */
+    function memoriser() {
+      if (!window.history || !history.replaceState) return;
+      var url = new URL(location.href);
+      if (champ.value.trim()) url.searchParams.set('q', champ.value.trim());
+      else url.searchParams.delete('q');
+      history.replaceState(null, '', url);
+    }
+
+    champ.addEventListener('input', function () { chercher(); memoriser(); });
     champ.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && champ.value) { champ.value = ''; chercher(); }
+      if (e.key === 'Escape' && champ.value) { champ.value = ''; chercher(); memoriser(); }
     });
     vider.addEventListener('click', function () {
-      champ.value = ''; chercher(); champ.focus();
+      champ.value = ''; chercher(); memoriser(); champ.focus();
     });
+
+    var initial = new URLSearchParams(location.search).get('q');
+    if (initial) { champ.value = initial; chercher(); }
   })();
 
   /* ---------- 6. Sommaire d'article ---------- */
