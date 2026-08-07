@@ -144,3 +144,15 @@ test('uses one anchor offset so sections align directly below the sticky navigat
   assert.match(css, /scroll-margin-top:var\(--nav-offset\)/);
   assert.doesNotMatch(css, /scroll-padding-top:/);
 });
+
+test('places Contact before Articles in every generated navigation', () => {
+  for (const path of ['index.html', 'articles/index.html']) {
+    const html = read(path);
+    const navigation = html.match(/<nav class="nav-links"[\s\S]*?<\/nav>/)?.[0] || '';
+
+    assert.match(
+      navigation,
+      />Expertise<[^]*>Open source<[^]*>Accompagnement<[^]*>Contact<[^]*>Articles</,
+    );
+  }
+});
