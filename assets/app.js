@@ -18,10 +18,6 @@
 
      GSAP reste utilisé pour ce qui est réellement interactif : compteurs,
      rotation du solide, marque animée. */
-  if (window.ScrollTrigger && typeof window.gsap !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-  }
-
   /* ---------- 2. Compteurs ---------- */
   /* Le HTML porte déjà la valeur finale. On ne remet à zéro qu'au moment précis
      où l'animation démarre : si elle ne démarre jamais, rien n'est faussé.     */
@@ -64,8 +60,8 @@
     document.querySelectorAll('[data-tile]').forEach(function (tile) {
       var depth = parseFloat(getComputedStyle(tile).getPropertyValue('--depth')) || 16;
 
-      // Le bouton ne bouge pas : on déplace tout son contenu dans une coque
-      // qui, elle, se soulève. La zone de survol reste donc immobile.
+      // La tuile reste immobile : on déplace son contenu dans une coque qui,
+      // elle, se soulève. La zone de pointage ne change donc pas de place.
       var lift = document.createElement('span');
       lift.className = 'tile-lift';
       while (tile.firstChild) lift.appendChild(tile.firstChild);
@@ -164,19 +160,19 @@
     // passe de l'autre, revient à 0 — puis on recommence, indéfiniment.
     var tl = gsap.timeline({
       repeat: -1,
-      defaults: { ease: 'sine.inOut', svgOrigin: HIP }
+      defaults: { ease: 'sine.inOut' }
     });
-    tl.to(legUp, { rotation:  SWING, duration: BEAT }, 0)
-      .to(legUp, { rotation: -SWING, duration: BEAT * 2 }, BEAT)
-      .to(legUp, { rotation: 0,      duration: BEAT }, BEAT * 3)
+    tl.to(legUp, { rotation:  SWING, duration: BEAT,     svgOrigin: HIP }, 0)
+      .to(legUp, { rotation: -SWING, duration: BEAT * 2, svgOrigin: HIP }, BEAT)
+      .to(legUp, { rotation: 0,      duration: BEAT,     svgOrigin: HIP }, BEAT * 3)
 
-      .to(legDn, { rotation: -SWING, duration: BEAT }, 0)
-      .to(legDn, { rotation:  SWING, duration: BEAT * 2 }, BEAT)
-      .to(legDn, { rotation: 0,      duration: BEAT }, BEAT * 3)
+      .to(legDn, { rotation: -SWING, duration: BEAT,     svgOrigin: HIP }, 0)
+      .to(legDn, { rotation:  SWING, duration: BEAT * 2, svgOrigin: HIP }, BEAT)
+      .to(legDn, { rotation: 0,      duration: BEAT,     svgOrigin: HIP }, BEAT * 3)
 
       // le tronc accompagne d'un rebond discret : un appui par pas
       .to(mark, { y: -1.5, duration: BEAT, ease: 'sine.out',
-                  yoyo: true, repeat: 3, svgOrigin: null }, 0);
+                  yoyo: true, repeat: 3 }, 0);
 
     // onglet en arrière-plan : on arrête, inutile de consommer
     document.addEventListener('visibilitychange', function () {
@@ -358,6 +354,10 @@
 
     bouton.addEventListener('click', basculer);
 
+    menu.addEventListener('click', function (event) {
+      if (event.target.closest('a')) fermer();
+    });
+
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && menu.classList.contains('is-open')) {
         fermer();
@@ -378,14 +378,44 @@
     });
   })();
 
-  /* ---------- 8. Clic : maintien de l'élévation ---------- */
-  document.querySelectorAll('[data-tile]').forEach(function (tile) {
-    tile.addEventListener('click', function () {
-      var was = tile.classList.contains('is-held');
-      document.querySelectorAll('.is-held').forEach(function (t) {
-        t.classList.remove('is-held');
+  /* ---------- 8. Section courante dans la landing ---------- */
+  (function () {
+    var main = document.querySelector('main[data-page="home"]');
+    if (!main) return;
+    var sections = [].slice.call(main.querySelectorAll('[data-nav-section]'));
+    var liens = [].slice.call(document.querySelectorAll('.nav-links a[href^="#"]'));
+    if (!sections.length || !liens.length || !('IntersectionObserver' in window)) return;
+
+    var liensParId = new Map(liens.map(function (lien) {
+      return [lien.getAttribute('href').slice(1), lien];
+    }));
+
+    function activer(id) {
+      liens.forEach(function (lien) { lien.removeAttribute('aria-current'); });
+      var lien = liensParId.get(id);
+      if (lien) lien.setAttribute('aria-current', 'location');
+    }
+
+    liens.forEach(function (lien) {
+      lien.addEventListener('click', function () {
+        activer(lien.getAttribute('href').slice(1));
       });
-      if (!was) tile.classList.add('is-held');
     });
-  });
+
+    var visibles = new Map();
+    var observateur = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (entree) {
+        if (entree.isIntersecting) visibles.set(entree.target.id, entree.intersectionRatio);
+        else visibles.delete(entree.target.id);
+      });
+      var courant = [].slice.call(visibles.entries()).sort(function (a, b) {
+        return b[1] - a[1];
+      })[0];
+      if (courant) activer(courant[0]);
+    }, {rootMargin: '-20% 0px -55% 0px', threshold: [0, .15, .4, .7]});
+
+    sections.forEach(function (section) {
+      observateur.observe(section);
+    });
+  })();
 })();

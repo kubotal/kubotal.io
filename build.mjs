@@ -82,7 +82,7 @@ const pageListe = (num, prefixe) => {
     <div class="wrap">
       <div class="section-head">
         <span class="eyebrow" data-anim>Articles</span>
-        <h2 data-anim>Notes de terrain.</h2>
+        <h1 data-anim>Notes de terrain.</h1>
         <p class="lead" data-anim>Ce qu'on lit, ce qu'on teste et ce qu'on retient sur les plateformes
           data, Kubernetes et le GitOps.</p>
       </div>
@@ -130,7 +130,7 @@ const pageBrouillon = (a) => `  <section class="section" id="article">
           </div>
           <div class="article-end">
             <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Tous les articles</a>
-            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre plateforme</a>
+            <a class="btn btn-accent btn-sm" href="/#contact">Parler de votre plateforme</a>
           </div>
         </div>
       </article>
@@ -171,62 +171,41 @@ const pagesArticles = () => {
   return [...listes, ...articles];
 };
 
+const LANDING_SECTIONS = ['home', 'expertise', 'open-source', 'accompagnement', 'contact'];
+const landing = () => LANDING_SECTIONS.map((id) => page(id)).join('\n');
+
+const LEGACY_REDIRECTS = [
+  {out: 'expertise/index.html', target: '/#expertise', label: 'Voir l’expertise'},
+  {out: 'open-source/index.html', target: '/#open-source', label: 'Voir les projets open source'},
+  {out: 'accompagnement/index.html', target: '/#accompagnement', label: 'Voir l’accompagnement'},
+  {out: 'contact/index.html', target: '/#contact', label: 'Aller au contact'},
+];
+
 /** `out` : chemin du fichier généré. `depth` : nombre de « ../ » pour remonter à la racine. */
 const PAGES = [
   {
     id: 'home',
+    corpsHtml: landing(),
     out: 'index.html',
     depth: 0,
     nav: null,
     url: '/',
+    flow: true,
     title: 'Kubotal — Plateformes Data, IA, Kubernetes et GitOps',
     desc: 'Kubotal conçoit, déploie et opère des plateformes Data & IA cloud-native avec Kubernetes, GitOps, MLOps et open source.',
   },
-  {
-    id: 'expertise',
-    out: 'expertise/index.html',
-    depth: 1,
-    nav: 'expertise',
-    url: '/expertise/',
-    title: 'Expertise Data, IA, Kubernetes et GitOps — Kubotal',
-    desc: 'Architecture de plateforme data, Kubernetes et GitOps, MLOps et IA, sécurité et gouvernance : les quatre domaines sur lesquels Kubotal intervient.',
-  },
-  {
-    id: 'open-source',
-    out: 'open-source/index.html',
-    depth: 1,
-    nav: 'open-source',
-    url: '/open-source/',
-    title: 'Open source : OKDP, KuboCD, KubAuth — Kubotal',
-    desc: 'OKDP, KuboCD et KubAuth : les trois projets open source que Kubotal construit au grand jour, pour des plateformes data sur Kubernetes.',
-  },
-  {
-    id: 'accompagnement',
-    out: 'accompagnement/index.html',
-    depth: 1,
-    nav: 'accompagnement',
-    url: '/accompagnement/',
-    title: 'Accompagnement : cadrage, build, run, transfert — Kubotal',
-    desc: 'Du cadrage à l’exploitation : quatre façons de travailler avec Kubotal sur votre plateforme data et IA.',
-  },
   ...pagesArticles(),
-  {
-    id: 'contact',
-    out: 'contact/index.html',
-    depth: 1,
-    nav: 'contact',
-    url: '/contact/',
-    title: 'Contact — Kubotal',
-    desc: 'Un échange de 30 minutes pour cadrer votre besoin de plateforme data et IA. Sans engagement.',
-  },
 ];
 
-/* La nav est écrite une fois, en liens racine-absolus : rien à réécrire par page.
-   On marque seulement la page courante. */
-const navFor = (id) =>
-  id
-    ? NAV.replace(`href="/${id}/"`, `href="/${id}/" aria-current="page"`)
-    : NAV;
+/* Sur la landing, les ancres restent locales : aucun nouveau document n'est chargé.
+   Depuis Articles, elles sont préfixées par / pour revenir à la landing. */
+const navFor = (p) => {
+  let html = p.id === 'home' ? NAV : NAV.replace(/href="#/g, 'href="/#');
+  if (p.nav === 'articles') {
+    html = html.replace('href="/articles/"', 'href="/articles/" aria-current="page"');
+  }
+  return html;
+};
 
 /* Les chemins d'assets sont relatifs dans les partiels : on les préfixe selon la profondeur. */
 const rebase = (html, depth) =>
@@ -302,13 +281,30 @@ const render = (p) => `<!doctype html>
 
 ${SPRITE}
 
-${navFor(p.nav)}
+${navFor(p)}
 
-<main id="top"${p.flow ? ' data-flow' : ''}>
+<main id="top" data-page="${p.id}"${p.flow ? ' data-flow' : ''}>
 ${rebase(p.corpsHtml ?? page(p.id), p.depth)}
 </main>
 
 ${rebase(SCRIPTS, p.depth)}
+</body>
+</html>
+`;
+
+const renderRedirect = ({target, label}) => `<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta http-equiv="refresh" content="0;url=${target}">
+<link rel="canonical" href="${SITE}/">
+<title>Redirection — Kubotal</title>
+<script>location.replace('${target}')</script>
+</head>
+<body>
+  <p><a href="${target}">${label}</a></p>
 </body>
 </html>
 `;
@@ -336,6 +332,13 @@ for (const p of PAGES) {
   mkdirSync(dirname(dest), {recursive: true});
   writeFileSync(dest, render(p), 'utf8');
   console.log('  écrit  ' + p.out);
+  n++;
+}
+for (const redirect of LEGACY_REDIRECTS) {
+  const dest = join(ROOT, redirect.out);
+  mkdirSync(dirname(dest), {recursive: true});
+  writeFileSync(dest, renderRedirect(redirect), 'utf8');
+  console.log('  redirige  ' + redirect.out);
   n++;
 }
 writeFileSync(join(ROOT, 'sitemap.xml'), sitemap(), 'utf8');

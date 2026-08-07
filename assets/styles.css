@@ -25,15 +25,16 @@
   --glass:rgba(255,255,255,.66);
   --glass-strong:rgba(255,255,255,.86);
   --glass-line:rgba(255,255,255,.94);
+  --nav-offset:75px;
 }
 
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none !important}
-html{scroll-behavior:smooth;overflow-x:hidden}
+html{scroll-behavior:smooth;overflow-x:clip}
 body{
   margin:0;background:var(--bg);color:var(--ink);
   font:16px/1.62 'DM Sans',system-ui,-apple-system,sans-serif;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;overflow-x:clip;
 }
 /* halo + trame technique */
 body::before{
@@ -61,6 +62,17 @@ button{font:inherit;cursor:pointer}
 /* main centre déjà verticalement : ce rembourrage ne déplaçait rien,
    il ne faisait qu'amputer la hauteur disponible pour le contenu. */
 .section{padding:clamp(16px,2.6vh,40px) 0}
+.landing-section{
+  padding:clamp(48px,6vh,84px) 0;
+  border-top:1px solid var(--line);
+}
+main[data-page="home"] > section{
+  min-height:calc(100svh - var(--nav-offset));
+  display:flex;
+  align-items:center;
+  flex:none;
+  scroll-margin-top:var(--nav-offset);
+}
 .eyebrow{
   display:inline-flex;align-items:center;gap:9px;
   font-size:clamp(13px,.55vw + .35vh,17px);font-weight:700;letter-spacing:.13em;
@@ -69,7 +81,7 @@ button{font:inherit;cursor:pointer}
 }
 .eyebrow::before{content:'';width:clamp(22px,1.9vw,38px);height:3px;border-radius:2px;background:var(--primary)}
 .section-head{max-width:min(100%,1180px);margin-bottom:clamp(28px,4.2vh,64px)}
-.section-head h2{font-size:clamp(36px,3.4vw + 2.6vh,104px);
+.section-head h1,.section-head h2{font-size:clamp(36px,3.4vw + 2.6vh,104px);
   margin:clamp(12px,1.7vh,24px) 0 0;max-width:17ch;text-wrap:balance}
 .lead{color:var(--ink-soft);font-size:clamp(18px,1.15vw + .55vh,30px);line-height:1.5;
   margin:clamp(16px,2.2vh,28px) 0 0}
@@ -129,6 +141,9 @@ button{font:inherit;cursor:pointer}
    réserve plus grande en bas remonte optiquement le bloc — la nav occupe déjà
    le haut de la fenêtre et tirait la composition vers le bas. */
 .hero{padding:clamp(8px,1.4vh,20px) 0 clamp(20px,3.2vh,44px)}
+main[data-page="home"] .hero{
+  border-top:0;
+}
 /* Répartition 60 / 40 : le texte porte la page, l'image l'accompagne. */
 .hero-grid{display:grid;grid-template-columns:63fr 37fr;
   column-gap:clamp(28px,3vw,72px);row-gap:var(--space-5);align-items:center}
@@ -183,29 +198,24 @@ button{font:inherit;cursor:pointer}
 .tile.is-hub .tile-icon{width:92%}   /* la marque a du blanc dans son viewBox : on compense */
 
 /* ============ CARTES EXPERTISE ============ */
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(18px,1.7vw,34px);
-  min-height:clamp(240px,36.5vh,560px)}
-/* space-between plutôt qu'une marge auto sur l'icône : le surplus de hauteur
-   se répartit sur les intervalles au lieu de creuser un seul trou. */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;
+  gap:clamp(18px,1.7vw,34px)}
 .card{padding:clamp(26px,2.2vw,44px);display:flex;flex-direction:column;
-  justify-content:space-between;gap:clamp(12px,1.1vw,18px);
-  transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
-.card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+  justify-content:flex-start;gap:clamp(18px,1.8vw,28px)}
 .card-ico{width:clamp(52px,3.8vw,74px);height:clamp(52px,3.8vw,74px);
   border-radius:clamp(15px,1.3vw,22px);display:grid;place-items:center;
-  background:linear-gradient(140deg,var(--tint,var(--primary)),color-mix(in srgb,var(--tint,var(--primary)) 60%,#fff));
+  background:var(--tint,var(--primary-deep));
   box-shadow:0 10px 22px color-mix(in srgb,var(--tint,var(--primary)) 34%,transparent)}
 .card-ico svg{width:52%;height:52%;color:#fff}
 .card h3{font-size:clamp(21px,1.62vw,32px);margin:4px 0 0;text-wrap:balance}
 .card p{margin:0;color:var(--ink-soft);font-size:clamp(16px,1.22vw,23px);line-height:1.55}
 
 /* ============ OPEN SOURCE ============ */
-.os{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,1.7vw,34px);
-  min-height:clamp(260px,38vh,580px)}
+.os{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;
+  gap:clamp(18px,1.7vw,34px)}
 .os-card{padding:clamp(26px,2.2vw,46px);display:flex;flex-direction:column;
   gap:clamp(14px,1.4vw,24px);justify-content:space-between;position:relative;overflow:hidden;
-  transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
-.os-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+  min-height:clamp(310px,26vw,430px)}
 .os-card::before{content:'';position:absolute;inset:-40% -30% auto auto;width:64%;aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,color-mix(in srgb,var(--tint) 22%,transparent),transparent 68%)}
 .os-mark{width:clamp(64px,5.6vw,112px);height:clamp(64px,5.6vw,112px);position:relative;flex:none}
@@ -221,7 +231,7 @@ button{font:inherit;cursor:pointer}
    grandissait, plus il paraissait perdu au milieu du vide. */
 .cta{position:relative;overflow:hidden;border-radius:clamp(28px,2.6vw,52px);
   padding:clamp(44px,6vh,88px) clamp(28px,4vw,80px);
-  min-height:min(74vh,1040px);display:flex;flex-direction:column;justify-content:center;
+  min-height:clamp(420px,58vh,640px);display:flex;flex-direction:column;justify-content:center;
   text-align:center;color:#fff;
   background:linear-gradient(140deg,#0B1220,#132A52 52%,#0B63F6);box-shadow:var(--shadow-lg)}
 .cta::before{content:'';position:absolute;inset:-34% -12% auto auto;width:54%;aspect-ratio:1;border-radius:50%;
@@ -449,7 +459,12 @@ main{flex:1 0 auto;display:flex;flex-direction:column;
 @media (max-width:560px){
   :root{--space-7:64px;--space-6:48px}
   .cards{grid-template-columns:1fr}
-  .stats{gap:var(--space-3)}
+  .landing-section{padding:64px 0}
+  .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%}
+  .stat b{font-size:clamp(28px,8vw,34px)}
+  .stat span{font-size:12px;line-height:1.3}
+  .hero-grid{gap:32px}
+  .iso-stage{margin-top:-12px}
   /* tourné à 45°, le plan occupe ~1.41x sa largeur : on le rétrécit pour éviter le scroll horizontal */
   .iso-plane{width:70%}
 }
@@ -544,5 +559,5 @@ main{flex:1 0 auto;display:flex;flex-direction:column;
 
 /* ============ NAV : PAGE COURANTE ============ */
 /* Le lien de la page affichée reste souligné et en couleur d'encre. */
-.nav-links a[aria-current="page"]{ color:var(--ink) }
-.nav-links a[aria-current="page"]::after{ transform:scaleX(1) }
+.nav-links a[aria-current="page"],.nav-links a[aria-current="location"]{ color:var(--ink) }
+.nav-links a[aria-current="page"]::after,.nav-links a[aria-current="location"]::after{ transform:scaleX(1) }

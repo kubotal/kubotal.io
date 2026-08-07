@@ -84,27 +84,28 @@
       </svg>
     </button>
     <nav class="nav-links" id="nav-menu">
-      <a href="/expertise/">Expertise</a>
-      <a href="/open-source/">Open source</a>
-      <a href="/accompagnement/">Accompagnement</a>
+      <a href="#expertise">Expertise</a>
+      <a href="#open-source">Open source</a>
+      <a href="#accompagnement">Accompagnement</a>
       <a href="/articles/">Articles</a>
-      <a href="/contact/">Contact</a>
+      <a href="#contact">Contact</a>
     </nav>
-    <a class="btn btn-accent btn-sm" href="/contact/">Parler projet</a>
+    <a class="btn btn-accent btn-sm" href="#contact">Parler projet</a>
   </div>
 </header>
 
-<main id="top">
+
+<main id="top" data-page="home" data-flow>
   <!-- ============== HERO ============== -->
-  <section class="hero">
+  <section class="hero" id="accueil">
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <span class="eyebrow" data-anim>Data · Kubernetes · IA</span>
         <h1 data-anim>Data platforms<br>for <span class="hl">AI teams</span>.</h1>
         <p class="lead" data-anim>Kubotal conçoit, déploie et opère des infrastructures data ouvertes pour industrialiser vos usages IA.</p>
         <div class="hero-cta" data-anim>
-          <a class="btn btn-accent" href="/contact/"><svg viewBox="0 0 24 24"><use href="#i-mail"/></svg>Discuter d'un projet</a>
-          <a class="btn btn-ghost" href="/open-source/">Voir l'open source<svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-accent" href="#contact"><svg viewBox="0 0 24 24"><use href="#i-mail"/></svg>Discuter d'un projet</a>
+          <a class="btn btn-ghost" href="#open-source">Voir l'open source<svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
         </div>
         <div class="stats" data-anim>
           <!-- la vraie valeur est écrite ici : sans JS, sans GSAP ou si l'animation
@@ -117,38 +118,145 @@
 
       <!-- Grille isométrique : l'écosystème -->
       <div>
-        <div class="iso-stage" id="iso">
+        <div class="iso-stage" id="iso" role="img"
+             aria-label="Écosystème Kubotal : Kubernetes, Spark, Airflow, Trino, Superset, Vault, MinIO et Kafka">
           <div class="iso-glow"></div>
           <div class="iso-plane">
             <div class="iso-grid">
-              <button class="tile" data-tile style="--tint:#326CE5" aria-label="Orchestration de conteneurs">
-                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-kubernetes"/></svg></span></span></button>
-              <button class="tile" data-tile style="--tint:#E25A1C" aria-label="Traitement distribué Apache Spark">
-                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-spark"/></svg></span></span></button>
-              <button class="tile" data-tile style="--tint:#017CEE" aria-label="Orchestration de workflows Apache Airflow">
-                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-airflow"/></svg></span></span></button>
-              <button class="tile" data-tile style="--tint:#DD00A1" aria-label="Moteur de requêtes distribué Trino">
-                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-trino"/></svg></span></span></button>
-              <button class="tile is-hub" data-tile data-hub aria-label="Kubotal, la plateforme">
-                <span class="tile-face"><span class="tile-icon"><svg viewBox="20 11 59 78"><use href="#mark"/></svg></span></span></button>
-              <button class="tile" data-tile style="--tint:#20A6C9" aria-label="Visualisation Apache Superset">
-                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-superset"/></svg></span></span></button>
-              <button class="tile" data-tile style="--tint:#0B1220" aria-label="Gestion des secrets HashiCorp Vault">
-                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-vault"/></svg></span></span></button>
-              <button class="tile" data-tile style="--tint:#C72E49" aria-label="Stockage objet MinIO">
-                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-minio"/></svg></span></span></button>
-              <button class="tile" data-tile style="--tint:#231F20" aria-label="Streaming Apache Kafka">
-                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-kafka"/></svg></span></span></button>
+              <span class="tile" data-tile style="--tint:#326CE5" aria-hidden="true">
+                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-kubernetes"/></svg></span></span></span>
+              <span class="tile" data-tile style="--tint:#E25A1C" aria-hidden="true">
+                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-spark"/></svg></span></span></span>
+              <span class="tile" data-tile style="--tint:#017CEE" aria-hidden="true">
+                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-airflow"/></svg></span></span></span>
+              <span class="tile" data-tile style="--tint:#DD00A1" aria-hidden="true">
+                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-trino"/></svg></span></span></span>
+              <span class="tile is-hub" data-tile data-hub aria-hidden="true">
+                <span class="tile-face"><span class="tile-icon"><svg viewBox="20 11 59 78"><use href="#mark"/></svg></span></span></span>
+              <span class="tile" data-tile style="--tint:#20A6C9" aria-hidden="true">
+                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-superset"/></svg></span></span></span>
+              <span class="tile" data-tile style="--tint:#0B1220" aria-hidden="true">
+                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-vault"/></svg></span></span></span>
+              <span class="tile" data-tile style="--tint:#C72E49" aria-hidden="true">
+                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-minio"/></svg></span></span></span>
+              <span class="tile" data-tile style="--tint:#231F20" aria-hidden="true">
+                <span class="tile-face"><span class="tile-icon"><svg viewBox="0 0 24 24"><use href="#i-kafka"/></svg></span></span></span>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ============== EXPERTISE ============== -->
+  <section class="section landing-section" id="expertise" data-nav-section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-anim>Expertise</span>
+        <h2 data-anim>Architecture data, Kubernetes et IA-ready.</h2>
+      </div>
+      <div class="cards">
+        <article class="glass card" data-anim style="--tint:#1685FF">
+          <span class="card-ico"><svg viewBox="0 0 24 24"><use href="#i-layers"/></svg></span>
+          <h3>Architecture plateforme</h3>
+          <p>Lakehouse, stockage objet, moteurs de requêtes. Ouvert, portable, sans lock-in.</p>
+        </article>
+        <article class="glass card" data-anim style="--tint:#00966A">
+          <span class="card-ico"><svg viewBox="0 0 24 24"><use href="#i-git"/></svg></span>
+          <h3>Kubernetes &amp; GitOps</h3>
+          <p>Déploiement déclaratif, réconciliation continue, environnements reproductibles.</p>
+        </article>
+        <article class="glass card" data-anim style="--tint:#5B3DF5">
+          <span class="card-ico"><svg viewBox="0 0 24 24"><use href="#i-brain"/></svg></span>
+          <h3>MLOps &amp; IA</h3>
+          <p>Du notebook à la production : pipelines, registry, servage et supervision.</p>
+        </article>
+        <article class="glass card" data-anim style="--tint:#D97706">
+          <span class="card-ico"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg></span>
+          <h3>Sécurité &amp; gouvernance</h3>
+          <p>Identité, RBAC, traçabilité. La conformité intégrée, pas ajoutée après coup.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== OPEN SOURCE ============== -->
+  <section class="section landing-section" id="open-source" data-nav-section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-anim>Open source</span>
+        <h2 data-anim>Ce qu'on construit au grand jour.</h2>
+      </div>
+      <div class="os">
+        <article class="glass os-card" data-anim style="--tint:#5B3DF5">
+          <svg class="os-mark" viewBox="-2 -2 100 100" style="color:#5B3DF5"><use href="#markMono"/></svg>
+          <h3>OKDP</h3>
+          <p>Distribution open source pour plateformes data sur Kubernetes.</p>
+          <a class="os-link" href="https://okdp.io/" target="_blank" rel="noopener" aria-label="Ouvrir okdp.io dans un nouvel onglet">okdp.io<svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="glass os-card" data-anim style="--tint:#00966A">
+          <svg class="os-mark" viewBox="-2 -2 100 100" style="color:#00966A"><use href="#markMono"/></svg>
+          <h3>KuboCD</h3>
+          <p>Livraison continue GitOps, pensée pour les plateformes complexes.</p>
+          <a class="os-link" href="https://www.kubocd.io/" target="_blank" rel="noopener" aria-label="Ouvrir kubocd.io dans un nouvel onglet">kubocd.io<svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="glass os-card" data-anim style="--tint:#D97706">
+          <svg class="os-mark" viewBox="-2 -2 100 100" style="color:#D97706"><use href="#markMono"/></svg>
+          <h3>KubAuth</h3>
+          <p>Authentification et gestion des accès pour vos clusters Kubernetes.</p>
+          <a class="os-link" href="https://github.com/kubauth/kubauth" target="_blank" rel="noopener" aria-label="Ouvrir le dépôt KubAuth dans un nouvel onglet">GitHub<svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== ACCOMPAGNEMENT ============== -->
+  <section class="section landing-section" id="accompagnement" data-nav-section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" data-anim>Accompagnement</span>
+        <h2 data-anim>Concevoir, déployer, opérer.</h2>
+        <p class="lead" data-anim>Quatre façons de travailler ensemble, du cadrage à l'exploitation.</p>
+      </div>
+      <div class="cards">
+        <article class="glass card" data-anim style="--tint:#1685FF">
+          <span class="card-ico"><svg viewBox="0 0 24 24"><use href="#i-layers"/></svg></span>
+          <h3>Cadrage</h3><p>Audit de l'existant, cible d'architecture, trajectoire.</p>
+        </article>
+        <article class="glass card" data-anim style="--tint:#0B63F6">
+          <span class="card-ico"><svg viewBox="0 0 24 24"><use href="#i-git"/></svg></span>
+          <h3>Build</h3><p>Mise en place de la plateforme et des chaînes de livraison.</p>
+        </article>
+        <article class="glass card" data-anim style="--tint:#087CB8">
+          <span class="card-ico"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg></span>
+          <h3>Run</h3><p>Exploitation, supervision, montée de version.</p>
+        </article>
+        <article class="glass card" data-anim style="--tint:#5B3DF5">
+          <span class="card-ico"><svg viewBox="0 0 24 24"><use href="#i-brain"/></svg></span>
+          <h3>Transfert</h3><p>Formation des équipes et autonomie sur la plateforme.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== CTA ============== -->
+  <section class="section landing-section" id="contact" data-nav-section>
+    <div class="wrap">
+      <div class="cta" data-anim>
+        <h2>Parlons de votre<br>plateforme.</h2>
+        <p>Un échange de 30 minutes pour cadrer le besoin. Sans engagement.</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="mailto:contact@kubotal.io"><svg viewBox="0 0 24 24"><use href="#i-mail"/></svg>contact@kubotal.io</a>
+          <a class="btn btn-ghost" href="https://okdp.io/" target="_blank" rel="noopener">Voir OKDP<svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <script src="assets/app.js" defer></script>
+
 </body>
 </html>

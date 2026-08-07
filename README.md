@@ -1,54 +1,51 @@
 # kubotal.io — v3
 
-Refonte de la page d'accueil dans le style de la landing HIVE, aux couleurs Kubotal,
-avec la marque **Flow-K Stream**.
+Site statique de Kubotal, construit autour d'une **landing page unique** et d'un espace
+Articles multi-pages. La navigation commerciale se fait par ancres dans le même document,
+sans rechargement de page.
 
-Statique. Aucun build, aucune dépendance à installer.
+Le site n'a aucune dépendance à installer. Un build Node assemble les fragments partagés et
+génère les fichiers HTML déployés.
 
 ```bash
 npx serve .
 ```
 
-## Ce qui change par rapport au site actuel
+## Architecture des routes
 
-| | Actuel | v3 |
-|---|---|---|
-| Nature | SPA React (bundle minifié, source absente de cette machine) | HTML/CSS/JS statique, éditable directement |
-| Logo | remplacé dans les fichiers, mais dessin d'origine | Flow-K Stream en SVG inline, net à toute taille |
-| Pages | 5 routes (accueil, expertise, open source, accompagnement, contact) | **1 page**, sections ancrées |
-| Animation | filigrane flottant | GSAP : cascade des tuiles, révélations au scroll, compteurs |
-| Poids | bundle JS ~ plusieurs centaines de Ko | 3 fichiers, ~40 Ko hors polices |
-
-## Cinq pages, cinq routes
-
-Le site n'est plus une page unique à ancres : chaque section est une vraie route,
-alignée sur les URL du site en ligne.
+Les contenus commerciaux vivent sur la même landing. Articles conserve de vraies routes
+pour le partage, la lecture et l'indexation.
 
 | Route | Contenu |
 |---|---|
-| `/` | Hero, la grille isométrique, les chiffres |
-| `/expertise/` | Les 4 domaines d'intervention |
-| `/open-source/` | OKDP, KuboCD, KubAuth |
-| `/accompagnement/` | Cadrage, Build, Run, Transfert |
-| `/contact/` | La bande d'appel |
+| `/` | Landing complète |
+| `/#expertise` | Les 4 domaines d'intervention |
+| `/#open-source` | OKDP, KuboCD, KubAuth |
+| `/#accompagnement` | Cadrage, Build, Run, Transfert |
+| `/#contact` | Prise de contact |
+| `/articles/` | Catalogue d'articles |
+| `/articles/<slug>/` | Article individuel |
 
 Aperçu : `assets/pages-reference.png`.
 
 ### Le build
 
-Le site est déployé tel quel — GitHub Pages, aucune étape côté serveur. Maintenir cinq
-fois le même `<head>`, la même nav et le même pied de page serait une source de dérive,
-donc un petit script assemble les pages à partir de morceaux partagés :
+Le site est déployé sur GitHub Pages, sans serveur applicatif. Un petit script assemble la
+landing, les pages Articles et les éléments partagés :
 
 ```
-src/parts/   sprite, nav, footer, scripts   — communs aux 5 pages
-src/pages/   le contenu propre à chaque page
-build.mjs    assemble et écrit les 5 index.html
+src/parts/   sprite, navigation, scripts — éléments communs
+src/pages/   sections de la landing et corps d'articles
+build.mjs    assemble la landing, les articles et les redirections
+tests/       contrats du build, des routes et de l'accessibilité
 ```
 
 ```bash
 node build.mjs
 ```
+
+Le build doit être exécuté après toute modification de `src/`. La CI relance les tests et
+refuse le déploiement si les fichiers générés ne sont pas synchronisés.
 
 **Ne modifie jamais les `index.html` générés** : ils sont écrasés au build suivant.
 Édite `src/`.
