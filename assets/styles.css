@@ -390,6 +390,10 @@ main[data-flow]{justify-content:flex-start}
 .article-body a{color:var(--primary-deep);text-decoration:underline;text-underline-offset:3px;
   text-decoration-thickness:1px}
 .article-body a:hover{text-decoration-thickness:2px}
+.article-table-wrap{overflow-x:auto}
+.article-table{width:100%;border-collapse:collapse;min-width:620px}
+.article-table th,.article-table td{padding:14px 16px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.article-table th{color:var(--ink);font-size:.9rem}
 .article-body code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
   background:rgba(11,18,32,.06);padding:.15em .45em;border-radius:6px}
 .article-body pre{overflow-x:auto;margin-inline:clamp(-80px,-4.4vw,0px);padding:clamp(18px,1.8vw,28px);border-radius:var(--r-md);

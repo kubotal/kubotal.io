@@ -6,6 +6,26 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
+    <loc>https://kubotal.io/expertise/</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://kubotal.io/open-source/</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://kubotal.io/accompagnement/</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://kubotal.io/contact/</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://kubotal.io/articles/</loc>
     <priority>0.85</priority>
     <changefreq>monthly</changefreq>

@@ -142,13 +142,6 @@ const pagesArticles = () => {
 const LANDING_SECTIONS = ['home', 'expertise', 'open-source', 'accompagnement', 'contact'];
 const landing = () => LANDING_SECTIONS.map((id) => page(id)).join('\n');
 
-const LEGACY_REDIRECTS = [
-  {out: 'expertise/index.html', target: '/#expertise', label: 'Voir l’expertise'},
-  {out: 'open-source/index.html', target: '/#open-source', label: 'Voir les projets open source'},
-  {out: 'accompagnement/index.html', target: '/#accompagnement', label: 'Voir l’accompagnement'},
-  {out: 'contact/index.html', target: '/#contact', label: 'Aller au contact'},
-];
-
 /** `out` : chemin du fichier généré. `depth` : nombre de « ../ » pour remonter à la racine. */
 const PAGES = [
   {
@@ -162,16 +155,63 @@ const PAGES = [
     title: 'Kubotal — Plateformes Data, IA, Kubernetes et GitOps',
     desc: 'Kubotal conçoit, déploie et opère des plateformes Data & IA cloud-native avec Kubernetes, GitOps, MLOps et open source.',
   },
+  {
+    id: 'expertise',
+    corpsHtml: page('expertise-detail'),
+    out: 'expertise/index.html',
+    depth: 1,
+    nav: 'expertise',
+    url: '/expertise/',
+    flow: true,
+    title: 'Expertise Data, Kubernetes, GitOps et MLOps — Kubotal',
+    desc: 'Architecture Data, Kubernetes et GitOps, MLOps, sécurité et gouvernance : les domaines d’intervention de Kubotal.',
+  },
+  {
+    id: 'open-source',
+    corpsHtml: page('open-source-detail'),
+    out: 'open-source/index.html',
+    depth: 1,
+    nav: 'open-source',
+    url: '/open-source/',
+    flow: true,
+    title: 'Open source : OKDP, KuboCD et KubAuth — Kubotal',
+    desc: 'Kubotal présente OKDP, KuboCD et KubAuth pour les plateformes Data, la livraison GitOps et les accès Kubernetes.',
+  },
+  {
+    id: 'accompagnement',
+    corpsHtml: page('accompagnement-detail'),
+    out: 'accompagnement/index.html',
+    depth: 1,
+    nav: 'accompagnement',
+    url: '/accompagnement/',
+    flow: true,
+    title: 'Accompagnement plateforme Data et IA — Kubotal',
+    desc: 'Cadrage, build, run et transfert : quatre modes d’accompagnement Kubotal pour les plateformes Data et IA.',
+  },
+  {
+    id: 'contact',
+    corpsHtml: page('contact-detail'),
+    out: 'contact/index.html',
+    depth: 1,
+    nav: 'contact',
+    url: '/contact/',
+    flow: true,
+    title: 'Contacter Kubotal — Projet Data, IA ou Kubernetes',
+    desc: 'Un échange de 30 minutes pour cadrer un besoin de plateforme Data, IA ou Kubernetes avec Kubotal, sans engagement.',
+  },
   ...pagesArticles(),
 ];
 
 /* Sur la landing, les ancres restent locales : aucun nouveau document n'est chargé.
-   Depuis Articles, elles sont préfixées par / pour revenir à la landing. */
+   Depuis les pages internes, la navigation pointe vers les pages canoniques. */
 const navFor = (p) => {
-  let html = p.id === 'home' ? NAV : NAV.replace(/href="#/g, 'href="/#');
-  if (p.nav === 'articles') {
-    html = html.replace('href="/articles/"', 'href="/articles/" aria-current="page"');
-  }
+  if (p.id === 'home') return NAV;
+  let html = NAV
+    .replace('href="#expertise"', 'href="/expertise/"')
+    .replace('href="#open-source"', 'href="/open-source/"')
+    .replace('href="#accompagnement"', 'href="/accompagnement/"')
+    .replaceAll('href="#contact"', 'href="/contact/"');
+  if (p.nav) html = html.replace(`href="/${p.nav}/"`, `href="/${p.nav}/" aria-current="page"`);
   return html;
 };
 
@@ -260,23 +300,6 @@ ${rebase(SCRIPTS, p.depth)}
 </html>
 `;
 
-const renderRedirect = ({target, label}) => `<!doctype html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,follow">
-<meta http-equiv="refresh" content="0;url=${target}">
-<link rel="canonical" href="${SITE}/">
-<title>Redirection — Kubotal</title>
-<script>location.replace('${target}')</script>
-</head>
-<body>
-  <p><a href="${target}">${label}</a></p>
-</body>
-</html>
-`;
-
 /* Le sitemap est dérivé de PAGES : ajouter un article suffit, il n'y a pas de
    liste à tenir à jour en parallèle — et donc pas de sitemap qui dérive. */
 const sitemap = () => {
@@ -305,13 +328,6 @@ for (const p of PAGES) {
   mkdirSync(dirname(dest), {recursive: true});
   writeFileSync(dest, render(p), 'utf8');
   console.log('  écrit  ' + p.out);
-  n++;
-}
-for (const redirect of LEGACY_REDIRECTS) {
-  const dest = join(ROOT, redirect.out);
-  mkdirSync(dirname(dest), {recursive: true});
-  writeFileSync(dest, renderRedirect(redirect), 'utf8');
-  console.log('  redirige  ' + redirect.out);
   n++;
 }
 writeFileSync(join(ROOT, 'sitemap.xml'), sitemap(), 'utf8');

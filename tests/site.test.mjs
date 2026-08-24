@@ -52,8 +52,8 @@ test('builds one landing page with local anchors and keeps articles separate', (
   assert.equal((home.match(/<h1\b/g) || []).length, 1);
 
   const articles = read('articles/index.html');
-  assert.match(articles, /href="\/#expertise"/);
-  assert.match(articles, /href="\/#contact"/);
+  assert.match(articles, /href="\/expertise\/"/);
+  assert.match(articles, /href="\/contact\/"/);
   assert.match(articles, /<h1[^>]*>Notes de terrain\.<\/h1>/);
 });
 
@@ -70,24 +70,25 @@ test('publishes only articles with a body and removes stale draft outputs', () =
   );
 });
 
-test('redirects legacy commercial routes and removes them from the sitemap', () => {
-  for (const [path, target] of [
-    ['expertise/index.html', '/#expertise'],
-    ['open-source/index.html', '/#open-source'],
-    ['accompagnement/index.html', '/#accompagnement'],
-    ['contact/index.html', '/#contact'],
+test('builds indexable commercial detail pages and keeps the landing UI', () => {
+  const home = read('index.html');
+
+  assert.match(home, /class="iso-stage"/);
+  assert.match(home, /href="\/expertise\/"/);
+  assert.match(home, /href="\/open-source\/"/);
+  assert.match(home, /href="\/accompagnement\/"/);
+
+  for (const [path, heading] of [
+    ['expertise/index.html', 'Expertise Data, Kubernetes, GitOps et MLOps'],
+    ['open-source/index.html', 'Écosystème open source pour les plateformes Data'],
+    ['accompagnement/index.html', 'Accompagnement de plateformes Data et IA'],
+    ['contact/index.html', 'Parler de votre plateforme avec Kubotal'],
   ]) {
     const html = read(path);
-    assert.match(html, new RegExp(`location\\.replace\\('${target}'\\)`));
-    assert.match(html, new RegExp(`content="0;url=${target}"`));
+    assert.equal((html.match(/<h1\b/g) || []).length, 1);
+    assert.match(html, new RegExp(`<h1[^>]*>${heading}`));
+    assert.doesNotMatch(html, /name="robots" content="noindex/);
   }
-
-  const sitemap = read('sitemap.xml');
-  assert.doesNotMatch(
-    sitemap,
-    /<loc>https:\/\/kubotal\.io\/(expertise|open-source|accompagnement|contact)\//,
-  );
-  assert.match(sitemap, /<loc>https:\/\/kubotal\.io\/articles\//);
 });
 
 test('uses one accessible ecosystem illustration and omits unused ScrollTrigger', () => {
