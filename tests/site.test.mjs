@@ -203,12 +203,16 @@ test('gives landing sections compact rhythm, anchor offsets and deliberate mobil
   );
 });
 
-test('verifies generated output in the deployment workflow', () => {
+test('documents and verifies generated output in the deployment workflow', () => {
   const workflow = readProject('.github/workflows/deploy.yml');
+  const readme = readProject('README.md');
 
   assert.match(workflow, /node --test tests\/site\.test\.mjs/);
   assert.match(workflow, /node build\.mjs/);
   assert.match(workflow, /git diff --exit-code/);
+  assert.match(readme, /landing page unique/i);
+  assert.match(readme, /\/#expertise/);
+  assert.doesNotMatch(readme, /Aucun build/);
 });
 
 test('keeps the sticky navigation inside the document scroll container', () => {
