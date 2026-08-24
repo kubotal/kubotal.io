@@ -35,6 +35,21 @@ before(() => {
   cpSync(join(PROJECT_ROOT, 'build.mjs'), join(buildRoot, 'build.mjs'));
   cpSync(join(PROJECT_ROOT, 'src'), join(buildRoot, 'src'), {recursive: true});
   cpSync(join(PROJECT_ROOT, 'assets'), join(buildRoot, 'assets'), {recursive: true});
+  for (const file of [
+    'CNAME',
+    'google58a3511232b3ddeb.html',
+    'robots.txt',
+    'sitemap.xml',
+    'llms.txt',
+    'kubotal-logo-hero.png',
+    'kubotal-logo-mark.png',
+    'kubotal-logo-watermark.png',
+  ]) {
+    cpSync(join(PROJECT_ROOT, file), join(buildRoot, file));
+  }
+  if (existsSync(join(PROJECT_ROOT, 'pages-artifact.mjs'))) {
+    cpSync(join(PROJECT_ROOT, 'pages-artifact.mjs'), join(buildRoot, 'pages-artifact.mjs'));
+  }
 
   for (const path of [
     'articles/page/2/index.html',
@@ -163,6 +178,60 @@ test('exposes only public canonical pages to search and AI crawlers', () => {
   assert.match(robots, /Sitemap: https:\/\/kubotal\.io\/sitemap\.xml/);
   for (const [, canonical] of PUBLIC_PAGES) assert.match(llms, new RegExp(canonical));
   assert.doesNotMatch(llms, /articles\/page\/2|okdp-distribution-data-kubernetes/);
+});
+
+test('loads web fonts directly before the local stylesheet', () => {
+  const home = read('index.html');
+  const css = read('assets/styles.css');
+  const fontStylesheet = 'href="https://fonts.googleapis.com/css2?family=DM+Sans';
+  const localStylesheet = 'href="assets/styles.css"';
+
+  assert.doesNotMatch(css, /@import[^;]+fonts\.googleapis\.com/);
+  assert.equal(home.includes(fontStylesheet), true);
+  assert.ok(home.indexOf(fontStylesheet) < home.indexOf(localStylesheet));
+});
+
+test('packages only runtime files in the GitHub Pages artifact', () => {
+  const result = spawnSync(process.execPath, ['pages-artifact.mjs'], {
+    cwd: buildRoot,
+    encoding: 'utf8',
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+
+  for (const path of [
+    'index.html',
+    'expertise/index.html',
+    'open-source/index.html',
+    'accompagnement/index.html',
+    'contact/index.html',
+    'articles/index.html',
+    'articles/kubocd-deployer-sans-maitriser-helm/index.html',
+    'assets/styles.css',
+    'assets/app.js',
+    'assets/favicon.svg',
+    'robots.txt',
+    'sitemap.xml',
+    'llms.txt',
+    'CNAME',
+    'google58a3511232b3ddeb.html',
+    'kubotal-logo-hero.png',
+    'kubotal-logo-mark.png',
+  ]) {
+    assert.equal(existsSync(join(buildRoot, '.pages-artifact', path)), true, path);
+  }
+
+  for (const path of [
+    'src',
+    'tests',
+    'docs',
+    'README.md',
+    'build.mjs',
+    'pages-artifact.mjs',
+    'assets/hero-reference.png',
+    'assets/pages-reference.png',
+  ]) {
+    assert.equal(existsSync(join(buildRoot, '.pages-artifact', path)), false, path);
+  }
 });
 
 test('uses one accessible ecosystem illustration and omits unused ScrollTrigger', () => {

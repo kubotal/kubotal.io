@@ -358,6 +358,7 @@ const render = (p) => `<!doctype html>
 <script type="application/ld+json">${jsonLd(p)}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="${'../'.repeat(p.depth)}assets/styles.css">
 </head>
 <body>

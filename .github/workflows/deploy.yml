@@ -36,13 +36,16 @@ jobs:
           node build.mjs
           git diff --exit-code
 
+      - name: Prepare minimal Pages artifact
+        run: node pages-artifact.mjs
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '.pages-artifact'
 
       - name: Deploy to GitHub Pages
         id: deployment
