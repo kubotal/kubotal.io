@@ -118,7 +118,8 @@ const pagesArticles = () => {
     nav: 'articles',
     url: num === 1 ? '/articles/' : `/articles/page/${num}/`,
     noindex: num > 1,
-    title: num === 1 ? 'Articles — Kubotal' : `Articles, page ${num} — Kubotal`,
+    pageType: 'CollectionPage',
+    title: num === 1 ? 'Articles Data, Kubernetes, GitOps et MLOps — Kubotal' : `Articles Data et Kubernetes, page ${num} — Kubotal`,
     desc: 'Notes de terrain sur les plateformes data, Kubernetes, le GitOps et l’open source, par l’équipe Kubotal.',
   }));
 
@@ -131,7 +132,16 @@ const pagesArticles = () => {
     url: `/articles/${a.slug}/`,
     /* `flow` : la page se lit en défilant, son contenu ne doit pas être centré. */
     flow: true,
-    article: {published: a.date, section: a.tag, readingTime: `PT${a.minutes}M`},
+    article: {
+      published: a.date,
+      modified: a.modified ?? a.date,
+      section: a.tag,
+      readingTime: `PT${a.minutes}M`,
+    },
+    breadcrumb: [
+      {name: 'Articles', url: '/articles/'},
+      {name: a.titre, url: `/articles/${a.slug}/`},
+    ],
     title: `${a.titre} — Kubotal`,
     desc: a.resume,
   }));
@@ -152,8 +162,8 @@ const PAGES = [
     nav: null,
     url: '/',
     flow: true,
-    title: 'Kubotal — Plateformes Data, IA, Kubernetes et GitOps',
-    desc: 'Kubotal conçoit, déploie et opère des plateformes Data & IA cloud-native avec Kubernetes, GitOps, MLOps et open source.',
+    title: 'Kubotal — Plateformes Data et IA sur Kubernetes',
+    desc: 'Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes, avec GitOps, MLOps, sécurité et gouvernance.',
   },
   {
     id: 'expertise',
@@ -163,6 +173,11 @@ const PAGES = [
     nav: 'expertise',
     url: '/expertise/',
     flow: true,
+    service: 'Architecture de plateformes Data et IA',
+    breadcrumb: [
+      {name: 'Accueil', url: '/'},
+      {name: 'Expertise', url: '/expertise/'},
+    ],
     title: 'Expertise Data, Kubernetes, GitOps et MLOps — Kubotal',
     desc: 'Architecture Data, Kubernetes et GitOps, MLOps, sécurité et gouvernance : les domaines d’intervention de Kubotal.',
   },
@@ -174,6 +189,10 @@ const PAGES = [
     nav: 'open-source',
     url: '/open-source/',
     flow: true,
+    breadcrumb: [
+      {name: 'Accueil', url: '/'},
+      {name: 'Open source', url: '/open-source/'},
+    ],
     title: 'Open source : OKDP, KuboCD et KubAuth — Kubotal',
     desc: 'Kubotal présente OKDP, KuboCD et KubAuth pour les plateformes Data, la livraison GitOps et les accès Kubernetes.',
   },
@@ -185,6 +204,11 @@ const PAGES = [
     nav: 'accompagnement',
     url: '/accompagnement/',
     flow: true,
+    service: 'Accompagnement de plateformes Data et IA',
+    breadcrumb: [
+      {name: 'Accueil', url: '/'},
+      {name: 'Accompagnement', url: '/accompagnement/'},
+    ],
     title: 'Accompagnement plateforme Data et IA — Kubotal',
     desc: 'Cadrage, build, run et transfert : quatre modes d’accompagnement Kubotal pour les plateformes Data et IA.',
   },
@@ -196,6 +220,10 @@ const PAGES = [
     nav: 'contact',
     url: '/contact/',
     flow: true,
+    breadcrumb: [
+      {name: 'Accueil', url: '/'},
+      {name: 'Contact', url: '/contact/'},
+    ],
     title: 'Contacter Kubotal — Projet Data, IA ou Kubernetes',
     desc: 'Un échange de 30 minutes pour cadrer un besoin de plateforme Data, IA ou Kubernetes avec Kubotal, sans engagement.',
   },
@@ -219,49 +247,96 @@ const navFor = (p) => {
 const rebase = (html, depth) =>
   depth === 0 ? html : html.replace(/(href|src)="assets\//g, `$1="${'../'.repeat(depth)}assets/`);
 
-const jsonLd = (p) =>
-  JSON.stringify([
-    {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      '@id': `${SITE}/#organization`,
-      name: 'Kubotal',
-      url: `${SITE}/`,
-      logo: `${SITE}/kubotal-logo-mark.png`,
-      email: 'contact@kubotal.io',
-      description:
-        'Kubotal conçoit, déploie et opère des plateformes Data, IA, Kubernetes et GitOps pour les équipes cloud-native.',
-      sameAs: ['https://okdp.io/', 'https://www.kubocd.io/', 'https://github.com/kubauth/kubauth'],
-      knowsAbout: ['Data platform', 'Artificial intelligence', 'Kubernetes', 'GitOps', 'MLOps', 'Open source'],
-    },
-    p.article
-      ? {
-          '@context': 'https://schema.org',
-          '@type': 'BlogPosting',
-          '@id': `${SITE}${p.url}#article`,
-          url: `${SITE}${p.url}`,
-          headline: p.title.replace(/ — Kubotal$/, ''),
-          description: p.desc,
-          datePublished: p.article.published,
-          dateModified: p.article.published,
-          articleSection: p.article.section,
-          timeRequired: p.article.readingTime,
-          author: {'@id': `${SITE}/#organization`},
-          publisher: {'@id': `${SITE}/#organization`},
-          inLanguage: 'fr-FR',
-        }
-      : {
-          '@context': 'https://schema.org',
-          '@type': 'WebPage',
-          '@id': `${SITE}${p.url}#webpage`,
-          url: `${SITE}${p.url}`,
-          name: p.title,
-          description: p.desc,
-          isPartOf: {'@id': `${SITE}/#website`},
-          about: {'@id': `${SITE}/#organization`},
-          inLanguage: 'fr-FR',
-        },
-  ]);
+const ORGANIZATION_ID = `${SITE}/#organization`;
+const WEBSITE_ID = `${SITE}/#website`;
+const canonicalUrl = (p) => `${SITE}${p.url}`;
+const pageId = (p) => `${canonicalUrl(p)}#webpage`;
+
+const organizationNode = () => ({
+  '@type': 'Organization',
+  '@id': ORGANIZATION_ID,
+  name: 'Kubotal',
+  url: `${SITE}/`,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${SITE}/kubotal-logo-mark.png`,
+  },
+  email: 'contact@kubotal.io',
+  description:
+    'Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes.',
+  knowsAbout: ['Data platform', 'Artificial intelligence', 'Kubernetes', 'GitOps', 'MLOps', 'Open source'],
+});
+
+const websiteNode = () => ({
+  '@type': 'WebSite',
+  '@id': WEBSITE_ID,
+  url: `${SITE}/`,
+  name: 'Kubotal',
+  publisher: {'@id': ORGANIZATION_ID},
+  inLanguage: 'fr-FR',
+});
+
+const pageNode = (p) => ({
+  '@type': p.pageType ?? 'WebPage',
+  '@id': pageId(p),
+  url: canonicalUrl(p),
+  name: p.title,
+  description: p.desc,
+  isPartOf: {'@id': WEBSITE_ID},
+  about: {'@id': ORGANIZATION_ID},
+  ...(p.article ? {mainEntity: {'@id': `${canonicalUrl(p)}#article`}} : {}),
+  ...(p.service ? {mainEntity: {'@id': `${canonicalUrl(p)}#service`}} : {}),
+  ...(p.breadcrumb ? {breadcrumb: {'@id': `${canonicalUrl(p)}#breadcrumb`}} : {}),
+  inLanguage: 'fr-FR',
+});
+
+const articleNode = (p) => ({
+  '@type': 'BlogPosting',
+  '@id': `${canonicalUrl(p)}#article`,
+  url: canonicalUrl(p),
+  headline: p.title.replace(/ — Kubotal$/, ''),
+  description: p.desc,
+  datePublished: p.article.published,
+  dateModified: p.article.modified,
+  articleSection: p.article.section,
+  timeRequired: p.article.readingTime,
+  mainEntityOfPage: {'@id': pageId(p)},
+  author: {
+    '@type': 'Organization',
+    name: 'Kubotal',
+    url: `${SITE}/`,
+  },
+  publisher: {'@id': ORGANIZATION_ID},
+  inLanguage: 'fr-FR',
+});
+
+const serviceNode = (p) => ({
+  '@type': 'Service',
+  '@id': `${canonicalUrl(p)}#service`,
+  name: p.service,
+  description: p.desc,
+  url: canonicalUrl(p),
+  provider: {'@id': ORGANIZATION_ID},
+});
+
+const breadcrumbNode = (p) => ({
+  '@type': 'BreadcrumbList',
+  '@id': `${canonicalUrl(p)}#breadcrumb`,
+  itemListElement: p.breadcrumb.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.name,
+    item: `${SITE}${item.url}`,
+  })),
+});
+
+const jsonLd = (p) => {
+  const graph = [organizationNode(), websiteNode(), pageNode(p)];
+  if (p.article) graph.push(articleNode(p));
+  if (p.service) graph.push(serviceNode(p));
+  if (p.breadcrumb) graph.push(breadcrumbNode(p));
+  return JSON.stringify({'@context': 'https://schema.org', '@graph': graph});
+};
 
 const render = (p) => `<!doctype html>
 <html lang="fr">
@@ -303,12 +378,8 @@ ${rebase(SCRIPTS, p.depth)}
 /* Le sitemap est dérivé de PAGES : ajouter un article suffit, il n'y a pas de
    liste à tenir à jour en parallèle — et donc pas de sitemap qui dérive. */
 const sitemap = () => {
-  const prio = (p) =>
-    p.url === '/' ? '1.0' : p.article ? '0.8' : p.url === '/articles/' ? '0.85' : '0.9';
   const entrees = PAGES.filter((p) => !p.noindex).map((p) => `  <url>
-    <loc>${SITE}${p.url}</loc>${p.article ? `\n    <lastmod>${p.article.published}</lastmod>` : ''}
-    <priority>${prio(p)}</priority>
-    <changefreq>${p.article ? 'yearly' : 'monthly'}</changefreq>
+    <loc>${SITE}${p.url}</loc>${p.article ? `\n    <lastmod>${p.article.modified}</lastmod>` : ''}
   </url>`).join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

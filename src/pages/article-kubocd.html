@@ -4,7 +4,11 @@
       <article class="article">
 
         <header class="article-head">
-          <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Tous les articles</a>
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Articles</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">KuboCD et Helm</span>
+          </nav>
           <h1>KuboCD : déployer sur Kubernetes sans maîtriser Helm</h1>
           <p class="article-sub">Un chart Helm emballé dans une image OCI, déployé par une ressource de
             quelques lignes. Ce que fait vraiment KuboCD, ce qu'il délègue à Flux, et ce qu'il faut
@@ -12,6 +16,10 @@
           <div class="post-meta" style="--tint:#00966A;margin-top:22px">
             <span class="post-tag">GitOps</span>
             <time datetime="2026-08-02">2 août 2026</time>
+            <span aria-hidden="true">·</span>
+            <time datetime="2026-08-24">Mis à jour le 24 août 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
             <span aria-hidden="true">·</span>
             <span>8 min de lecture</span>
           </div>
@@ -22,6 +30,10 @@
         <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
 
         <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> KuboCD emballe un chart Helm dans un Package OCI et transforme une Release courte en ressources Flux. KuboCD convient quand une équipe plateforme doit exposer quelques paramètres stables à plusieurs équipes ; pour une application isolée, Helm et un fichier <code>values.yaml</code> restent plus directs.</p>
+          </div>
 
           <p>Presque toutes les applications prêtes pour Kubernetes sont livrées avec un chart Helm.
             Et presque tous ces charts sont conçus pour couvrir le plus grand nombre de cas possible :
@@ -178,6 +190,10 @@ Events:
             bonne réponse.</p>
 
           <div class="article-note">
+            <p><strong>KuboCD ou Helm seul&nbsp;?</strong> Choisissez KuboCD lorsque plusieurs équipes déploient les mêmes briques sur plusieurs environnements et qu'un contrat de paramètres commun est utile. Gardez Helm seul lorsqu'une équipe maîtrise déjà le chart d'une application unique.</p>
+          </div>
+
+          <div class="article-note">
             <p><strong>Sur le projet :</strong> KuboCD est publié en Apache-2.0 par l'organisation
               GitHub <a href="https://github.com/kubocd/kubocd" target="_blank" rel="noopener">kubocd</a>,
               où se trouve le dépôt de référence. Le groupe d'API de ses ressources,
@@ -187,9 +203,11 @@ Events:
               documentation, pas une communication du projet.</p>
           </div>
 
+          <p>Pour replacer ce choix dans l'ensemble de la plateforme, consultez l'<a href="/expertise/">expertise Data, Kubernetes, GitOps et MLOps de Kubotal</a>.</p>
+
           <div class="article-end">
             <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Tous les articles</a>
-            <a class="btn btn-accent btn-sm" href="/#contact">Parler de votre plateforme</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre plateforme</a>
           </div>
 
         </div>

@@ -1,24 +1,25 @@
 # Kubotal
 
-Kubotal is an IT company specialized in Data, AI, Kubernetes, GitOps, MLOps, and open-source cloud-native platforms.
+Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes.
 
-## Core Pages
+## Pages principales
 
-- Home: https://kubotal.io/
-- Expertise: https://kubotal.io/expertise/
-- Open source: https://kubotal.io/open-source/
-- Accompagnement: https://kubotal.io/accompagnement/
-- Contact: https://kubotal.io/contact/
+- Accueil : https://kubotal.io/
+- Expertise Data, Kubernetes, GitOps et MLOps : https://kubotal.io/expertise/
+- Écosystème open source présenté par Kubotal : https://kubotal.io/open-source/
+- Accompagnement des plateformes Data et IA : https://kubotal.io/accompagnement/
+- Contact : https://kubotal.io/contact/
+- Articles : https://kubotal.io/articles/
+- Analyse de KuboCD, Helm et Flux : https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/
 
-## Open Source Ecosystem
+## Sources officielles de l'écosystème présenté
 
-- OKDP: https://okdp.io/
-- KuboCD: https://www.kubocd.io/
-- KubAuth: https://github.com/kubauth/kubauth
+- OKDP : https://okdp.io/
+- KuboCD : https://www.kubocd.io/
+- KubAuth : https://github.com/kubauth/kubauth
 
-## Useful Facts
+## Faits utiles
 
-- Kubotal designs, deploys, and operates cloud-native data and AI platforms.
-- Kubotal works with CTOs, data platform teams, cloud architects, and engineering leaders.
-- Kubotal focuses on open infrastructure, Kubernetes, GitOps delivery, security, governance, and AI-ready data foundations.
-- Contact: contact@kubotal.io
+- Domaines : plateformes Data, Kubernetes, GitOps, MLOps, sécurité et gouvernance.
+- Modes d'accompagnement : cadrage, build, run et transfert.
+- Contact : contact@kubotal.io

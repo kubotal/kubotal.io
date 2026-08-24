@@ -12,6 +12,24 @@ let buildRoot;
 const read = (path) => readFileSync(join(buildRoot, path), 'utf8');
 const readProject = (path) => readFileSync(join(PROJECT_ROOT, path), 'utf8');
 
+const PUBLIC_PAGES = [
+  ['index.html', 'https://kubotal.io/'],
+  ['expertise/index.html', 'https://kubotal.io/expertise/'],
+  ['open-source/index.html', 'https://kubotal.io/open-source/'],
+  ['accompagnement/index.html', 'https://kubotal.io/accompagnement/'],
+  ['contact/index.html', 'https://kubotal.io/contact/'],
+  ['articles/index.html', 'https://kubotal.io/articles/'],
+  [
+    'articles/kubocd-deployer-sans-maitriser-helm/index.html',
+    'https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/',
+  ],
+];
+
+const graphFrom = (html) => {
+  const source = html.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)?.[1] || '{}';
+  return JSON.parse(source)['@graph'];
+};
+
 before(() => {
   buildRoot = mkdtempSync(join(tmpdir(), 'kubotal-build-'));
   cpSync(join(PROJECT_ROOT, 'build.mjs'), join(buildRoot, 'build.mjs'));
@@ -89,6 +107,65 @@ test('builds indexable commercial detail pages and keeps the landing UI', () => 
     assert.match(html, new RegExp(`<h1[^>]*>${heading}`));
     assert.doesNotMatch(html, /name="robots" content="noindex/);
   }
+});
+
+test('aligns indexable metadata, sitemap and the JSON-LD graph', () => {
+  const titles = new Set();
+  const descriptions = new Set();
+
+  for (const [path, canonical] of PUBLIC_PAGES) {
+    const html = read(path);
+    const graph = graphFrom(html);
+    const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+    const description = html.match(/<meta name="description" content="([^"]+)">/)?.[1];
+
+    assert.ok(title);
+    assert.ok(description);
+    assert.equal((html.match(/<h1\b/g) || []).length, 1);
+    assert.equal((html.match(/<link rel="canonical"/g) || []).length, 1);
+    assert.match(html, new RegExp(`<link rel="canonical" href="${canonical}">`));
+    assert.doesNotMatch(html, /name="robots" content="noindex/);
+    assert.ok(Array.isArray(graph));
+    assert.ok(graph.some((node) => node['@id'] === 'https://kubotal.io/#organization'));
+    assert.ok(graph.some((node) => node['@id'] === 'https://kubotal.io/#website'));
+    titles.add(title);
+    descriptions.add(description);
+  }
+
+  assert.equal(titles.size, PUBLIC_PAGES.length);
+  assert.equal(descriptions.size, PUBLIC_PAGES.length);
+
+  const sitemap = read('sitemap.xml');
+  assert.equal((sitemap.match(/<loc>/g) || []).length, PUBLIC_PAGES.length);
+  for (const [, canonical] of PUBLIC_PAGES) {
+    assert.match(sitemap, new RegExp(`<loc>${canonical}<\\/loc>`));
+  }
+  assert.doesNotMatch(sitemap, /articles\/page\/2|okdp-distribution-data-kubernetes/);
+});
+
+test('keeps BlogPosting authorship and dates consistent with visible article metadata', () => {
+  const html = read('articles/kubocd-deployer-sans-maitriser-helm/index.html');
+  const article = graphFrom(html).find((node) => node['@type'] === 'BlogPosting');
+
+  assert.deepEqual(article.author, {
+    '@type': 'Organization',
+    name: 'Kubotal',
+    url: 'https://kubotal.io/',
+  });
+  assert.match(html, new RegExp(`<time datetime="${article.datePublished}"`));
+  assert.match(html, new RegExp(`<time datetime="${article.dateModified}"`));
+  assert.match(html, /Par l'équipe Kubotal/);
+});
+
+test('exposes only public canonical pages to search and AI crawlers', () => {
+  const robots = readProject('robots.txt');
+  const llms = readProject('llms.txt');
+
+  assert.match(robots, /User-agent: OAI-SearchBot[\s\S]*Allow: \//);
+  assert.match(robots, /User-agent: GPTBot[\s\S]*Allow: \//);
+  assert.match(robots, /Sitemap: https:\/\/kubotal\.io\/sitemap\.xml/);
+  for (const [, canonical] of PUBLIC_PAGES) assert.match(llms, new RegExp(canonical));
+  assert.doesNotMatch(llms, /articles\/page\/2|okdp-distribution-data-kubernetes/);
 });
 
 test('uses one accessible ecosystem illustration and omits unused ScrollTrigger', () => {

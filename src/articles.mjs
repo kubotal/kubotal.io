@@ -15,6 +15,7 @@ export const ARTICLES = [
     tag: 'GitOps',
     tint: '#00966A',
     date: '2026-08-02',
+    modified: '2026-08-24',
     minutes: 8,
     resume:
       'Un chart Helm emballé dans une image OCI, déployé par une ressource de quelques lignes. ' +
