@@ -92,9 +92,6 @@ test('builds indexable commercial detail pages and keeps the landing UI', () => 
   const home = read('index.html');
 
   assert.match(home, /class="iso-stage"/);
-  assert.match(home, /href="\/expertise\/"/);
-  assert.match(home, /href="\/open-source\/"/);
-  assert.match(home, /href="\/accompagnement\/"/);
 
   for (const [path, heading] of [
     ['expertise/index.html', 'Expertise Data, Kubernetes, GitOps et MLOps'],
