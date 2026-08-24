@@ -7,7 +7,7 @@
  *
  *   node build.mjs
  */
-import {readFileSync, writeFileSync, mkdirSync} from 'node:fs';
+import {readFileSync, writeFileSync, mkdirSync, rmSync} from 'node:fs';
 import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {ARTICLES, PAR_PAGE, dateFr} from './src/articles.mjs';
@@ -25,7 +25,8 @@ const SITE = 'https://kubotal.io';
 const echappe = (t) =>
   String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-const NB_PAGES_LISTE = Math.max(1, Math.ceil(ARTICLES.length / PAR_PAGE));
+const PUBLISHED_ARTICLES = ARTICLES.filter((article) => article.corps);
+const NB_PAGES_LISTE = Math.max(1, Math.ceil(PUBLISHED_ARTICLES.length / PAR_PAGE));
 
 /* Une ligne de la liste. Le résumé est tronqué à deux lignes en CSS : la hauteur
    d'une ligne ne dépend donc pas de la longueur du texte, et cent articles
@@ -77,7 +78,7 @@ const pagination = (num, prefixe) => {
    sans JavaScript il ne ferait rien, autant ne pas l'afficher du tout. */
 const pageListe = (num, prefixe) => {
   const debut = (num - 1) * PAR_PAGE;
-  const lot = ARTICLES.slice(debut, debut + PAR_PAGE);
+  const lot = PUBLISHED_ARTICLES.slice(debut, debut + PAR_PAGE);
   return `  <section class="section" id="articles">
     <div class="wrap">
       <div class="section-head">
@@ -88,7 +89,7 @@ const pageListe = (num, prefixe) => {
       </div>
 
       <div class="posts-tete">
-        <p class="posts-compte" id="posts-compte">${ARTICLES.length} articles<span class="posts-page">
+        <p class="posts-compte" id="posts-compte">${PUBLISHED_ARTICLES.length} article${PUBLISHED_ARTICLES.length > 1 ? 's' : ''}<span class="posts-page">
           · page ${num} sur ${NB_PAGES_LISTE}</span></p>
       </div>
 
@@ -101,41 +102,11 @@ ${pagination(num, prefixe)}
   </section>
 
   <script type="application/json" id="articles-data">${JSON.stringify(
-    ARTICLES.map((a) => ({
+    PUBLISHED_ARTICLES.map((a) => ({
       s: a.slug, t: a.titre, r: a.resume, g: a.tag, c: a.tint,
       d: a.date, f: dateFr(a.date), m: a.minutes,
     })))}</script>`;
 };
-
-/* Page d'un sujet prévu mais pas encore rédigé : mieux vaut une page honnête
-   qu'un lien mort dans la liste. Elle porte un noindex, pour ne pas peupler
-   l'index des moteurs de pages sans contenu. */
-const pageBrouillon = (a) => `  <section class="section" id="article">
-    <div class="wrap">
-      <article class="article">
-        <header class="article-head">
-          <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Tous les articles</a>
-          <h1>${echappe(a.titre)}</h1>
-          <p class="article-sub">${echappe(a.resume)}</p>
-          <div class="post-meta" style="--tint:${a.tint};margin-top:22px">
-            <span class="post-tag">${echappe(a.tag)}</span>
-            <span>${a.minutes} min de lecture</span>
-          </div>
-        </header>
-        <div class="article-body">
-          <div class="article-note">
-            <p><strong>Article en préparation.</strong> Le sujet est au programme, le texte n'est
-              pas encore écrit. Si le sujet vous concerne aujourd'hui, écrivez-nous : on répondra
-              plus vite que la publication.</p>
-          </div>
-          <div class="article-end">
-            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Tous les articles</a>
-            <a class="btn btn-accent btn-sm" href="/#contact">Parler de votre plateforme</a>
-          </div>
-        </div>
-      </article>
-    </div>
-  </section>`;
 
 /** Les entrées de PAGES correspondant aux listes paginées et aux articles. */
 const pagesArticles = () => {
@@ -151,19 +122,16 @@ const pagesArticles = () => {
     desc: 'Notes de terrain sur les plateformes data, Kubernetes, le GitOps et l’open source, par l’équipe Kubotal.',
   }));
 
-  const articles = ARTICLES.map((a) => ({
-    id: a.corps || `brouillon-${a.slug}`,
-    corpsHtml: a.corps ? null : pageBrouillon(a),
+  const articles = PUBLISHED_ARTICLES.map((a) => ({
+    id: a.corps,
+    corpsHtml: null,
     out: `articles/${a.slug}/index.html`,
     depth: 2,
     nav: 'articles',
     url: `/articles/${a.slug}/`,
     /* `flow` : la page se lit en défilant, son contenu ne doit pas être centré. */
     flow: true,
-    noindex: !a.corps,
-    article: a.corps
-      ? {published: a.date, section: a.tag, readingTime: `PT${a.minutes}M`}
-      : null,
+    article: {published: a.date, section: a.tag, readingTime: `PT${a.minutes}M`},
     title: `${a.titre} — Kubotal`,
     desc: a.resume,
   }));
@@ -325,6 +293,11 @@ ${entrees}
 </urlset>
 `;
 };
+
+rmSync(join(ROOT, 'articles', 'page'), {recursive: true, force: true});
+for (const article of ARTICLES.filter((entry) => !entry.corps)) {
+  rmSync(join(ROOT, 'articles', article.slug), {recursive: true, force: true});
+}
 
 let n = 0;
 for (const p of PAGES) {

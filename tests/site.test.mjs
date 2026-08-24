@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {after, before, test} from 'node:test';
-import {cpSync, mkdtempSync, readFileSync, rmSync} from 'node:fs';
+import {cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import {fileURLToPath} from 'node:url';
@@ -17,6 +17,15 @@ before(() => {
   cpSync(join(PROJECT_ROOT, 'build.mjs'), join(buildRoot, 'build.mjs'));
   cpSync(join(PROJECT_ROOT, 'src'), join(buildRoot, 'src'), {recursive: true});
   cpSync(join(PROJECT_ROOT, 'assets'), join(buildRoot, 'assets'), {recursive: true});
+
+  for (const path of [
+    'articles/page/2/index.html',
+    'articles/okdp-distribution-data-kubernetes/index.html',
+  ]) {
+    const output = join(buildRoot, path);
+    mkdirSync(join(output, '..'), {recursive: true});
+    writeFileSync(output, 'stale generated output', 'utf8');
+  }
 
   const result = spawnSync(process.execPath, ['build.mjs'], {
     cwd: buildRoot,
@@ -46,6 +55,19 @@ test('builds one landing page with local anchors and keeps articles separate', (
   assert.match(articles, /href="\/#expertise"/);
   assert.match(articles, /href="\/#contact"/);
   assert.match(articles, /<h1[^>]*>Notes de terrain\.<\/h1>/);
+});
+
+test('publishes only articles with a body and removes stale draft outputs', () => {
+  const index = read('articles/index.html');
+
+  assert.match(index, /kubocd-deployer-sans-maitriser-helm/);
+  assert.doesNotMatch(index, /okdp-distribution-data-kubernetes/);
+  assert.doesNotMatch(index, /11 articles|page 1 sur 2/);
+  assert.equal(existsSync(join(buildRoot, 'articles/page/2/index.html')), false);
+  assert.equal(
+    existsSync(join(buildRoot, 'articles/okdp-distribution-data-kubernetes/index.html')),
+    false,
+  );
 });
 
 test('redirects legacy commercial routes and removes them from the sitemap', () => {
