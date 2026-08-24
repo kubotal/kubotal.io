@@ -36,6 +36,8 @@ for (const file of [
   'assets/styles.css',
   'assets/app.js',
   'assets/favicon.svg',
+  'assets/fonts/dm-sans-latin.woff2',
+  'assets/fonts/space-grotesk-latin.woff2',
 ]) copyFile(file);
 
 for (const directory of [

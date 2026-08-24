@@ -180,15 +180,16 @@ test('exposes only public canonical pages to search and AI crawlers', () => {
   assert.doesNotMatch(llms, /articles\/page\/2|okdp-distribution-data-kubernetes/);
 });
 
-test('loads web fonts directly before the local stylesheet', () => {
+test('self-hosts and preloads the existing web fonts', () => {
   const home = read('index.html');
   const css = read('assets/styles.css');
-  const fontStylesheet = 'href="https://fonts.googleapis.com/css2?family=DM+Sans';
-  const localStylesheet = 'href="assets/styles.css"';
 
   assert.doesNotMatch(css, /@import[^;]+fonts\.googleapis\.com/);
-  assert.equal(home.includes(fontStylesheet), true);
-  assert.ok(home.indexOf(fontStylesheet) < home.indexOf(localStylesheet));
+  assert.doesNotMatch(home, /fonts\.(googleapis|gstatic)\.com/);
+  assert.match(css, /url\('\/assets\/fonts\/dm-sans-latin\.woff2'\)/);
+  assert.match(css, /url\('\/assets\/fonts\/space-grotesk-latin\.woff2'\)/);
+  assert.match(home, /rel="preload" href="\/assets\/fonts\/dm-sans-latin\.woff2" as="font" type="font\/woff2" crossorigin/);
+  assert.match(home, /rel="preload" href="\/assets\/fonts\/space-grotesk-latin\.woff2" as="font" type="font\/woff2" crossorigin/);
 });
 
 test('packages only runtime files in the GitHub Pages artifact', () => {
@@ -209,6 +210,8 @@ test('packages only runtime files in the GitHub Pages artifact', () => {
     'assets/styles.css',
     'assets/app.js',
     'assets/favicon.svg',
+    'assets/fonts/dm-sans-latin.woff2',
+    'assets/fonts/space-grotesk-latin.woff2',
     'robots.txt',
     'sitemap.xml',
     'llms.txt',
