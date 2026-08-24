@@ -390,6 +390,7 @@ main[data-flow]{justify-content:flex-start}
 .article-body a{color:var(--primary-deep);text-decoration:underline;text-underline-offset:3px;
   text-decoration-thickness:1px}
 .article-body a:hover{text-decoration-thickness:2px}
+.article-body a.btn-accent{color:#fff;text-decoration:none}
 .article-table-wrap{overflow-x:auto}
 .article-table{width:100%;border-collapse:collapse;min-width:620px}
 .article-table th,.article-table td{padding:14px 16px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
