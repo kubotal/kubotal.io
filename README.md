@@ -1,8 +1,8 @@
 # kubotal.io — v3
 
 Site statique de Kubotal, construit autour d'une **landing page unique** et d'un espace
-Articles multi-pages. La navigation commerciale se fait par ancres dans le même document,
-sans rechargement de page.
+Articles multi-pages. Sur l'accueil, la navigation commerciale se fait par ancres sans
+rechargement. Chaque section mène aussi vers une page détaillée indexable.
 
 Le site n'a aucune dépendance à installer. Un build Node assemble les fragments partagés et
 génère les fichiers HTML déployés.
@@ -13,8 +13,8 @@ npx serve .
 
 ## Architecture des routes
 
-Les contenus commerciaux vivent sur la même landing. Articles conserve de vraies routes
-pour le partage, la lecture et l'indexation.
+La landing conserve le parcours visuel complet. Les routes commerciales détaillées portent
+les réponses longues, les métadonnées propres et les liens internes.
 
 | Route | Contenu |
 |---|---|
@@ -23,6 +23,10 @@ pour le partage, la lecture et l'indexation.
 | `/#open-source` | OKDP, KuboCD, KubAuth |
 | `/#accompagnement` | Cadrage, Build, Run, Transfert |
 | `/#contact` | Prise de contact |
+| `/expertise/` | Expertise Data, Kubernetes, GitOps et MLOps |
+| `/open-source/` | Écosystème OKDP, KuboCD et KubAuth |
+| `/accompagnement/` | Détail du cadrage, du build, du run et du transfert |
+| `/contact/` | Cadrage du premier échange |
 | `/articles/` | Catalogue d'articles |
 | `/articles/<slug>/` | Article individuel |
 
@@ -35,8 +39,8 @@ landing, les pages Articles et les éléments partagés :
 
 ```
 src/parts/   sprite, navigation, scripts — éléments communs
-src/pages/   sections de la landing et corps d'articles
-build.mjs    assemble la landing, les articles et les redirections
+src/pages/   sections de la landing, pages détaillées et corps d'articles
+build.mjs    assemble la landing, les pages commerciales et les articles
 tests/       contrats du build, des routes et de l'accessibilité
 ```
 
@@ -51,8 +55,15 @@ refuse le déploiement si les fichiers générés ne sont pas synchronisés.
 Édite `src/`.
 
 Chaque page reçoit son propre `<title>`, sa `meta description`, son `canonical`,
-ses balises Open Graph et son JSON-LD `WebPage`. La nav marque la page courante
+ses balises Open Graph et son graphe JSON-LD. La nav marque la page courante
 avec `aria-current="page"`, stylé par `.nav-links a[aria-current="page"]`.
+
+### Invariants SEO
+
+- Une entrée d'article sans `corps` reste un backlog interne et n'est jamais générée ni liée.
+- Toute page publique possède un H1, une description, une canonique auto-référente et un graphe JSON-LD cohérent.
+- Le sitemap et `llms.txt` sont dérivés ou alignés sur les seules URL publiques.
+- Le contenu principal est rendu dans le HTML initial ; JavaScript améliore l'expérience mais ne porte pas le texte indexable.
 
 ## Largeur utile et échelle
 
