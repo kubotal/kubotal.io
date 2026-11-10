@@ -43,6 +43,7 @@ for (const file of [
 for (const directory of [
   'expertise',
   'open-source',
+  'okdp',
   'accompagnement',
   'contact',
   'articles',

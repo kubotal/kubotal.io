@@ -1,0 +1,138 @@
+  <!-- ============== PILIER : OKDP ============== -->
+  <section class="section" id="detail">
+    <div class="wrap">
+      <article class="article">
+        <header class="article-head">
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/open-source/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Open source</a>
+            <span aria-hidden="true">/</span><span aria-current="page">OKDP</span>
+          </nav>
+          <h1>OKDP : la plateforme Data open source sur Kubernetes</h1>
+          <p class="article-sub">Ce qu'est l'Open Kubernetes Data Platform, comment elle est construite, comment l'essayer, et ce que Kubotal y apporte en tant que contributeur du projet.</p>
+          <div class="post-meta" style="--tint:#5B3DF5;margin-top:22px">
+            <span class="post-tag">OKDP</span>
+            <time datetime="2026-11-10">Mis à jour le 10 novembre 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
+          </div>
+        </header>
+
+        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
+
+        <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> OKDP (Open Kubernetes Data Platform) est une plateforme de données 100&nbsp;% open source, sous licence Apache&nbsp;2.0, qui s'exécute sur Kubernetes. Elle assemble des moteurs reconnus (Spark, Trino, Airflow, Superset, JupyterHub) et un Control Plane qui les instancie par projet. Kubotal contribue au code d'OKDP et accompagne les équipes qui veulent l'évaluer, le déployer et l'opérer.</p>
+          </div>
+
+          <h2>Qu'est-ce qu'OKDP&nbsp;?</h2>
+          <p>OKDP est une plateforme de services de gestion de données composée de logiciels open source conteneurisés, exécutés sur une infrastructure Kubernetes. Elle couvre le cycle de vie de la donnée&nbsp;: collecte, stockage, traitement, analyse et exposition. Sa conception est modulaire&nbsp;: une équipe peut déployer l'ensemble ou seulement les composants dont elle a besoin.</p>
+          <p>Le projet a été lancé en 2024. Il a été initié par la DGFiP, rejoint par Orange et d'autres organisations, au sein de l'association TOSIT (The Open Source I Trust). Le site officiel est <a href="https://okdp.io/" target="_blank" rel="noopener">okdp.io</a> et le code est publié dans l'organisation <a href="https://github.com/OKDP" target="_blank" rel="noopener">OKDP sur GitHub</a>.</p>
+
+          <h2>Comment OKDP est-il architecturé&nbsp;?</h2>
+          <p>L'architecture repose sur deux couches. Les distinguer évite l'erreur la plus fréquente à l'évaluation&nbsp;: croire qu'il faut tout adopter d'un bloc.</p>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Couche</th><th>Rôle</th><th>Ce qu'elle contient</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Modules Data &amp; IA</th>
+                  <td>Un catalogue de moteurs open source, utilisables seuls ou combinés, sans dépendre du Control Plane.</td>
+                  <td>Spark, Trino, Hive Metastore, Airflow, JupyterHub, Superset, Spark History Server.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Control Plane</th>
+                  <td>La couche d'automatisation&nbsp;: portail, API, isolation par projet, quotas, authentification OIDC, secrets, observabilité.</td>
+                  <td>Un serveur d'API, une console web et un catalogue de services instanciés projet par projet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Dans la pratique, la plateforme pose d'abord des fondations partagées&nbsp;: Keycloak pour l'identité, CloudNativePG pour PostgreSQL, External Secrets pour les secrets, le Spark Operator pour les traitements, cert-manager et ingress-nginx pour le TLS et le routage. Les services Data ne sont pas installés une fois pour tous&nbsp;: le Control Plane les crée pour chaque projet, avec ses propres ressources et ses propres accès.</p>
+          <p>Ce découpage a une conséquence directe sur le dimensionnement. Le coût fixe est celui des fondations et du Control Plane&nbsp;; le coût variable suit le nombre de projets et les services que chacun active.</p>
+
+          <h2>Comment OKDP est-il déployé&nbsp;?</h2>
+          <p>Le déploiement de référence est GitOps. Flux applique l'état décrit dans Git, et KuboCD emballe chaque composant dans un package OCI exposé par une ressource <code>Release</code> courte. Un cluster OKDP se lit donc comme une liste de releases, chacune avec sa version et ses paramètres, et non comme un empilement de fichiers <code>values.yaml</code>.</p>
+          <p>KuboCD est le projet de livraison continue porté par Kubotal. Ses ressources Kubernetes appartiennent au groupe d'API <code>kubocd.kubotal.io</code>, visible dans la documentation du sandbox OKDP. Pour comprendre ce mécanisme avant d'ouvrir le dépôt, lisez <a href="/articles/kubocd-deployer-sans-maitriser-helm/">notre analyse de KuboCD, Helm et Flux</a>.</p>
+          <p>Les composants restent aussi installables un par un avec Helm, pour les équipes qui ne veulent qu'une brique. Le dépôt <a href="https://github.com/OKDP/helm-handbook" target="_blank" rel="noopener">helm-handbook</a> documente cette voie.</p>
+
+          <h2>Comment essayer OKDP sur un poste&nbsp;?</h2>
+          <p>Le dépôt <a href="https://github.com/OKDP/okdp-sandbox" target="_blank" rel="noopener">okdp-sandbox</a> déploie la plateforme sur un cluster Kubernetes local créé avec Kind. C'est le chemin le plus court pour juger le projet sur pièces.</p>
+          <ul>
+            <li><strong>Machine&nbsp;:</strong> 16&nbsp;Go de RAM et 4&nbsp;CPU au minimum, dont au moins 8&nbsp;Go et 2&nbsp;CPU alloués à Docker ou Podman.</li>
+            <li><strong>Outils&nbsp;:</strong> Docker ou un runtime compatible, Kind, kubectl et la CLI Flux.</li>
+            <li><strong>Résultat&nbsp;:</strong> les fondations et le Control Plane. Les services Data sont ensuite créés par projet depuis le Control Plane.</li>
+          </ul>
+<pre><code>git clone https://github.com/OKDP/okdp-sandbox.git
+cd okdp-sandbox
+# puis suivre le « Quick start » du README : cluster Kind, Flux, releases KuboCD</code></pre>
+          <p>Le sandbox se lit en trois niveaux&nbsp;: la plateforme, un projet de démonstration complet, puis des exemples de traitements qui alimentent un lakehouse en couches. Chaque niveau est optionnel et s'appuie sur le précédent. Suivez le README officiel pour les commandes exactes&nbsp;: elles évoluent avec les versions.</p>
+
+          <h2>Quand choisir OKDP, et quand s'en passer&nbsp;?</h2>
+          <p>OKDP convient quand trois conditions sont réunies&nbsp;: l'organisation exploite déjà Kubernetes ou a décidé de le faire, elle veut garder la maîtrise de son infrastructure et de ses données, et plusieurs équipes doivent partager une même plateforme avec une isolation par projet.</p>
+          <ul>
+            <li><strong>Souveraineté&nbsp;:</strong> le cluster reste le vôtre, sur site ou chez le fournisseur de votre choix, et aucun composant n'est sous licence propriétaire.</li>
+            <li><strong>Réversibilité&nbsp;:</strong> les moteurs sont des projets open source standards. Les traitements Spark, les requêtes Trino et les DAG Airflow ne dépendent pas d'OKDP pour s'exécuter ailleurs.</li>
+            <li><strong>Coût&nbsp;:</strong> il n'y a pas de licence. Le budget se déplace vers l'infrastructure et vers les compétences d'exploitation.</li>
+          </ul>
+          <p>OKDP n'est pas le bon choix dans deux cas. Une équipe sans compétence Kubernetes et sans intention d'en acquérir paiera l'exploitation plus cher qu'un service managé. Et un besoin centré sur l'ingestion temps réel ou le service de modèles de langage devra composer avec la feuille de route&nbsp;: ces domaines y figurent comme des évolutions à venir, à vérifier sur la <a href="https://okdp.io/" target="_blank" rel="noopener">roadmap officielle</a>.</p>
+
+          <h2>Quel est le rôle de Kubotal dans OKDP&nbsp;?</h2>
+          <p>Kubotal contribue au code d'OKDP. Les chiffres ci-dessous viennent des pages publiques de contributeurs GitHub, relevées le 10&nbsp;novembre 2026, en comptant les comptes dont le profil indique Kubotal.</p>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Dépôt OKDP</th><th>Ce qu'il porte</th><th>Place des contributeurs Kubotal</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row"><a href="https://github.com/OKDP/okdp-sandbox/graphs/contributors" target="_blank" rel="noopener">okdp-sandbox</a></th>
+                  <td>Le déploiement de référence sur un cluster local.</td>
+                  <td>1<sup>er</sup> contributeur en nombre de commits.</td>
+                </tr>
+                <tr>
+                  <th scope="row"><a href="https://github.com/OKDP/okdp-control-plane-server/graphs/contributors" target="_blank" rel="noopener">okdp-control-plane-server</a></th>
+                  <td>L'API du Control Plane.</td>
+                  <td>1<sup>er</sup> et 2<sup>e</sup> contributeurs.</td>
+                </tr>
+                <tr>
+                  <th scope="row"><a href="https://github.com/OKDP/platform-packages/graphs/contributors" target="_blank" rel="noopener">platform-packages</a></th>
+                  <td>Les packages KuboCD des services et du Control Plane.</td>
+                  <td>2<sup>e</sup> contributeur.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>S'y ajoute KuboCD, le moteur de déploiement utilisé par le sandbox. Cette position nous donne une connaissance du projet que la documentation seule ne transmet pas&nbsp;: les choix d'architecture, leurs raisons, et les points qui demandent de l'attention en production.</p>
+          <p>OKDP reste un projet communautaire, hébergé par TOSIT et ouvert à tous. Kubotal n'en est ni le propriétaire ni l'éditeur.</p>
+
+          <h2>Comment Kubotal accompagne un projet OKDP&nbsp;?</h2>
+          <ul>
+            <li><strong>Cadrage&nbsp;:</strong> vérifier qu'OKDP répond au besoin, choisir les modules, dimensionner le cluster et chiffrer l'exploitation.</li>
+            <li><strong>Build&nbsp;:</strong> déployer la plateforme en GitOps, la raccorder à l'annuaire, au stockage objet et à l'observabilité existants.</li>
+            <li><strong>Run&nbsp;:</strong> opérer les montées de version, la sécurité et la capacité.</li>
+            <li><strong>Transfert&nbsp;:</strong> former l'équipe interne pour qu'elle exploite la plateforme sans nous.</li>
+          </ul>
+          <p>Le détail de ces modes est décrit sur la page <a href="/accompagnement/">Accompagnement</a>, et nos domaines d'intervention sur la page <a href="/expertise/">Expertise</a>.</p>
+
+          <h2>Questions fréquentes sur OKDP</h2>
+<!--FAQ-->
+
+          <h2>Sources</h2>
+          <ul>
+            <li><a href="https://okdp.io/" target="_blank" rel="noopener">okdp.io</a>, site officiel du projet.</li>
+            <li><a href="https://github.com/OKDP/OKDP" target="_blank" rel="noopener">OKDP/OKDP</a>, inventaire des composants et gouvernance.</li>
+            <li><a href="https://github.com/OKDP/okdp-sandbox" target="_blank" rel="noopener">OKDP/okdp-sandbox</a>, déploiement de référence et prérequis.</li>
+            <li><a href="https://www.kubocd.io/" target="_blank" rel="noopener">kubocd.io</a>, documentation de KuboCD.</li>
+          </ul>
+
+          <div class="article-end">
+            <a class="article-back" href="/open-source/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Voir l'écosystème open source</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre projet OKDP</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>

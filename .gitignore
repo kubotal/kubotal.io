@@ -1,6 +1,10 @@
 .DS_Store
-.claude/
 node_modules/
-/docs/superpowers/plans/2026-08-24-seo-geo-foundation.md
-/docs/superpowers/specs/2026-08-24-seo-geo-foundation-design.md
 /.pages-artifact/
+
+# Fichiers de travail Claude et outils associés
+.claude/
+.superpowers/
+
+# Documentation interne : non publiée
+/docs/

@@ -16,6 +16,7 @@ const PUBLIC_PAGES = [
   ['index.html', 'https://kubotal.io/'],
   ['expertise/index.html', 'https://kubotal.io/expertise/'],
   ['open-source/index.html', 'https://kubotal.io/open-source/'],
+  ['okdp/index.html', 'https://kubotal.io/okdp/'],
   ['accompagnement/index.html', 'https://kubotal.io/accompagnement/'],
   ['contact/index.html', 'https://kubotal.io/contact/'],
   ['articles/index.html', 'https://kubotal.io/articles/'],
@@ -203,6 +204,7 @@ test('packages only runtime files in the GitHub Pages artifact', () => {
     'index.html',
     'expertise/index.html',
     'open-source/index.html',
+    'okdp/index.html',
     'accompagnement/index.html',
     'contact/index.html',
     'articles/index.html',
@@ -324,4 +326,39 @@ test('places Contact before Articles in every generated navigation', () => {
       />Expertise<[^]*>Open source<[^]*>Accompagnement<[^]*>Contact<[^]*>Articles</,
     );
   }
+});
+
+test('publishes an OKDP pillar page with sourced structured data and internal links', () => {
+  const html = read('okdp/index.html');
+  const graph = graphFrom(html);
+  const title = html.match(/<title>([^<]+)<\/title>/)[1];
+  const description = html.match(/<meta name="description" content="([^"]+)">/)[1];
+
+  assert.ok(title.length <= 60, `title ${title.length}`);
+  assert.ok(description.length <= 155, `description ${description.length}`);
+  assert.match(html, /<h1[^>]*>OKDP/);
+  assert.match(html, /Open Kubernetes Data Platform/);
+  assert.match(html, /href="https:\/\/okdp\.io\//);
+  assert.match(html, /href="\/contact\/"/);
+  assert.match(html, /href="\/articles\/kubocd-deployer-sans-maitriser-helm\/"/);
+
+  const software = graph.find((node) => node['@type'] === 'SoftwareApplication');
+  assert.equal(software.name, 'OKDP');
+  assert.ok(software.sameAs.includes('https://okdp.io/'));
+  assert.equal(software.license, 'https://www.apache.org/licenses/LICENSE-2.0');
+
+  const faq = graph.find((node) => node['@type'] === 'FAQPage');
+  assert.ok(faq.mainEntity.length >= 4);
+  const visible = html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/&nbsp;/g, ' ');
+  for (const item of faq.mainEntity) {
+    assert.ok(visible.includes(item.name), item.name);
+    assert.ok(visible.includes(item.acceptedAnswer.text), item.name);
+  }
+
+  const crumbs = graph.find((node) => node['@type'] === 'BreadcrumbList');
+  assert.equal(crumbs.itemListElement.length, 3);
+  assert.match(read('sitemap.xml'), /<loc>https:\/\/kubotal\.io\/okdp\/<\/loc>\s*<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/);
+
+  assert.match(read('index.html'), /href="\/okdp\/"/);
+  assert.match(read('open-source/index.html'), /href="\/okdp\/"/);
 });

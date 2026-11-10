@@ -149,6 +149,38 @@ const pagesArticles = () => {
   return [...listes, ...articles];
 };
 
+/* La FAQ OKDP est une donnée unique : le HTML visible et le JSON-LD FAQPage en sont
+   tous deux dérivés, ils ne peuvent donc pas diverger. Texte brut uniquement. */
+const OKDP_FAQ = [
+  {
+    q: 'OKDP est-il gratuit ?',
+    a: 'Oui. OKDP est distribué sous licence Apache 2.0, sans coût de licence. Les coûts réels sont ceux de l’infrastructure Kubernetes et de l’exploitation.',
+  },
+  {
+    q: 'Que signifie OKDP ?',
+    a: 'OKDP signifie Open Kubernetes Data Platform : une plateforme de données open source conçue pour s’exécuter sur Kubernetes.',
+  },
+  {
+    q: 'Qui développe OKDP ?',
+    a: 'OKDP est un projet communautaire hébergé par l’association TOSIT, initié par la DGFiP et rejoint par Orange et d’autres organisations. Kubotal fait partie des contributeurs du code.',
+  },
+  {
+    q: 'Quels composants OKDP propose-t-il ?',
+    a: 'OKDP assemble notamment Apache Spark, Trino, Hive Metastore, Apache Airflow, JupyterHub et Apache Superset, complétés par un Control Plane qui les instancie par projet.',
+  },
+  {
+    q: 'Faut-il un cluster Kubernetes pour utiliser OKDP ?',
+    a: 'Oui. OKDP s’installe sur un cluster Kubernetes que vous gérez. Pour un essai, le sandbox officiel crée un cluster local avec Kind sur une machine de 16 Go de RAM.',
+  },
+  {
+    q: 'Peut-on installer un seul composant d’OKDP ?',
+    a: 'Oui. Les modules sont utilisables séparément avec Helm, sans le Control Plane. Le Control Plane devient utile quand plusieurs équipes partagent la plateforme.',
+  },
+];
+
+const faqHtml = (faq) => faq.map((item) => `          <h3>${echappe(item.q)}</h3>
+          <p>${echappe(item.a)}</p>`).join('\n');
+
 const LANDING_SECTIONS = ['home', 'expertise', 'open-source', 'accompagnement', 'contact'];
 const landing = () => LANDING_SECTIONS.map((id) => page(id)).join('\n');
 
@@ -195,6 +227,32 @@ const PAGES = [
     ],
     title: 'Open source : OKDP, KuboCD et KubAuth — Kubotal',
     desc: 'Kubotal présente OKDP, KuboCD et KubAuth pour les plateformes Data, la livraison GitOps et les accès Kubernetes.',
+  },
+  {
+    id: 'okdp',
+    corpsHtml: page('okdp-detail').replace('<!--FAQ-->', faqHtml(OKDP_FAQ)),
+    out: 'okdp/index.html',
+    depth: 1,
+    nav: 'open-source',
+    url: '/okdp/',
+    flow: true,
+    lastmod: '2026-11-10',
+    faq: OKDP_FAQ,
+    software: {
+      name: 'OKDP',
+      alternateName: 'Open Kubernetes Data Platform',
+      description: 'Plateforme de données open source et cloud-native pour Kubernetes.',
+      url: 'https://okdp.io/',
+      sameAs: ['https://okdp.io/', 'https://github.com/OKDP'],
+      license: 'https://www.apache.org/licenses/LICENSE-2.0',
+    },
+    breadcrumb: [
+      {name: 'Accueil', url: '/'},
+      {name: 'Open source', url: '/open-source/'},
+      {name: 'OKDP', url: '/okdp/'},
+    ],
+    title: 'OKDP : plateforme Data open source Kubernetes — Kubotal',
+    desc: 'OKDP (Open Kubernetes Data Platform) expliqué par un contributeur : architecture, composants, sandbox, cas d’usage et accompagnement Kubotal.',
   },
   {
     id: 'accompagnement',
@@ -286,6 +344,7 @@ const pageNode = (p) => ({
   about: {'@id': ORGANIZATION_ID},
   ...(p.article ? {mainEntity: {'@id': `${canonicalUrl(p)}#article`}} : {}),
   ...(p.service ? {mainEntity: {'@id': `${canonicalUrl(p)}#service`}} : {}),
+  ...(p.software ? {mainEntity: {'@id': `${canonicalUrl(p)}#software`}} : {}),
   ...(p.breadcrumb ? {breadcrumb: {'@id': `${canonicalUrl(p)}#breadcrumb`}} : {}),
   inLanguage: 'fr-FR',
 });
@@ -330,10 +389,34 @@ const breadcrumbNode = (p) => ({
   })),
 });
 
+/* Kubotal n'est pas l'éditeur d'OKDP : le nœud décrit le logiciel et renvoie vers
+   ses sources officielles, sans attribuer d'auteur ni d'éditeur. */
+const softwareNode = (p) => ({
+  '@type': 'SoftwareApplication',
+  '@id': `${canonicalUrl(p)}#software`,
+  ...p.software,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Kubernetes',
+  offers: {'@type': 'Offer', price: '0', priceCurrency: 'EUR'},
+});
+
+const faqNode = (p) => ({
+  '@type': 'FAQPage',
+  '@id': `${canonicalUrl(p)}#faq`,
+  mainEntity: p.faq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {'@type': 'Answer', text: item.a},
+  })),
+  inLanguage: 'fr-FR',
+});
+
 const jsonLd = (p) => {
   const graph = [organizationNode(), websiteNode(), pageNode(p)];
   if (p.article) graph.push(articleNode(p));
   if (p.service) graph.push(serviceNode(p));
+  if (p.software) graph.push(softwareNode(p));
+  if (p.faq) graph.push(faqNode(p));
   if (p.breadcrumb) graph.push(breadcrumbNode(p));
   return JSON.stringify({'@context': 'https://schema.org', '@graph': graph});
 };
@@ -379,7 +462,7 @@ ${rebase(SCRIPTS, p.depth)}
    liste à tenir à jour en parallèle — et donc pas de sitemap qui dérive. */
 const sitemap = () => {
   const entrees = PAGES.filter((p) => !p.noindex).map((p) => `  <url>
-    <loc>${SITE}${p.url}</loc>${p.article ? `\n    <lastmod>${p.article.modified}</lastmod>` : ''}
+    <loc>${SITE}${p.url}</loc>${p.lastmod ?? p.article?.modified ? `\n    <lastmod>${p.lastmod ?? p.article.modified}</lastmod>` : ''}
   </url>`).join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

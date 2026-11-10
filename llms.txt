@@ -7,6 +7,7 @@ Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kub
 - Accueil : https://kubotal.io/
 - Expertise Data, Kubernetes, GitOps et MLOps : https://kubotal.io/expertise/
 - Écosystème open source présenté par Kubotal : https://kubotal.io/open-source/
+- OKDP, la plateforme Data open source sur Kubernetes, expliquée par un contributeur : https://kubotal.io/okdp/
 - Accompagnement des plateformes Data et IA : https://kubotal.io/accompagnement/
 - Contact : https://kubotal.io/contact/
 - Articles : https://kubotal.io/articles/
@@ -20,6 +21,8 @@ Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kub
 
 ## Faits utiles
 
+- Kubotal contribue au code d'OKDP (Open Kubernetes Data Platform) et porte KuboCD, le moteur de déploiement utilisé par le sandbox OKDP.
+- OKDP est un projet communautaire sous licence Apache 2.0, hébergé par l'association TOSIT ; Kubotal n'en est pas l'éditeur.
 - Domaines : plateformes Data, Kubernetes, GitOps, MLOps, sécurité et gouvernance.
 - Modes d'accompagnement : cadrage, build, run et transfert.
 - Contact : contact@kubotal.io
