@@ -1,0 +1,137 @@
+  <!-- ============== ARTICLE : OKDP et KuboCD ============== -->
+  <section class="section" id="article">
+    <div class="wrap">
+      <article class="article">
+
+        <header class="article-head">
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Articles</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">OKDP et KuboCD</span>
+          </nav>
+          <h1>OKDP et KuboCD : packages, releases et connexions</h1>
+          <p class="article-sub">Comment une plateforme de plus d'une dizaine de composants se livre sous forme
+            d'artefacts OCI versionnés, et comment ses services se trouvent les uns les autres sans
+            adresse codée en dur.</p>
+          <div class="post-meta" style="--tint:#5B3DF5;margin-top:22px">
+            <span class="post-tag">OKDP</span>
+            <time datetime="2026-11-10">10 novembre 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
+            <span aria-hidden="true">·</span>
+            <span>5 min de lecture</span>
+          </div>
+        </header>
+
+        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
+
+        <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> chaque composant d'OKDP est un Package KuboCD&nbsp;: un artefact OCI versionné qui embarque un descripteur et un ou plusieurs charts Helm. Une Release dit quel package installer et avec quels paramètres. Un Context fournit la configuration commune. Une Connection relie deux services par un contrat typé, par exemple <code>s3</code> ou <code>trino</code>. Les packages et leur déploiement vivent dans deux dépôts distincts.</p>
+          </div>
+
+          <p>Cet article décrit le packaging d'OKDP à partir des dépôts <a href="https://github.com/OKDP/platform-packages" target="_blank" rel="noopener">platform-packages</a> et <a href="https://github.com/OKDP/okdp-sandbox" target="_blank" rel="noopener">okdp-sandbox</a>, lus le 10&nbsp;novembre 2026. KuboCD est le projet de livraison continue porté par Kubotal&nbsp;; si vous le découvrez, lisez d'abord <a href="/articles/kubocd-deployer-sans-maitriser-helm/">KuboCD&nbsp;: déployer sur Kubernetes sans maîtriser Helm</a>.</p>
+
+          <h2>Pourquoi ne pas livrer OKDP avec Helm seul&nbsp;?</h2>
+          <p>Une plateforme Data n'est pas un chart, c'est un ensemble de charts qui doivent s'accorder. Superset a besoin d'une base PostgreSQL et d'un client OIDC. Trino a besoin d'un métastore et d'un stockage objet. Spark a besoin du même stockage et du même métastore.</p>
+          <p>Avec Helm seul, cet accord se règle dans des fichiers <code>values.yaml</code>&nbsp;: la même adresse de base, le même domaine, le même émetteur de certificats recopiés d'un fichier à l'autre. Chaque recopie est une occasion d'erreur, et chaque nouvel environnement multiplie les fichiers.</p>
+          <p>KuboCD répond à ce problème par quatre objets.</p>
+
+          <h2>Quels sont les quatre objets à connaître&nbsp;?</h2>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Objet</th><th>Ce qu'il est</th><th>Qui le maintient dans OKDP</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Package</th>
+                  <td>Un artefact OCI versionné&nbsp;: un descripteur d'application et un ou plusieurs charts Helm.</td>
+                  <td>Le dépôt <code>platform-packages</code>.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Release</th>
+                  <td>L'instruction d'installer un package, avec sa version et ses paramètres.</td>
+                  <td>Le dépôt de déploiement, ou le Control Plane.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Context</th>
+                  <td>La configuration partagée, injectée dans tous les composants.</td>
+                  <td>Le dépôt de déploiement.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Connection</th>
+                  <td>Un point d'accès typé, identifié par un contrat.</td>
+                  <td>Publiée par un package, consommée par un autre.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Que contient le dépôt des packages&nbsp;?</h2>
+          <p>Le dépôt <code>platform-packages</code> ne fait qu'une chose&nbsp;: définir, construire et publier les packages. Il ne contient aucune release, aucun contexte, aucune amorce Flux.</p>
+<pre><code>packages/
+├── system/
+│   ├── okdp-control-plane-server/
+│   └── okdp-control-plane-ui/
+└── services/
+    ├── airflow/
+    ├── hive-metastore/
+    ├── jupyterhub/
+    ├── okdp-examples/
+    ├── polaris/
+    ├── spark-defaults/
+    ├── spark-history-server/
+    ├── spark-operator/
+    ├── spark-rbac/
+    ├── superset/
+    └── trino/</code></pre>
+          <p>Deux familles&nbsp;: les packages <em>système</em>, qui forment le Control Plane, et les packages de <em>services</em>. Les dépendances tierces et d'amorçage sont emballées dans un autre dépôt, <code>sandbox-dependencies</code>&nbsp;: OKDP distingue ce qu'il maintient de ce qu'il se contente d'intégrer.</p>
+          <p>Un package se construit avec une commande&nbsp;:</p>
+<pre><code>kubocd package ./packages/services/superset/superset.yaml \
+  --ociRepoPrefix quay.io/okdp/platform-packages</code></pre>
+          <p>Le résultat est poussé sous la forme <code>{préfixe}/{nom}:{tag}</code>. Changer le préfixe suffit à publier dans le registre interne d'une organisation, ce qui compte pour les environnements sans accès à Internet.</p>
+
+          <h2>Pourquoi séparer les packages de leur déploiement&nbsp;?</h2>
+          <p>Le dépôt <code>okdp-sandbox</code> est le miroir du précédent&nbsp;: il ne construit aucun package, il déploie ceux qui sont publiés. On y trouve l'amorce du contrôleur KuboCD, les contrats, les contextes et les releases.</p>
+          <p>Cette séparation correspond à deux métiers et à deux rythmes. Publier une nouvelle version de Superset est un travail de packaging, validé par une intégration continue qui construit tous les packages. Décider qu'un cluster passe à cette version est une décision d'exploitation, qui tient en une ligne modifiée dans une release.</p>
+          <p>Pour votre organisation, la conséquence est simple&nbsp;: vous n'avez pas à dupliquer le dépôt des packages. Vous écrivez votre propre dépôt de déploiement, avec vos contextes et vos releases, et vous consommez les packages publiés.</p>
+
+          <h2>À quoi servent les Connections&nbsp;?</h2>
+          <p>C'est la partie la moins visible et la plus utile. Une Connection est un point d'accès typé par un contrat. Les packages d'OKDP utilisent cinq contrats&nbsp;:</p>
+          <ul>
+            <li><code>s3</code>, pour le stockage objet&nbsp;;</li>
+            <li><code>database-server</code>, pour un serveur de bases de données&nbsp;;</li>
+            <li><code>hive</code>, pour le métastore&nbsp;;</li>
+            <li><code>iceberg-catalog</code>, pour un catalogue Iceberg&nbsp;;</li>
+            <li><code>trino</code>, pour le moteur SQL.</li>
+          </ul>
+          <p>Un package <em>publie</em> une connexion dans ses sorties et un autre la <em>consomme</em> par un paramètre de référence. Trino ne reçoit pas l'adresse du métastore&nbsp;: il reçoit une référence vers une connexion de type <code>hive</code>.</p>
+          <p>L'intérêt apparaît au premier remplacement. Le sandbox utilise SeaweedFS comme stockage objet, mais tout service compatible S3 convient. Passer à un autre stockage revient à fournir une autre connexion de contrat <code>s3</code>&nbsp;; les services qui la consomment ne changent pas. Le contrat joue le rôle d'une interface.</p>
+          <p>C'est pour cela que les contrats s'appliquent en premier lors d'une installation, avant les contextes et les releases&nbsp;: ils définissent le vocabulaire que tout le reste utilise.</p>
+
+          <h2>Qu'est-ce que cela change à l'exploitation&nbsp;?</h2>
+          <ul>
+            <li><strong>Une montée de version est un changement de tag.</strong> Les releases existantes se mettent à jour en place, sans suppression.</li>
+            <li><strong>L'état se lit d'une commande.</strong> <code>kubectl get releases -A</code> liste tous les composants avec leur phase.</li>
+            <li><strong>Les composants critiques sont protégés.</strong> Un webhook refuse la suppression d'une release protégée, par exemple cert-manager, tant que la protection n'est pas levée explicitement.</li>
+            <li><strong>Un changement de contexte se propage seul.</strong> Seuls les composants concernés sont réconciliés.</li>
+          </ul>
+          <p>La contrepartie est réelle. KuboCD est une couche de plus à comprendre, au-dessus de Flux et de Helm. Quand un déploiement échoue, le diagnostic traverse trois niveaux&nbsp;: la release, les ressources Flux qu'elle a produites, puis le chart. Une équipe qui exploite OKDP doit savoir lire les trois.</p>
+
+          <h2>Par où commencer&nbsp;?</h2>
+          <p>Lisez une release du sandbox, puis le package qu'elle référence&nbsp;: en dix minutes, le modèle devient concret. Ensuite, <a href="/articles/installer-okdp-sandbox-kind/">installez le sandbox en local</a> pour voir les releases passer à l'état prêt. L'article sur <a href="/articles/okdp-architecture-control-plane/">l'architecture et le Control Plane</a> montre enfin comment la console s'appuie sur ces mêmes objets.</p>
+
+          <div class="article-note">
+            <p><strong>Besoin d'un dépôt de déploiement pour votre organisation&nbsp;?</strong> Contextes par environnement, registre interne, intégration à votre annuaire&nbsp;: c'est le cœur de nos missions de <a href="/accompagnement/">build</a> sur OKDP.</p>
+          </div>
+
+          <div class="article-end">
+            <a class="article-back" href="/okdp/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Lire le guide d'OKDP</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre projet OKDP</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>

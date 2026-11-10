@@ -12,6 +12,12 @@ let buildRoot;
 const read = (path) => readFileSync(join(buildRoot, path), 'utf8');
 const readProject = (path) => readFileSync(join(PROJECT_ROOT, path), 'utf8');
 
+const OKDP_ARTICLES = [
+  'installer-okdp-sandbox-kind',
+  'okdp-architecture-control-plane',
+  'okdp-kubocd-packages-releases-connexions',
+];
+
 const PUBLIC_PAGES = [
   ['index.html', 'https://kubotal.io/'],
   ['expertise/index.html', 'https://kubotal.io/expertise/'],
@@ -24,6 +30,7 @@ const PUBLIC_PAGES = [
     'articles/kubocd-deployer-sans-maitriser-helm/index.html',
     'https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/',
   ],
+  ...OKDP_ARTICLES.map((slug) => [`articles/${slug}/index.html`, `https://kubotal.io/articles/${slug}/`]),
 ];
 
 const graphFrom = (html) => {
@@ -361,4 +368,30 @@ test('publishes an OKDP pillar page with sourced structured data and internal li
 
   assert.match(read('index.html'), /href="\/okdp\/"/);
   assert.match(read('open-source/index.html'), /href="\/okdp\/"/);
+});
+
+test('publishes OKDP articles linked both ways with the pillar page', () => {
+  const pillar = read('okdp/index.html');
+  const index = read('articles/index.html');
+
+  for (const slug of OKDP_ARTICLES) {
+    const html = read(`articles/${slug}/index.html`);
+    const article = graphFrom(html).find((node) => node['@type'] === 'BlogPosting');
+    const title = html.match(/<title>([^<]+)<\/title>/)[1];
+    const description = html.match(/<meta name="description" content="([^"]+)">/)[1];
+
+    assert.ok(title.length <= 60, `${slug} title ${title.length}`);
+    assert.ok(description.length <= 155, `${slug} description ${description.length}`);
+    assert.match(html, /href="\/okdp\/"/, slug);
+    assert.match(html, /href="\/contact\/"/, slug);
+    assert.match(html, /href="https:\/\/github\.com\/OKDP\//, slug);
+    assert.match(html, new RegExp(`<time datetime="${article.datePublished}"`), slug);
+    assert.match(html, /Par l'équipe Kubotal/, slug);
+    assert.match(pillar, new RegExp(`href="/articles/${slug}/"`), slug);
+    assert.match(index, new RegExp(`articles/${slug}/`), slug);
+
+    for (const other of OKDP_ARTICLES.filter((entry) => entry !== slug)) {
+      assert.match(html, new RegExp(`href="/articles/${other}/"`), `${slug} -> ${other}`);
+    }
+  }
 });

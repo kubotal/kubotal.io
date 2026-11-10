@@ -1,0 +1,129 @@
+  <!-- ============== ARTICLE : OKDP architecture ============== -->
+  <section class="section" id="article">
+    <div class="wrap">
+      <article class="article">
+
+        <header class="article-head">
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Articles</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Architecture d'OKDP</span>
+          </nav>
+          <h1>Architecture d'OKDP : le rôle du Control Plane</h1>
+          <p class="article-sub">Deux couches, des projets modélisés comme de simples espaces de noms, et
+            un serveur qui ne génère aucun manifeste lui-même. Ce que ces choix impliquent pour une équipe
+            plateforme.</p>
+          <div class="post-meta" style="--tint:#5B3DF5;margin-top:22px">
+            <span class="post-tag">OKDP</span>
+            <time datetime="2026-11-10">10 novembre 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
+            <span aria-hidden="true">·</span>
+            <span>6 min de lecture</span>
+          </div>
+        </header>
+
+        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
+
+        <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> OKDP sépare un catalogue de moteurs Data, utilisables seuls, et un Control Plane qui les instancie par projet. Le Control Plane est un serveur d'API et une console web. Il ne déploie rien directement&nbsp;: il lit un catalogue dans un <code>Context</code> KuboCD et crée des <code>Release</code> KuboCD. Un projet est un espace de noms Kubernetes, sans CRD ni opérateur supplémentaire.</p>
+          </div>
+
+          <p>La page d'accueil d'<a href="https://okdp.io/" target="_blank" rel="noopener">okdp.io</a> présente l'architecture en deux blocs. Cet article ouvre ces blocs à partir des dépôts publics du projet, lus le 10&nbsp;novembre 2026. Pour une vue d'ensemble, commencez par <a href="/okdp/">notre guide d'OKDP</a>.</p>
+
+          <h2>Quelles sont les deux couches d'OKDP&nbsp;?</h2>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Couche</th><th>Contenu</th><th>Dépendance</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Plateforme Data</th>
+                  <td>Spark et son opérateur, Hive Metastore, Trino, Superset, Airflow, JupyterHub, Polaris.</td>
+                  <td>Aucune envers le Control Plane&nbsp;: chaque composant se déploie seul.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Control Plane</th>
+                  <td>Un serveur d'API et une console web pour déployer, configurer et suivre les composants.</td>
+                  <td>Kubernetes et KuboCD.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>La première couche est un assemblage, pas une réécriture. Trino et Airflow sont déployés avec leurs charts d'origine. OKDP ajoute son propre travail là où l'intégration manquait&nbsp;: des images Spark, un filtre d'authentification OIDC pour les interfaces Spark, un proxy pour suivre les applications en cours depuis le Spark History Server, un chart pour Hive Metastore.</p>
+          <p>Conséquence pratique&nbsp;: vos traitements ne dépendent pas d'OKDP. Un job Spark ou un DAG Airflow écrit pour la plateforme reste un job Spark ou un DAG Airflow.</p>
+
+          <h2>Que fait exactement le Control Plane&nbsp;?</h2>
+          <p>La console web est une application exécutée dans le navigateur. Elle n'a ni identifiants de cluster ni logique côté serveur. Elle ne peut donc pas piloter Kubernetes seule.</p>
+          <p>Le serveur du Control Plane est son pendant&nbsp;: un service écrit en Go, déployé dans le cluster, qui traduit les actions de la console en opérations. Il crée les espaces de noms des projets, déploie et met à jour les services, sert le catalogue, et diffuse l'état des services, des pods et des métriques. Les identifiants et la logique métier restent côté serveur.</p>
+          <ul>
+            <li><strong>Interfaces&nbsp;:</strong> une API REST, et des événements envoyés par le serveur (SSE) pour le suivi en direct.</li>
+            <li><strong>Authentification&nbsp;:</strong> OIDC et TLS sont assurés par l'ingress de la plateforme, placé devant le serveur, et non par le serveur lui-même.</li>
+            <li><strong>Droits&nbsp;:</strong> le chart Helm lui attribue un compte de service limité à ce dont il a besoin, à savoir gérer des espaces de noms et lire ou écrire les ressources KuboCD.</li>
+          </ul>
+
+          <h2>Pourquoi le serveur ne génère-t-il aucun manifeste&nbsp;?</h2>
+          <p>C'est le choix d'architecture le plus structurant. Le serveur ne fabrique pas de YAML Kubernetes. Il fait deux choses&nbsp;:</p>
+          <ul>
+            <li>il <strong>lit le catalogue de services</strong> dans une ressource KuboCD <code>Context</code>&nbsp;;</li>
+            <li>il <strong>crée des ressources KuboCD <code>Release</code></strong>, une par service à déployer.</li>
+          </ul>
+          <p>KuboCD, déjà utilisé pour installer la plateforme, fait le reste&nbsp;: il résout la configuration, produit les ressources Flux et Flux applique les charts. Le serveur réutilise le moteur GitOps en place au lieu d'en dupliquer la logique.</p>
+          <p>Deux bénéfices en découlent. D'abord, ce que la console déploie et ce qu'un administrateur déploie avec <code>kubectl</code> passent par le même chemin et donnent le même résultat. Ensuite, tout ce que fait la console est visible dans le cluster sous forme de ressources lisibles&nbsp;:</p>
+<pre><code>kubectl get releases -A
+kubectl -n okdp-system get context platform -o yaml</code></pre>
+          <p>Une console qui masquerait ses actions derrière une base interne serait plus simple à écrire, et beaucoup plus difficile à auditer.</p>
+
+          <h2>Pourquoi un projet est-il un simple espace de noms&nbsp;?</h2>
+          <p>OKDP modélise un projet comme un espace de noms Kubernetes. Aucune CRD «&nbsp;Project&nbsp;», aucun opérateur dédié. Les services d'un projet sont des <code>Release</code> qui portent une étiquette de projet.</p>
+          <p>Ce choix a un coût et un bénéfice. Le coût&nbsp;: le modèle de projet est limité à ce qu'un espace de noms sait exprimer. Le bénéfice&nbsp;: tous les mécanismes Kubernetes existants s'appliquent sans adaptation. Quotas de ressources, politiques réseau, RBAC et outils d'observabilité fonctionnent déjà par espace de noms.</p>
+          <p>Un projet complet, tel que le sandbox le montre, empile cinq éléments dans cet ordre&nbsp;:</p>
+          <ul>
+            <li>l'espace de noms&nbsp;;</li>
+            <li>les secrets du projet&nbsp;;</li>
+            <li>un PostgreSQL dédié, avec une base par service qui en a besoin&nbsp;;</li>
+            <li>les connexions, qui décrivent où joindre les bases et le stockage objet&nbsp;;</li>
+            <li>les services Data eux-mêmes.</li>
+          </ul>
+          <p>Chaque projet a donc ses propres bases et ses propres instances de services. L'isolation ne repose pas sur des droits dans un service partagé, mais sur des instances séparées.</p>
+
+          <h2>D'où vient la configuration commune&nbsp;?</h2>
+          <p>Du <code>Context</code>. C'est une couche de configuration déclarative et partagée&nbsp;: suffixe d'ingress, classes de stockage, émetteur de certificats, catalogues, paramètres d'authentification. KuboCD injecte ces valeurs dans chaque composant au déploiement.</p>
+          <p>Quand un contexte change, seuls les composants concernés sont réconciliés. On peut superposer plusieurs contextes&nbsp;: un contexte d'organisation pour les valeurs par défaut, puis un contexte par environnement qui les complète ou les remplace.</p>
+          <p>Un détail mérite l'attention si vous installez le Control Plane sur votre propre cluster. Les releases créées par le serveur ne citent aucun contexte explicitement&nbsp;: elles prennent ceux que la ressource <code>Config</code> de KuboCD déclare par défaut. Si le contexte de la plateforme n'y figure pas, les packages sont rendus avec une configuration vide.</p>
+<pre><code>apiVersion: kubocd.kubotal.io/v1alpha1
+kind: Config
+spec:
+  defaultContexts:
+    - name: platform
+      namespace: okdp-system</code></pre>
+
+          <h2>Comment l'identité est-elle gérée&nbsp;?</h2>
+          <p>Tous les services s'authentifient en OIDC auprès d'un même fournisseur, dont les adresses sont lues dans le contexte. Le sandbox utilise Keycloak.</p>
+          <p>OKDP prend aussi en charge KubAuth, proposé comme composant optionnel. La différence est concrète&nbsp;: KubAuth stocke les utilisateurs, les groupes et les clients OIDC comme des ressources Kubernetes. C'est ce qui permet au Control Plane de les gérer depuis la console. Avec Keycloak seul, la rubrique Identité de la console est masquée&nbsp;: c'est un état normal, pas une panne.</p>
+          <p>Installer KubAuth ne bascule pas la plateforme. La bascule est une décision séparée, qui modifie le contexte et fait réconcilier tous les services sur le nouveau fournisseur. Elle se prépare.</p>
+
+          <h2>Que retenir pour une équipe plateforme&nbsp;?</h2>
+          <ul>
+            <li><strong>Vous pouvez adopter par étapes.</strong> Les moteurs d'abord, avec Helm&nbsp;; le Control Plane quand plusieurs équipes arrivent.</li>
+            <li><strong>Le cluster reste lisible.</strong> Projets, services et configuration sont des ressources Kubernetes ordinaires.</li>
+            <li><strong>KuboCD est une dépendance réelle.</strong> Le Control Plane ne fonctionne pas sans lui. Il faut le comprendre avant d'exploiter la plateforme&nbsp;: voir <a href="/articles/okdp-kubocd-packages-releases-connexions/">comment OKDP est packagé avec KuboCD</a>.</li>
+            <li><strong>Le coût suit le nombre de projets.</strong> Des instances par projet isolent bien, et consomment plus qu'un service mutualisé. Le dimensionnement se fait projet par projet.</li>
+          </ul>
+          <p>Pour voir ces mécanismes tourner, le plus rapide reste d'<a href="/articles/installer-okdp-sandbox-kind/">installer le sandbox en local</a>.</p>
+
+          <div class="article-note">
+            <p><strong>Sources&nbsp;:</strong> <a href="https://github.com/OKDP/OKDP" target="_blank" rel="noopener">OKDP/OKDP</a>, <a href="https://github.com/OKDP/okdp-control-plane-server" target="_blank" rel="noopener">okdp-control-plane-server</a> et <a href="https://github.com/OKDP/okdp-sandbox" target="_blank" rel="noopener">okdp-sandbox</a>.</p>
+          </div>
+
+          <div class="article-end">
+            <a class="article-back" href="/okdp/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Lire le guide d'OKDP</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre projet OKDP</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>

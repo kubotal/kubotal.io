@@ -23,6 +23,18 @@
     <loc>https://kubotal.io/articles/</loc>
   </url>
   <url>
+    <loc>https://kubotal.io/articles/installer-okdp-sandbox-kind/</loc>
+    <lastmod>2026-11-10</lastmod>
+  </url>
+  <url>
+    <loc>https://kubotal.io/articles/okdp-architecture-control-plane/</loc>
+    <lastmod>2026-11-10</lastmod>
+  </url>
+  <url>
+    <loc>https://kubotal.io/articles/okdp-kubocd-packages-releases-connexions/</loc>
+    <lastmod>2026-11-10</lastmod>
+  </url>
+  <url>
     <loc>https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/</loc>
     <lastmod>2026-08-24</lastmod>
   </url>

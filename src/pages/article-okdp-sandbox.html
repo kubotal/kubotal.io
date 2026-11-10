@@ -1,0 +1,170 @@
+  <!-- ============== ARTICLE : OKDP sandbox ============== -->
+  <section class="section" id="article">
+    <div class="wrap">
+      <article class="article">
+
+        <header class="article-head">
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Articles</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Installer OKDP en local</span>
+          </nav>
+          <h1>Installer OKDP en local avec Kind, Flux et KuboCD</h1>
+          <p class="article-sub">Le sandbox officiel d'OKDP, étape par étape&nbsp;: ce que fait chaque
+            commande, dans quel ordre attendre, et les quatre points où l'installation cale le plus souvent.</p>
+          <div class="post-meta" style="--tint:#5B3DF5;margin-top:22px">
+            <span class="post-tag">OKDP</span>
+            <time datetime="2026-11-10">10 novembre 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
+            <span aria-hidden="true">·</span>
+            <span>7 min de lecture</span>
+          </div>
+        </header>
+
+        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
+
+        <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> le sandbox OKDP s'installe en cinq étapes sur un cluster Kind&nbsp;: créer le cluster, installer Flux, installer KuboCD, appliquer les contrats, les contextes et les releases, puis régler le DNS et le certificat. Il faut 16&nbsp;Go de RAM et 4&nbsp;CPU. On obtient les fondations de la plateforme et le Control Plane&nbsp;; les services Data se créent ensuite par projet.</p>
+          </div>
+
+          <p>Cet article suit le <a href="https://github.com/OKDP/okdp-sandbox" target="_blank" rel="noopener">README du dépôt okdp-sandbox</a> tel qu'il était le 10&nbsp;novembre 2026. Les commandes viennent de ce dépôt&nbsp;; les explications sont les nôtres. Si une commande diffère, le README fait foi&nbsp;: il évolue avec les versions. Pour situer le projet avant de commencer, lisez <a href="/okdp/">notre guide d'OKDP</a>.</p>
+
+          <h2>Que faut-il avant de commencer&nbsp;?</h2>
+          <ul>
+            <li><strong>Machine&nbsp;:</strong> 16&nbsp;Go de RAM et 4&nbsp;CPU au minimum.</li>
+            <li><strong>Conteneurs&nbsp;:</strong> Docker ou Podman, avec au moins 8&nbsp;Go de RAM et 2&nbsp;CPU alloués.</li>
+            <li><strong>Outils&nbsp;:</strong> Kind, kubectl et la CLI Flux.</li>
+            <li><strong>Réseau&nbsp;:</strong> un accès aux registres de conteneurs, directement ou par un proxy.</li>
+          </ul>
+          <p>La mémoire allouée au moteur de conteneurs est le premier point à vérifier. Sur un poste où Docker Desktop garde son réglage par défaut, le cluster démarre mais les pods restent en attente faute de ressources.</p>
+
+          <h2>Étape 1&nbsp;: comment créer le cluster Kind&nbsp;?</h2>
+          <p>Le cluster tient en un seul nœud. Sa configuration publie trois ports de la machine vers le cluster&nbsp;: 80 et 443 pour le trafic web, et un port UDP pour le serveur DNS local.</p>
+<pre><code>git clone https://github.com/OKDP/okdp-sandbox.git
+cd okdp-sandbox
+
+cat &gt; /tmp/okdp-sandbox-config.yaml &lt;&lt;EOF
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: okdp-sandbox
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 30080
+    hostPort: 80
+  - containerPort: 30443
+    hostPort: 443
+  - containerPort: 30053
+    hostPort: 30053
+    protocol: UDP
+EOF
+
+kind create cluster --config /tmp/okdp-sandbox-config.yaml</code></pre>
+          <p>Les ports 80 et 443 doivent être libres sur le poste. Un serveur web local ou un autre cluster Kind qui les occupe fait échouer la création.</p>
+
+          <h2>Étape 2&nbsp;: pourquoi installer Flux sans dépôt Git&nbsp;?</h2>
+          <p>Flux est le moteur GitOps&nbsp;: il réconcilie en continu l'état du cluster avec un état décrit. Dans le sandbox, il n'est relié à aucun dépôt Git. Les manifestes sont appliqués à la main avec <code>kubectl</code>, et Flux sert seulement à exécuter ce que KuboCD lui demande.</p>
+<pre><code>flux install
+
+kubectl -n flux-system wait --for=condition=Available deploy \
+  -l app.kubernetes.io/part-of=flux --timeout=300s</code></pre>
+          <p>Derrière un proxy d'entreprise, il faut transmettre les variables <code>HTTPS_PROXY</code>, <code>HTTP_PROXY</code> et <code>NO_PROXY</code> aux contrôleurs Flux avant de continuer. Le README donne la commande. Sans elle, Flux ne peut pas télécharger les packages et tout reste bloqué plus loin, sans erreur évidente.</p>
+
+          <h2>Étape 3&nbsp;: que fait KuboCD dans l'installation&nbsp;?</h2>
+          <p>KuboCD est la couche de livraison continue posée sur Flux. Il transforme une ressource courte, la <code>Release</code>, en ressources Flux complètes. C'est lui qui déploie tous les composants d'OKDP. Son fonctionnement est détaillé dans <a href="/articles/kubocd-deployer-sans-maitriser-helm/">notre analyse de KuboCD</a>.</p>
+<pre><code>kubectl apply -f clusters/sandbox/flux/kubocd.yaml
+
+kubectl -n flux-system wait --for=condition=Ready \
+  helmrelease/kubocd-controller --timeout=300s
+
+kubectl wait --for=condition=Established --timeout=300s \
+  crd/contexts.kubocd.kubotal.io \
+  crd/releases.kubocd.kubotal.io \
+  crd/configs.kubocd.kubotal.io \
+  crd/clustercontracts.kubocd.kubotal.io \
+  crd/connections.kubocd.kubotal.io
+
+kubectl -n kubocd wait --for=condition=Available \
+  deploy/kubocd-ctrl-controller --timeout=300s</code></pre>
+          <p>Les trois attentes ne sont pas décoratives. Appliquer les releases avant que les CRD soient enregistrées produit une erreur «&nbsp;no matches for kind&nbsp;»&nbsp;; les appliquer avant que le contrôleur tourne les laisse sans effet.</p>
+          <p>Le README installe ensuite <code>metrics-server</code>, avec un correctif&nbsp;: le délai par défaut des sondes, une seconde, est trop court pour un cluster Kind à un seul nœud. Sous charge, le pod redémarre en boucle. Appliquez le correctif tel qu'il est fourni.</p>
+
+          <h2>Étape 4&nbsp;: dans quel ordre déployer la plateforme&nbsp;?</h2>
+          <p>Trois familles de ressources s'appliquent dans un ordre précis. Leur logique est expliquée dans <a href="/articles/okdp-kubocd-packages-releases-connexions/">l'article sur les packages, releases et connexions d'OKDP</a>.</p>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Ordre</th><th>Ressource</th><th>Rôle</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Contrats (<code>ClusterContract</code>)</td>
+                  <td>Les types de connexion que les composants peuvent publier ou consommer.</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Contextes (<code>Context</code>)</td>
+                  <td>La configuration partagée&nbsp;: domaine d'ingress, classes de stockage, émetteur de certificats, paramètres OIDC.</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Releases (<code>Release</code>)</td>
+                  <td>Ce qui est installé, avec quelle version de package et quels paramètres.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+<pre><code>kubectl apply -f clusters/sandbox/contracts/
+kubectl apply --server-side -f clusters/sandbox/contexts/
+kubectl apply -f clusters/sandbox/releases/
+
+kubectl get releases -A --watch</code></pre>
+          <p>Le déploiement prend plusieurs minutes&nbsp;: les releases passent à l'état <code>READY</code> l'une après l'autre, selon leurs dépendances. Pour bloquer jusqu'à la fin au lieu de surveiller&nbsp;:</p>
+<pre><code>kubectl wait --for=jsonpath='{.status.phase}'=READY release --all \
+  -n kubocd-system --timeout=900s</code></pre>
+          <p>À ce stade, le cluster contient Keycloak, CloudNativePG et une instance PostgreSQL, External Secrets, le Spark Operator, cert-manager, ingress-nginx et le Control Plane d'OKDP.</p>
+
+          <h2>Étape 5&nbsp;: comment accéder aux services&nbsp;?</h2>
+          <p>Les services sont exposés sous le domaine <code>okdp.sandbox</code>. Deux réglages restent à faire sur le poste.</p>
+          <ul>
+            <li><strong>DNS&nbsp;:</strong> soit un serveur DNS local, recommandé parce qu'il couvre tous les services d'un coup, soit des entrées dans <code>/etc/hosts</code>, à tenir à jour à la main. Le guide <code>docs/dns-configuration.md</code> du dépôt détaille chaque système.</li>
+            <li><strong>Certificat&nbsp;:</strong> le sandbox utilise une autorité de certification locale. Soit vous l'exportez et l'importez dans le magasin de confiance, soit vous acceptez les avertissements du navigateur.</li>
+          </ul>
+<pre><code>kubectl get secret default-issuer -n cert-manager \
+  -o jsonpath='{.data.ca\.crt}' | base64 -d &gt; okdp-sandbox-ca.crt</code></pre>
+          <p>La console s'ouvre alors sur <code>https://okdp-ui.okdp.sandbox</code>. L'authentification passe par Keycloak, avec le compte par défaut indiqué dans le README. Ce compte est public&nbsp;: il convient à un poste local, jamais à un environnement partagé.</p>
+
+          <h2>Quels sont les quatre pièges les plus fréquents&nbsp;?</h2>
+          <ul>
+            <li><strong>Le certificat Keycloak non accepté.</strong> Si vous choisissez d'ignorer les avertissements, ouvrez d'abord Keycloak et acceptez son certificat. Tant que ce n'est pas fait, la console et les autres services ne peuvent pas dialoguer avec lui et la connexion échoue.</li>
+            <li><strong>Le domaine changé à moitié.</strong> Si <code>okdp.sandbox</code> est interdit par votre politique réseau, il faut modifier le suffixe d'ingress <em>et</em> les cinq adresses OIDC du contexte. Changer le suffixe seul déplace Keycloak, mais les services continuent de valider les jetons sur l'ancien hôte.</li>
+            <li><strong>Le proxy oublié côté services.</strong> Le proxy se règle deux fois&nbsp;: sur les contrôleurs Flux, puis dans le contexte de la plateforme pour les services qui téléchargent des jeux de données.</li>
+            <li><strong>La suppression d'une release protégée.</strong> Un webhook refuse de supprimer les releases marquées comme protégées, par exemple cert-manager. C'est voulu. Pour passer outre en connaissance de cause, il faut d'abord mettre <code>spec.protected: false</code> sur la release.</li>
+          </ul>
+
+          <h2>Et après&nbsp;: comment obtenir Spark, Trino et Superset&nbsp;?</h2>
+          <p>Les services Data ne font pas partie de l'installation. Ils se créent par projet, depuis la console ou avec <code>kubectl</code>. Le dépôt fournit un projet de démonstration complet&nbsp;: un espace de noms, ses secrets, son PostgreSQL, ses connexions et ses services.</p>
+          <p>Ce projet demande d'abord le composant de stockage objet, optionnel dans le sandbox&nbsp;: SeaweedFS, ou tout service compatible S3. Le troisième niveau charge ensuite un exemple de lakehouse en trois couches, bronze, silver et gold, avec ses notebooks et ses DAG Airflow.</p>
+          <p>Ce découpage en projets est le cœur du modèle d'OKDP. Nous l'expliquons dans <a href="/articles/okdp-architecture-control-plane/">l'article sur l'architecture et le Control Plane</a>.</p>
+
+          <h2>Comment tout supprimer&nbsp;?</h2>
+<pre><code>kind delete cluster --name okdp-sandbox
+rm /tmp/okdp-sandbox-config.yaml</code></pre>
+          <p>Supprimer le cluster suffit&nbsp;: rien n'est installé en dehors, à part le certificat que vous auriez importé dans votre magasin de confiance.</p>
+
+          <div class="article-note">
+            <p><strong>Du sandbox à la production&nbsp;:</strong> le sandbox prouve que la plateforme fonctionne, pas qu'elle est dimensionnée. Stockage, haute disponibilité, annuaire d'entreprise et sauvegardes restent à concevoir. C'est le travail que Kubotal mène en phase de <a href="/accompagnement/">cadrage</a>.</p>
+          </div>
+
+          <div class="article-end">
+            <a class="article-back" href="/okdp/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Lire le guide d'OKDP</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre projet OKDP</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>

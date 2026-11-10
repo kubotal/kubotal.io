@@ -9,6 +9,42 @@
  */
 export const ARTICLES = [
   {
+    slug: 'installer-okdp-sandbox-kind',
+    corps: 'article-okdp-sandbox',
+    titre: 'Installer OKDP en local avec Kind, Flux et KuboCD',
+    tag: 'OKDP',
+    tint: '#5B3DF5',
+    date: '2026-11-10',
+    minutes: 7,
+    resume:
+      'Le sandbox officiel d’OKDP pas à pas : prérequis, cluster Kind, Flux, KuboCD, ' +
+      'ordre de déploiement et les quatre pièges qui bloquent l’installation.',
+  },
+  {
+    slug: 'okdp-architecture-control-plane',
+    corps: 'article-okdp-architecture',
+    titre: 'Architecture d’OKDP : le rôle du Control Plane',
+    tag: 'OKDP',
+    tint: '#5B3DF5',
+    date: '2026-11-10',
+    minutes: 6,
+    resume:
+      'Deux couches, des projets modélisés comme des espaces de noms et un serveur qui ' +
+      'délègue le déploiement à KuboCD : ce que l’architecture d’OKDP implique.',
+  },
+  {
+    slug: 'okdp-kubocd-packages-releases-connexions',
+    corps: 'article-okdp-kubocd',
+    titre: 'OKDP et KuboCD : packages, releases et connexions',
+    tag: 'OKDP',
+    tint: '#5B3DF5',
+    date: '2026-11-10',
+    minutes: 5,
+    resume:
+      'Comment OKDP se livre en artefacts OCI versionnés, pourquoi packages et déploiement ' +
+      'vivent dans deux dépôts, et à quoi servent les connexions typées.',
+  },
+  {
     slug: 'kubocd-deployer-sans-maitriser-helm',
     corps: 'article-kubocd',
     titre: 'KuboCD : déployer sur Kubernetes sans maîtriser Helm',

@@ -11,6 +11,9 @@ Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kub
 - Accompagnement des plateformes Data et IA : https://kubotal.io/accompagnement/
 - Contact : https://kubotal.io/contact/
 - Articles : https://kubotal.io/articles/
+- Tutoriel d'installation du sandbox OKDP avec Kind, Flux et KuboCD : https://kubotal.io/articles/installer-okdp-sandbox-kind/
+- Architecture d'OKDP et rôle du Control Plane : https://kubotal.io/articles/okdp-architecture-control-plane/
+- Packaging d'OKDP avec KuboCD (packages, releases, connexions) : https://kubotal.io/articles/okdp-kubocd-packages-releases-connexions/
 - Analyse de KuboCD, Helm et Flux : https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/
 
 ## Sources officielles de l'écosystème présenté
