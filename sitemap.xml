@@ -23,6 +23,14 @@
     <loc>https://kubotal.io/articles/</loc>
   </url>
   <url>
+    <loc>https://kubotal.io/articles/alternative-cloudera-open-source/</loc>
+    <lastmod>2026-11-10</lastmod>
+  </url>
+  <url>
+    <loc>https://kubotal.io/articles/migration-hadoop-kubernetes/</loc>
+    <lastmod>2026-11-10</lastmod>
+  </url>
+  <url>
     <loc>https://kubotal.io/articles/installer-okdp-sandbox-kind/</loc>
     <lastmod>2026-11-10</lastmod>
   </url>

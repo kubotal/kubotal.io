@@ -1,0 +1,138 @@
+  <!-- ============== ARTICLE : alternative Cloudera ============== -->
+  <section class="section" id="article">
+    <div class="wrap">
+      <article class="article">
+
+        <header class="article-head">
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Articles</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Alternative à Cloudera</span>
+          </nav>
+          <h1>Alternative à Cloudera open source : que choisir ?</h1>
+          <p class="article-sub">Quatre voies pour sortir d'une plateforme Hadoop sous licence, ce que
+            chacune coûte réellement, et les cas où OKDP est le bon choix — ou ne l'est pas.</p>
+          <div class="post-meta" style="--tint:#1685FF;margin-top:22px">
+            <span class="post-tag">Data</span>
+            <time datetime="2026-11-10">10 novembre 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
+            <span aria-hidden="true">·</span>
+            <span>5 min de lecture</span>
+          </div>
+        </header>
+
+        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
+
+        <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> il existe quatre familles d'alternatives à Cloudera. Rester sur Hadoop avec une distribution libre comme TDP. Passer à une plateforme open source sur Kubernetes, comme OKDP ou Stackable. Adopter un service managé dans le cloud. Ou assembler soi-même les composants. Pour une organisation qui veut garder ses données chez elle, sans licence, et qui exploite déjà Kubernetes, OKDP est l'option la plus directe.</p>
+          </div>
+
+          <p>La situation est courante dans les équipes Data&nbsp;: la plateforme Hadoop arrive en fin de contrat ou de support, et le renouvellement pèse lourd. Avant de comparer des produits, il faut comparer des trajectoires. Les voici.</p>
+
+          <h2>Pourquoi chercher une alternative à Cloudera&nbsp;?</h2>
+          <p>Les raisons les plus fréquentes sont au nombre de quatre.</p>
+          <ul>
+            <li><strong>Le coût de licence</strong>, qui suit la taille du cluster et pèse davantage à chaque extension.</li>
+            <li><strong>La dépendance à un éditeur unique</strong> pour les versions, le support et le calendrier des montées de version.</li>
+            <li><strong>L'architecture Hadoop elle-même</strong>&nbsp;: stockage et calcul liés sur les mêmes machines, donc impossibles à dimensionner séparément.</li>
+            <li><strong>La souveraineté</strong>&nbsp;: vouloir un socle auditable, sous licence libre, déployable sur sa propre infrastructure.</li>
+          </ul>
+          <p>Identifiez votre raison principale. Elle décide de la voie&nbsp;: si le problème est seulement la licence, rester sur Hadoop peut suffire. Si le problème est l'architecture, il faut changer de socle.</p>
+
+          <h2>Quelles sont les quatre voies possibles&nbsp;?</h2>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Voie</th><th>Exemples</th><th>Ce que vous gagnez</th><th>Ce que vous payez</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Rester sur Hadoop, en libre</th>
+                  <td>TDP, hébergé par TOSIT</td>
+                  <td>Migration courte, compétences conservées, plus de licence.</td>
+                  <td>L'architecture Hadoop reste, avec ses limites.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Plateforme open source sur Kubernetes</th>
+                  <td>OKDP, Stackable</td>
+                  <td>Stockage et calcul séparés, élasticité, pas de licence.</td>
+                  <td>Une vraie migration, et des compétences Kubernetes.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Service managé dans le cloud</th>
+                  <td>Databricks, Snowflake, services des hyperscalers</td>
+                  <td>Presque plus d'exploitation.</td>
+                  <td>Une facture à l'usage et une nouvelle dépendance.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Assemblage maison</th>
+                  <td>Charts Helm choisis un par un</td>
+                  <td>Liberté totale.</td>
+                  <td>Tout le coût d'intégration, pour toujours.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>La quatrième voie est la plus sous-estimée. Installer Spark, Trino et Airflow prend quelques jours. Les faire partager une authentification, un catalogue, un stockage et des règles d'accès prend des mois, puis se refait à chaque montée de version. C'est précisément le travail qu'une distribution prend à sa charge.</p>
+
+          <h2>Qu'apporte OKDP par rapport à une plateforme Hadoop&nbsp;?</h2>
+          <p><a href="/okdp/">OKDP</a> est une plateforme de données open source, sous licence Apache&nbsp;2.0, conçue pour Kubernetes. Elle remplace les briques de Hadoop par leurs équivalents cloud-native.</p>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Besoin</th><th>Monde Hadoop</th><th>Avec OKDP</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Stockage</th><td>HDFS</td><td>Stockage objet compatible S3</td></tr>
+                <tr><th scope="row">Ordonnancement du calcul</th><td>YARN</td><td>Kubernetes et le Spark Operator</td></tr>
+                <tr><th scope="row">Traitements</th><td>Spark sur YARN</td><td>Spark sur Kubernetes</td></tr>
+                <tr><th scope="row">SQL interactif</th><td>Hive, Impala</td><td>Trino</td></tr>
+                <tr><th scope="row">Catalogue</th><td>Hive Metastore</td><td>Hive Metastore, Polaris pour Iceberg</td></tr>
+                <tr><th scope="row">Orchestration</th><td>Oozie</td><td>Airflow</td></tr>
+                <tr><th scope="row">Notebooks</th><td>Zeppelin, Hue</td><td>JupyterHub</td></tr>
+                <tr><th scope="row">Tableaux de bord</th><td>Outil tiers</td><td>Superset</td></tr>
+                <tr><th scope="row">Authentification</th><td>Kerberos</td><td>OIDC, avec Keycloak ou KubAuth</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Trois différences comptent plus que la liste des composants.</p>
+          <ul>
+            <li><strong>Le stockage et le calcul se dimensionnent séparément.</strong> Ajouter de la capacité de calcul ne force plus à acheter du disque, et inversement.</li>
+            <li><strong>Chaque équipe a son projet.</strong> Le Control Plane crée les services par projet, avec leurs ressources et leurs accès. L'isolation ne repose pas sur des files d'attente partagées.</li>
+            <li><strong>Rien n'est propriétaire.</strong> Les moteurs sont les projets Apache d'origine. Quitter OKDP ne demande pas de réécrire les traitements.</li>
+          </ul>
+
+          <h2>Dans quels cas OKDP n'est-il pas la bonne alternative&nbsp;?</h2>
+          <p>Une comparaison honnête doit dire où le produit s'arrête.</p>
+          <ul>
+            <li><strong>Vous n'avez pas de compétence Kubernetes</strong> et ne comptez pas en acquérir. L'exploitation coûtera plus cher qu'un service managé.</li>
+            <li><strong>Votre usage central est le streaming ou HBase.</strong> L'ingestion et le traitement temps réel figurent sur la feuille de route d'OKDP comme des évolutions à venir. Vérifiez l'état réel sur <a href="https://okdp.io/" target="_blank" rel="noopener">okdp.io</a> avant de vous engager.</li>
+            <li><strong>Votre échéance est très courte.</strong> Si le contrat se termine dans trois mois, une distribution Hadoop libre vous fait gagner du temps. La migration vers Kubernetes peut venir ensuite.</li>
+            <li><strong>Vous voulez un support éditeur contractuel unique.</strong> OKDP est un projet communautaire. Le support vient de la communauté et des sociétés qui y contribuent, pas d'un éditeur.</li>
+          </ul>
+
+          <h2>Comment choisir en pratique&nbsp;?</h2>
+          <p>Quatre questions suffisent à écarter la plupart des options.</p>
+          <ul>
+            <li><strong>Où doivent rester les données&nbsp;?</strong> Si elles ne peuvent pas quitter votre infrastructure, le cloud managé sort de la liste.</li>
+            <li><strong>Avez-vous une équipe Kubernetes&nbsp;?</strong> Sinon, comptez le temps pour la construire, ou restez sur Hadoop pour l'instant.</li>
+            <li><strong>Quels composants utilisez-vous vraiment&nbsp;?</strong> Dressez l'inventaire des traitements par moteur. Un parc fait de Spark, Hive et Oozie se transpose bien. Un parc centré sur HBase, beaucoup moins.</li>
+            <li><strong>Quelle est l'échéance&nbsp;?</strong> Elle fixe le nombre d'étapes acceptables.</li>
+          </ul>
+          <p>Si vos réponses sont «&nbsp;chez nous&nbsp;», «&nbsp;oui&nbsp;», «&nbsp;surtout Spark et SQL&nbsp;» et «&nbsp;plus de six mois&nbsp;», OKDP mérite un essai. Le plus rapide est d'<a href="/articles/installer-okdp-sandbox-kind/">installer le sandbox sur un poste</a>, puis de lire <a href="/articles/migration-hadoop-kubernetes/">notre guide de migration de Hadoop vers Kubernetes</a>.</p>
+
+          <div class="article-note">
+            <p><strong>Kubotal contribue au code d'OKDP</strong> et accompagne les organisations qui l'adoptent. Un <a href="/accompagnement/">cadrage</a> de quelques jours suffit en général à dire si la plateforme répond à votre cas, et à chiffrer la migration.</p>
+          </div>
+
+          <div class="article-end">
+            <a class="article-back" href="/okdp/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Lire le guide d'OKDP</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre sortie de Cloudera</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>

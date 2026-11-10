@@ -1,0 +1,109 @@
+  <!-- ============== ARTICLE : migration Hadoop ============== -->
+  <section class="section" id="article">
+    <div class="wrap">
+      <article class="article">
+
+        <header class="article-head">
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Articles</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Migrer de Hadoop vers Kubernetes</span>
+          </nav>
+          <h1>Migrer de Hadoop vers Kubernetes : le guide</h1>
+          <p class="article-sub">Ce qui change vraiment, l'ordre dans lequel migrer, et les cinq points qui
+            font déraper les projets. Une méthode en six étapes, sans bascule brutale.</p>
+          <div class="post-meta" style="--tint:#1685FF;margin-top:22px">
+            <span class="post-tag">Data</span>
+            <time datetime="2026-11-10">10 novembre 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
+            <span aria-hidden="true">·</span>
+            <span>6 min de lecture</span>
+          </div>
+        </header>
+
+        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
+
+        <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> migrer de Hadoop vers Kubernetes, c'est remplacer HDFS par un stockage objet, YARN par Kubernetes, et Kerberos par OIDC. Les traitements Spark et les requêtes SQL se transposent&nbsp;; le stockage et la sécurité demandent le plus de travail. La méthode sûre fait tourner les deux plateformes en parallèle et migre un domaine de données à la fois, en commençant par les données.</p>
+          </div>
+
+          <p>Ce guide s'adresse aux équipes qui exploitent un cluster Hadoop, sous Cloudera ou une autre distribution, et qui visent une plateforme sur Kubernetes. Il décrit la démarche que nous recommandons avec <a href="/okdp/">OKDP</a>, mais l'ordre des étapes vaut pour toute cible Kubernetes. Si vous hésitez encore sur la cible, lisez d'abord <a href="/articles/alternative-cloudera-open-source/">notre comparatif des alternatives à Cloudera</a>.</p>
+
+          <h2>Qu'est-ce qui change entre Hadoop et Kubernetes&nbsp;?</h2>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Sujet</th><th>Hadoop</th><th>Kubernetes</th><th>Effort</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Stockage</th><td>HDFS</td><td>Stockage objet S3</td><td>Élevé</td></tr>
+                <tr><th scope="row">Sécurité</th><td>Kerberos, règles par service</td><td>OIDC, droits par projet</td><td>Élevé</td></tr>
+                <tr><th scope="row">Ordonnancement</th><td>YARN et ses files</td><td>Kubernetes, quotas par espace de noms</td><td>Moyen</td></tr>
+                <tr><th scope="row">Orchestration</th><td>Oozie</td><td>Airflow</td><td>Moyen</td></tr>
+                <tr><th scope="row">Traitements Spark</th><td>spark-submit sur YARN</td><td>Spark Operator</td><td>Faible à moyen</td></tr>
+                <tr><th scope="row">SQL</th><td>Hive, Impala</td><td>Trino</td><td>Faible à moyen</td></tr>
+                <tr><th scope="row">Catalogue</th><td>Hive Metastore</td><td>Hive Metastore</td><td>Faible</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>La surprise habituelle est dans la colonne de droite. Les équipes redoutent la réécriture des traitements, qui se passe bien. Elles sous-estiment le stockage et la sécurité, qui décident du calendrier.</p>
+
+          <h2>Pourquoi ne pas tout basculer d'un coup&nbsp;?</h2>
+          <p>Parce qu'une bascule complète oblige à réussir tous les sujets le même jour, sans retour arrière possible. Une migration par domaine fait l'inverse&nbsp;: les deux plateformes coexistent, chaque domaine bascule quand il est prêt, et un échec ne touche qu'un périmètre.</p>
+          <p>La coexistence a un prix&nbsp;: deux plateformes à exploiter pendant plusieurs mois. Ce coût se chiffre et se borne. Celui d'une bascule ratée, non.</p>
+
+          <h2>Quelles sont les six étapes&nbsp;?</h2>
+
+          <h3>1. Faire l'inventaire</h3>
+          <p>Listez les traitements par moteur, par fréquence et par propriétaire, puis les volumes par jeu de données. Cherchez surtout ce qui ne se transpose pas&nbsp;: tables HBase, fonctions Hive maison, scripts qui appellent HDFS en direct. Ces cas particuliers font le risque du projet, pas les mille jobs Spark ordinaires.</p>
+
+          <h3>2. Monter la plateforme cible</h3>
+          <p>Déployez la cible à côté de l'existant, avec son stockage objet, son annuaire et son observabilité. Avec OKDP, le déploiement est décrit en GitOps&nbsp;: voir <a href="/articles/okdp-kubocd-packages-releases-connexions/">comment la plateforme est packagée</a>. Validez-la d'abord avec un projet de test, pas avec un cas métier.</p>
+
+          <h3>3. Migrer les données d'un premier domaine</h3>
+          <p>Copiez les données de HDFS vers le stockage objet, puis déclarez les tables dans le catalogue de la cible. Gardez une synchronisation tant que les traitements d'origine écrivent encore. C'est aussi le moment de décider du format&nbsp;: conserver les tables telles quelles, ou passer à Iceberg pour les nouvelles.</p>
+
+          <h3>4. Migrer les traitements du domaine</h3>
+          <p>Un job Spark change peu&nbsp;: les chemins <code>hdfs://</code> deviennent des chemins <code>s3a://</code>, et la soumission passe par une ressource Kubernetes au lieu de <code>spark-submit</code> sur YARN. Les workflows Oozie se réécrivent en DAG Airflow. Les requêtes Hive ou Impala demandent une passe de compatibilité pour Trino.</p>
+
+          <h3>5. Faire tourner en double et comparer</h3>
+          <p>Exécutez les traitements sur les deux plateformes pendant un cycle complet et comparez les résultats&nbsp;: nombre de lignes, agrégats, durées. Rien ne remplace cette étape. Elle révèle les écarts de comportement entre moteurs que personne n'avait prévus.</p>
+
+          <h3>6. Basculer, puis recommencer</h3>
+          <p>Redirigez les consommateurs vers la cible, gelez l'ancien domaine en lecture seule, puis supprimez-le après un délai convenu. Passez au domaine suivant. Le premier domaine prend toujours le plus de temps&nbsp;: il sert à roder la méthode.</p>
+
+          <h2>Quels sont les cinq points qui font déraper&nbsp;?</h2>
+          <ul>
+            <li><strong>Le stockage objet n'est pas HDFS.</strong> Renommer un répertoire est instantané sur HDFS et coûteux sur S3. Les traitements qui écrivent puis renomment doivent utiliser un mode de validation adapté au stockage objet, ou un format de table comme Iceberg.</li>
+            <li><strong>Le calcul n'est plus à côté des données.</strong> Hadoop place le calcul sur les machines qui portent les données. Sur Kubernetes, tout passe par le réseau. Le débit entre le calcul et le stockage devient un paramètre de dimensionnement.</li>
+            <li><strong>Les droits ne se copient pas.</strong> Les règles construites autour de Kerberos et des services Hadoop n'ont pas de traduction automatique. Il faut redéfinir qui accède à quoi, par projet. Prévoyez ce chantier dès le début, avec les responsables des données.</li>
+            <li><strong>Les files YARN deviennent des quotas.</strong> Le partage des ressources entre équipes se repense avec les quotas Kubernetes. Les réglages de mémoire de Spark changent aussi&nbsp;: un conteneur qui dépasse sa limite est arrêté sans préavis.</li>
+            <li><strong>Les petits fichiers coûtent plus cher.</strong> Des millions de petits fichiers, déjà pénibles sur HDFS, ralentissent fortement les lectures sur stockage objet. Compactez avant de migrer, pas après.</li>
+          </ul>
+
+          <h2>Combien de temps faut-il prévoir&nbsp;?</h2>
+          <p>Il n'existe pas de durée type&nbsp;: elle dépend du nombre de domaines, de la part de cas particuliers et de la maturité Kubernetes de l'équipe. Ce qui se prévoit, c'est la forme du calendrier. Une phase de cadrage et d'inventaire, courte. La construction de la cible et le premier domaine, qui concentrent les imprévus. Puis les domaines suivants, de plus en plus rapides.</p>
+          <p>Méfiez-vous de tout chiffrage donné avant l'inventaire. Les cas particuliers, invisibles tant qu'on ne les a pas listés, font la différence entre un projet tenu et un projet qui double.</p>
+
+          <h2>Par où commencer cette semaine&nbsp;?</h2>
+          <ul>
+            <li>Lancez l'inventaire des traitements et des volumes&nbsp;: il ne demande aucune décision d'architecture.</li>
+            <li><a href="/articles/installer-okdp-sandbox-kind/">Installez le sandbox OKDP</a> sur un poste pour juger la cible sur pièces.</li>
+            <li>Choisissez le domaine pilote&nbsp;: représentatif, mais pas critique.</li>
+          </ul>
+
+          <div class="article-note">
+            <p><strong>Kubotal contribue au code d'OKDP</strong> et accompagne ces migrations avec les équipes en place&nbsp;: inventaire, plateforme cible, premier domaine, puis transfert de compétences. Les modes d'intervention sont décrits sur la page <a href="/accompagnement/">Accompagnement</a>.</p>
+          </div>
+
+          <div class="article-end">
+            <a class="article-back" href="/okdp/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Lire le guide d'OKDP</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre migration Hadoop</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>

@@ -18,6 +18,8 @@ const OKDP_ARTICLES = [
   'okdp-kubocd-packages-releases-connexions',
 ];
 
+const CLIENT_ARTICLES = ['alternative-cloudera-open-source', 'migration-hadoop-kubernetes'];
+
 const PUBLIC_PAGES = [
   ['index.html', 'https://kubotal.io/'],
   ['expertise/index.html', 'https://kubotal.io/expertise/'],
@@ -30,6 +32,7 @@ const PUBLIC_PAGES = [
     'articles/kubocd-deployer-sans-maitriser-helm/index.html',
     'https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/',
   ],
+  ...CLIENT_ARTICLES.map((slug) => [`articles/${slug}/index.html`, `https://kubotal.io/articles/${slug}/`]),
   ...OKDP_ARTICLES.map((slug) => [`articles/${slug}/index.html`, `https://kubotal.io/articles/${slug}/`]),
 ];
 
@@ -394,4 +397,25 @@ test('publishes OKDP articles linked both ways with the pillar page', () => {
       assert.match(html, new RegExp(`href="/articles/${other}/"`), `${slug} -> ${other}`);
     }
   }
+});
+
+test('publishes client-need articles linked with the pillar page and each other', () => {
+  const pillar = read('okdp/index.html');
+  const [first, second] = CLIENT_ARTICLES;
+
+  for (const slug of CLIENT_ARTICLES) {
+    const html = read(`articles/${slug}/index.html`);
+    const title = html.match(/<title>([^<]+)<\/title>/)[1];
+    const description = html.match(/<meta name="description" content="([^"]+)">/)[1];
+
+    assert.ok(title.length <= 60, `${slug} title ${title.length}`);
+    assert.ok(description.length <= 155, `${slug} description ${description.length}`);
+    assert.match(html, /href="\/okdp\/"/, slug);
+    assert.match(html, /href="\/contact\/"/, slug);
+    assert.match(html, /href="\/accompagnement\/"/, slug);
+    assert.match(html, /Par l'équipe Kubotal/, slug);
+    assert.match(pillar, new RegExp(`href="/articles/${slug}/"`), slug);
+  }
+  assert.match(read(`articles/${first}/index.html`), new RegExp(`href="/articles/${second}/"`));
+  assert.match(read(`articles/${second}/index.html`), new RegExp(`href="/articles/${first}/"`));
 });

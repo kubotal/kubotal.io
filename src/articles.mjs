@@ -9,6 +9,30 @@
  */
 export const ARTICLES = [
   {
+    slug: 'alternative-cloudera-open-source',
+    corps: 'article-alternative-cloudera',
+    titre: 'Alternative à Cloudera open source : que choisir ?',
+    tag: 'Data',
+    tint: '#1685FF',
+    date: '2026-11-10',
+    minutes: 5,
+    resume:
+      'Quatre voies pour quitter une plateforme Hadoop sous licence : Hadoop libre, ' +
+      'Kubernetes avec OKDP, cloud managé ou assemblage maison. Comment choisir.',
+  },
+  {
+    slug: 'migration-hadoop-kubernetes',
+    corps: 'article-migration-hadoop',
+    titre: 'Migrer de Hadoop vers Kubernetes : le guide',
+    tag: 'Data',
+    tint: '#1685FF',
+    date: '2026-11-10',
+    minutes: 6,
+    resume:
+      'Ce qui change entre Hadoop et Kubernetes, une méthode de migration en six étapes ' +
+      'par domaine de données, et les cinq points qui font déraper les projets.',
+  },
+  {
     slug: 'installer-okdp-sandbox-kind',
     corps: 'article-okdp-sandbox',
     titre: 'Installer OKDP en local avec Kind, Flux et KuboCD',
