@@ -322,7 +322,11 @@ const organizationNode = () => ({
   email: 'contact@kubotal.io',
   description:
     'Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes.',
-  knowsAbout: ['Data platform', 'Artificial intelligence', 'Kubernetes', 'GitOps', 'MLOps', 'Open source'],
+  knowsAbout: [
+    'Data platform', 'Artificial intelligence', 'Kubernetes', 'GitOps', 'MLOps', 'Open source',
+    'OKDP', 'Open Kubernetes Data Platform', 'KuboCD', 'KubAuth',
+  ],
+  sameAs: ['https://github.com/kubotal', 'https://github.com/kubocd', 'https://github.com/kubauth'],
 });
 
 const websiteNode = () => ({
