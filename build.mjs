@@ -326,7 +326,7 @@ const organizationNode = () => ({
     'Data platform', 'Artificial intelligence', 'Kubernetes', 'GitOps', 'MLOps', 'Open source',
     'OKDP', 'Open Kubernetes Data Platform', 'KuboCD', 'KubAuth',
   ],
-  sameAs: ['https://github.com/kubotal', 'https://github.com/kubocd', 'https://github.com/kubauth'],
+  sameAs: ['https://www.linkedin.com/company/kubotal', 'https://github.com/kubotal','https://github.com/kubocd', 'https://github.com/kubauth'],
 });
 
 const websiteNode = () => ({
