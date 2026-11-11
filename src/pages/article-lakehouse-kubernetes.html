@@ -1,0 +1,102 @@
+  <!-- ============== ARTICLE : lakehouse open source Kubernetes ============== -->
+  <section class="section" id="article">
+    <div class="wrap">
+      <article class="article">
+
+        <header class="article-head">
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Articles</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Lakehouse open source sur Kubernetes</span>
+          </nav>
+          <h1>Lakehouse open source sur Kubernetes : le guide</h1>
+          <p class="article-sub">Les quatre briques d'un lakehouse, pourquoi Iceberg et un catalogue REST
+            changent la donne, et les cinq pièges d'exploitation à connaître avant de se lancer.</p>
+          <div class="post-meta" style="--tint:#1685FF;margin-top:22px">
+            <span class="post-tag">Data</span>
+            <time datetime="2026-11-11">11 novembre 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
+            <span aria-hidden="true">·</span>
+            <span>4 min de lecture</span>
+          </div>
+        </header>
+
+        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
+
+        <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> un lakehouse open source sur Kubernetes repose sur quatre briques&nbsp;: un stockage objet, un format de table comme Apache Iceberg, un catalogue, et des moteurs comme Spark et Trino. Le format de table apporte aux fichiers les garanties d'un entrepôt de données. Le catalogue permet à plusieurs moteurs de lire les mêmes tables. OKDP fournit ces briques déjà intégrées.</p>
+          </div>
+
+          <p>Le lakehouse est devenu l'architecture de référence des plateformes de données. Il se construit entièrement avec des logiciels libres. Voici comment, et à quoi faire attention.</p>
+
+          <h2>Qu'est-ce qu'un lakehouse&nbsp;?</h2>
+          <p>Un lakehouse réunit deux mondes. Du lac de données, il garde le stockage économique de fichiers ouverts. De l'entrepôt de données, il reprend les garanties&nbsp;: transactions, schémas contrôlés, requêtes SQL rapides.</p>
+          <p>Ce qui rend cette union possible est le <strong>format de table</strong>. Il ajoute aux fichiers une couche de métadonnées qui dit quels fichiers composent une table à un instant donné. On obtient ainsi&nbsp;:</p>
+          <ul>
+            <li>des écritures transactionnelles, sans lecture de données à moitié écrites&nbsp;;</li>
+            <li>l'évolution du schéma sans réécrire la table&nbsp;;</li>
+            <li>le retour à un état antérieur de la table, pour auditer ou corriger.</li>
+          </ul>
+
+          <h2>Quelles sont les briques d'un lakehouse open source&nbsp;?</h2>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Brique</th><th>Rôle</th><th>Choix open source courant</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Stockage objet</th><td>Conserver les fichiers</td><td>Tout stockage compatible S3</td></tr>
+                <tr><th scope="row">Format de fichier</th><td>Stocker les données en colonnes</td><td>Apache Parquet</td></tr>
+                <tr><th scope="row">Format de table</th><td>Transactions, schéma, historique</td><td>Apache Iceberg. Delta Lake et Hudi existent aussi.</td></tr>
+                <tr><th scope="row">Catalogue</th><td>Référencer les tables et leurs droits</td><td>Apache Polaris, Hive Metastore</td></tr>
+                <tr><th scope="row">Moteur de traitement</th><td>Transformer les données</td><td>Apache Spark</td></tr>
+                <tr><th scope="row">Moteur SQL</th><td>Interroger en interactif</td><td>Trino</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Pourquoi Iceberg et un catalogue REST&nbsp;?</h2>
+          <p>Iceberg définit une interface de catalogue standard, exposée en REST. Tout moteur qui la respecte peut lire et écrire les mêmes tables. Apache Polaris est un catalogue open source qui implémente cette interface.</p>
+          <p>La conséquence est concrète&nbsp;: Spark alimente une table, Trino l'interroge, et aucun des deux ne possède la donnée. Changer de moteur ne demande plus de migrer les tables. C'est la meilleure protection contre le verrouillage.</p>
+          <p>Hive Metastore reste utile. Beaucoup d'outils savent s'y connecter, et il facilite la reprise de tables existantes lors d'une <a href="/articles/migration-hadoop-kubernetes/">migration depuis Hadoop</a>.</p>
+
+          <h2>Qu'apporte Kubernetes à un lakehouse&nbsp;?</h2>
+          <ul>
+            <li><strong>Un calcul à la demande.</strong> Les exécuteurs Spark démarrent pour un traitement, puis libèrent leurs ressources.</li>
+            <li><strong>Une isolation par équipe.</strong> Chaque équipe travaille dans son espace de noms, avec ses quotas.</li>
+            <li><strong>Un déploiement reproductible.</strong> Le lakehouse entier se décrit dans Git et se réinstalle à l'identique.</li>
+          </ul>
+          <p>Le lakehouse n'est qu'une partie de l'ensemble. L'orchestration, les notebooks et les tableaux de bord sont décrits dans <a href="/articles/plateforme-data-kubernetes/">notre guide de la plateforme data sur Kubernetes</a>.</p>
+
+          <h2>Quels sont les cinq pièges d'exploitation&nbsp;?</h2>
+          <ul>
+            <li><strong>Les petits fichiers.</strong> Des écritures fréquentes produisent des milliers de fichiers minuscules, et les lectures ralentissent. Planifiez une compaction régulière.</li>
+            <li><strong>L'historique qui grossit.</strong> Chaque écriture crée une nouvelle version de la table. Sans expiration des anciennes versions, le stockage enfle.</li>
+            <li><strong>Plusieurs catalogues.</strong> Deux catalogues qui référencent la même table finissent par diverger. Désignez-en un seul comme référence.</li>
+            <li><strong>Les droits à deux endroits.</strong> Un droit accordé dans le catalogue ne vaut rien si le stockage objet est ouvert. Les deux niveaux doivent être cohérents.</li>
+            <li><strong>Le débit du stockage.</strong> Le calcul lit tout à travers le réseau. Mesurez le débit réel avant de dimensionner.</li>
+          </ul>
+
+          <h2>Comment démarrer avec OKDP&nbsp;?</h2>
+          <p><a href="/okdp/">OKDP</a>, l'Open Kubernetes Data Platform, livre ces briques intégrées&nbsp;: Spark et son opérateur, Trino, Hive Metastore et Polaris, reliés à un stockage objet et à une authentification commune. La plateforme est sous licence Apache&nbsp;2.0.</p>
+          <ul>
+            <li><a href="/articles/installer-okdp-sandbox-kind/">Installez le sandbox en local</a> pour manipuler un lakehouse complet sur un poste.</li>
+            <li>Lisez <a href="/articles/okdp-architecture-control-plane/">l'architecture d'OKDP</a> pour comprendre comment les services sont créés par projet.</li>
+            <li>Si vous comparez avec une offre managée, voyez <a href="/articles/alternative-databricks-open-source/">notre analyse des alternatives à Databricks</a>.</li>
+          </ul>
+
+          <div class="article-note">
+            <p><strong>Kubotal contribue au code d'OKDP</strong> et accompagne la conception et l'exploitation de lakehouses sur Kubernetes. Les modes d'intervention sont décrits sur la page <a href="/accompagnement/">Accompagnement</a>.</p>
+          </div>
+
+          <div class="article-end">
+            <a class="article-back" href="/okdp/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Lire le guide d'OKDP</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre lakehouse</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>

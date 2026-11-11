@@ -14,6 +14,11 @@ Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kub
 - Tutoriel d'installation du sandbox OKDP avec Kind, Flux et KuboCD : https://kubotal.io/articles/installer-okdp-sandbox-kind/
 - Architecture d'OKDP et rôle du Control Plane : https://kubotal.io/articles/okdp-architecture-control-plane/
 - Packaging d'OKDP avec KuboCD (packages, releases, connexions) : https://kubotal.io/articles/okdp-kubocd-packages-releases-connexions/
+- Support et accompagnement OKDP, choix d'un intégrateur : https://kubotal.io/articles/support-okdp-accompagnement/
+- Guide de la plateforme data sur Kubernetes : https://kubotal.io/articles/plateforme-data-kubernetes/
+- Plateforme data souveraine, critères et options : https://kubotal.io/articles/plateforme-data-souveraine/
+- Guide du lakehouse open source sur Kubernetes (Iceberg, Polaris, Spark, Trino) : https://kubotal.io/articles/lakehouse-open-source-kubernetes/
+- Alternatives open source à Databricks : https://kubotal.io/articles/alternative-databricks-open-source/
 - Comparatif des alternatives open source à Cloudera : https://kubotal.io/articles/alternative-cloudera-open-source/
 - Guide de migration de Hadoop vers Kubernetes : https://kubotal.io/articles/migration-hadoop-kubernetes/
 - Analyse de KuboCD, Helm et Flux : https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/

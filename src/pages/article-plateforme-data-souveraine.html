@@ -1,0 +1,140 @@
+  <!-- ============== ARTICLE : plateforme data souveraine ============== -->
+  <section class="section" id="article">
+    <div class="wrap">
+      <article class="article">
+
+        <header class="article-head">
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Articles</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Plateforme data souveraine</span>
+          </nav>
+          <h1>Plateforme data souveraine : comment la bâtir ?</h1>
+          <p class="article-sub">La souveraineté ne se résume pas au pays du datacenter. Trois niveaux à
+            maîtriser, trois options comparées, et six questions à poser avant de signer.</p>
+          <div class="post-meta" style="--tint:#1685FF;margin-top:22px">
+            <span class="post-tag">Data</span>
+            <time datetime="2026-11-11">11 novembre 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
+            <span aria-hidden="true">·</span>
+            <span>4 min de lecture</span>
+          </div>
+        </header>
+
+        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
+
+        <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> une plateforme data est souveraine quand vous maîtrisez trois choses&nbsp;: la loi qui s'applique à vos données, le logiciel qui les traite, et l'équipe qui l'exploite. Un hébergement en France ne suffit pas si le logiciel est fermé. Un logiciel open source ne suffit pas si l'hébergeur dépend d'un droit étranger. La combinaison la plus maîtrisée associe une plateforme open source, comme OKDP, à une infrastructure que vous contrôlez.</p>
+          </div>
+
+          <p>Le mot «&nbsp;souverain&nbsp;» figure aujourd'hui sur presque toutes les offres. Pour comparer, il faut le découper. Cet article propose une grille simple, puis l'applique.</p>
+
+          <h2>Que veut dire «&nbsp;souveraine&nbsp;» pour une plateforme data&nbsp;?</h2>
+          <p>La souveraineté se joue à trois niveaux. Une plateforme peut être forte sur l'un et faible sur les autres.</p>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Niveau</th><th>La question à poser</th><th>Ce qui la garantit</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Juridique</th>
+                  <td>Quelle loi peut donner accès aux données&nbsp;?</td>
+                  <td>Un hébergeur soumis au seul droit européen. En France, la qualification SecNumCloud de l'ANSSI encadre ce point.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Technique</th>
+                  <td>Pouvez-vous lire le code et reprendre vos données&nbsp;?</td>
+                  <td>Un logiciel open source et des formats ouverts, comme Parquet et Iceberg.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Opérationnel</th>
+                  <td>Qui administre la plateforme au quotidien&nbsp;?</td>
+                  <td>Une équipe interne, ou un prestataire que vous pouvez remplacer.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Le niveau juridique est le plus commenté, à cause des lois à portée extraterritoriale comme le Cloud Act américain. Les deux autres décident pourtant de votre liberté réelle&nbsp;: celle de changer de fournisseur sans tout reconstruire.</p>
+
+          <h2>Quelles sont les options possibles&nbsp;?</h2>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Option</th><th>Juridique</th><th>Technique</th><th>Opérationnel</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Service data d'un éditeur non européen</th>
+                  <td>Faible</td>
+                  <td>Faible à moyen</td>
+                  <td>Faible</td>
+                </tr>
+                <tr>
+                  <th scope="row">Service managé propriétaire chez un hébergeur européen</th>
+                  <td>Fort</td>
+                  <td>Faible à moyen</td>
+                  <td>Moyen</td>
+                </tr>
+                <tr>
+                  <th scope="row">Plateforme open source sur votre infrastructure ou un cloud de confiance</th>
+                  <td>Fort</td>
+                  <td>Fort</td>
+                  <td>Fort, si l'équipe suit</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>La troisième option est la plus maîtrisée. Elle est aussi la plus exigeante&nbsp;: l'exploitation vous revient. C'est le prix de la souveraineté, et il doit figurer dans le budget dès le départ.</p>
+
+          <h2>Pourquoi l'open source ne suffit-il pas à lui seul&nbsp;?</h2>
+          <p>Un logiciel libre vous donne le code et les formats. Il ne dit rien du lieu où il tourne, ni de qui l'opère. Trois pièges reviennent souvent.</p>
+          <ul>
+            <li><strong>Le service managé d'un logiciel open source.</strong> Le moteur est libre, mais la console, la sécurité et la facturation sont propres au fournisseur. En sortir reste un projet.</li>
+            <li><strong>L'«&nbsp;open core&nbsp;».</strong> Le cœur est libre, les fonctions d'entreprise sont payantes. Vérifiez ce qui est réellement sous licence libre.</li>
+            <li><strong>La dépendance aux compétences.</strong> Si une seule personne sait exploiter la plateforme, vous dépendez d'elle autant que d'un éditeur.</li>
+          </ul>
+
+          <h2>En quoi OKDP répond-il à ces critères&nbsp;?</h2>
+          <p><a href="/okdp/">OKDP</a>, l'Open Kubernetes Data Platform, a été conçu pour ce cas d'usage.</p>
+          <ul>
+            <li><strong>Une licence libre de bout en bout.</strong> La plateforme est sous licence Apache&nbsp;2.0, sans édition payante.</li>
+            <li><strong>Des composants standards.</strong> Spark, Trino, Airflow et Superset sont les projets Apache d'origine. Vos traitements ne dépendent pas d'OKDP.</li>
+            <li><strong>Un déploiement où vous voulez.</strong> OKDP s'installe sur tout cluster Kubernetes&nbsp;: dans votre datacenter ou chez l'hébergeur de votre choix.</li>
+            <li><strong>Une gouvernance associative.</strong> Le projet est hébergé par l'association TOSIT, et non par un éditeur.</li>
+          </ul>
+          <p>OKDP couvre donc le niveau technique. Le niveau juridique dépend de votre hébergement, et le niveau opérationnel de votre équipe. Pour une vue d'ensemble des composants, lisez <a href="/articles/plateforme-data-kubernetes/">notre guide de la plateforme data sur Kubernetes</a>.</p>
+
+          <h2>Quelles questions poser avant de choisir&nbsp;?</h2>
+          <ul>
+            <li>À quel droit l'hébergeur et sa maison mère sont-ils soumis&nbsp;?</li>
+            <li>Quelle part du logiciel est sous licence libre, et laquelle exactement&nbsp;?</li>
+            <li>Dans quel format les données sont-elles stockées, et un autre moteur peut-il les lire&nbsp;?</li>
+            <li>Combien de temps faudrait-il pour déplacer la plateforme ailleurs&nbsp;?</li>
+            <li>Qui détient les accès d'administration&nbsp;?</li>
+            <li>Que se passe-t-il si le fournisseur arrête le produit&nbsp;?</li>
+          </ul>
+          <p>Une offre sérieuse répond à ces six questions par écrit.</p>
+
+          <h2>Par où commencer&nbsp;?</h2>
+          <ul>
+            <li>Si vous quittez une plateforme sous licence, lisez <a href="/articles/alternative-cloudera-open-source/">notre comparatif des alternatives à Cloudera</a> ou <a href="/articles/alternative-databricks-open-source/">à Databricks</a>.</li>
+            <li><a href="/articles/installer-okdp-sandbox-kind/">Installez le sandbox OKDP</a> pour juger la plateforme sur pièces.</li>
+            <li>Pour l'exploitation, voyez <a href="/articles/support-okdp-accompagnement/">d'où vient le support d'OKDP</a>.</li>
+          </ul>
+
+          <div class="article-note">
+            <p><strong>Kubotal contribue au code d'OKDP</strong> et accompagne les organisations qui bâtissent une plateforme data souveraine, avec un objectif constant&nbsp;: l'autonomie de leurs équipes. Voir la page <a href="/accompagnement/">Accompagnement</a>.</p>
+          </div>
+
+          <div class="article-end">
+            <a class="article-back" href="/okdp/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Lire le guide d'OKDP</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre plateforme souveraine</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>

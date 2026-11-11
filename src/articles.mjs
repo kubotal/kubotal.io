@@ -9,6 +9,66 @@
  */
 export const ARTICLES = [
   {
+    slug: 'support-okdp-accompagnement',
+    corps: 'article-support-okdp',
+    titre: 'Support OKDP : qui peut vous accompagner ?',
+    tag: 'OKDP',
+    tint: '#5B3DF5',
+    date: '2026-11-11',
+    minutes: 4,
+    resume:
+      "OKDP n'a pas d'éditeur. D'où vient le support, ce qu'un accompagnement doit couvrir, " +
+      'et comment choisir un intégrateur OKDP sur des critères vérifiables.',
+  },
+  {
+    slug: 'plateforme-data-kubernetes',
+    corps: 'article-plateforme-data-kubernetes',
+    titre: 'Plateforme data sur Kubernetes : le guide',
+    tag: 'Data',
+    tint: '#1685FF',
+    date: '2026-11-11',
+    minutes: 4,
+    resume:
+      'Les composants d\'une plateforme data sur Kubernetes, les trois façons de ' +
+      "l'obtenir, et ce qui reste difficile une fois tout installé.",
+  },
+  {
+    slug: 'plateforme-data-souveraine',
+    corps: 'article-plateforme-data-souveraine',
+    titre: 'Plateforme data souveraine : comment la bâtir ?',
+    tag: 'Data',
+    tint: '#1685FF',
+    date: '2026-11-11',
+    minutes: 4,
+    resume:
+      'La souveraineté se joue à trois niveaux : juridique, technique et opérationnel. ' +
+      'Trois options comparées et six questions à poser avant de choisir.',
+  },
+  {
+    slug: 'lakehouse-open-source-kubernetes',
+    corps: 'article-lakehouse-kubernetes',
+    titre: 'Lakehouse open source sur Kubernetes : le guide',
+    tag: 'Data',
+    tint: '#1685FF',
+    date: '2026-11-11',
+    minutes: 4,
+    resume:
+      'Stockage objet, Iceberg, catalogue Polaris, Spark et Trino : les briques ' +
+      "d'un lakehouse open source sur Kubernetes et ses cinq pièges d'exploitation.",
+  },
+  {
+    slug: 'alternative-databricks-open-source',
+    corps: 'article-alternative-databricks',
+    titre: 'Alternative à Databricks open source : le guide',
+    tag: 'Data',
+    tint: '#1685FF',
+    date: '2026-11-11',
+    minutes: 4,
+    resume:
+      'Chaque brique de Databricks a un équivalent open source. Ce que vous gagnez, ' +
+      'ce que vous perdez, et quand OKDP est une bonne alternative.',
+  },
+  {
     slug: 'alternative-cloudera-open-source',
     corps: 'article-alternative-cloudera',
     titre: 'Alternative à Cloudera open source : que choisir ?',
@@ -194,7 +254,7 @@ export const ARTICLES = [
 ];
 
 /** Nombre d'articles affichés par page de liste. */
-export const PAR_PAGE = 10;
+export const PAR_PAGE = 12;
 
 const MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
   'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];

@@ -1,0 +1,129 @@
+  <!-- ============== ARTICLE : plateforme data Kubernetes ============== -->
+  <section class="section" id="article">
+    <div class="wrap">
+      <article class="article">
+
+        <header class="article-head">
+          <nav class="post-meta" aria-label="Fil d'Ariane">
+            <a class="article-back" href="/articles/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Articles</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Plateforme data sur Kubernetes</span>
+          </nav>
+          <h1>Plateforme data sur Kubernetes : le guide</h1>
+          <p class="article-sub">Ce qu'une plateforme data sur Kubernetes contient, les trois façons de
+            l'obtenir, et ce qui est réellement difficile une fois les composants installés.</p>
+          <div class="post-meta" style="--tint:#1685FF;margin-top:22px">
+            <span class="post-tag">Data</span>
+            <time datetime="2026-11-11">11 novembre 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Par l'équipe Kubotal</span>
+            <span aria-hidden="true">·</span>
+            <span>4 min de lecture</span>
+          </div>
+        </header>
+
+        <nav class="toc" id="toc" aria-label="Sommaire" hidden></nav>
+
+        <div class="article-body">
+
+          <div class="article-note">
+            <p><strong>En bref :</strong> une plateforme data sur Kubernetes réunit un stockage objet, un catalogue, des moteurs de traitement et de requête, un orchestrateur et des outils d'analyse, tous déployés comme des applications Kubernetes. On l'obtient de trois façons&nbsp;: l'assembler soi-même, adopter une distribution open source comme OKDP, ou acheter un service managé. Installer les composants est rapide. Les faire fonctionner ensemble est le vrai travail.</p>
+          </div>
+
+          <p>Kubernetes est devenu le socle par défaut des applications. La donnée suit le même chemin&nbsp;: Spark, Trino et Airflow s'exécutent aujourd'hui nativement sur Kubernetes. Ce guide décrit ce que cela implique pour une équipe plateforme.</p>
+
+          <h2>Pourquoi mettre une plateforme data sur Kubernetes&nbsp;?</h2>
+          <ul>
+            <li><strong>Le stockage et le calcul sont séparés.</strong> Les données vivent dans un stockage objet. Le calcul démarre à la demande et s'arrête ensuite. Chacun se dimensionne seul.</li>
+            <li><strong>Un seul socle.</strong> Les applications et la donnée partagent les mêmes outils de déploiement, de supervision et de sécurité.</li>
+            <li><strong>Tout est déclaratif.</strong> La plateforme se décrit dans Git et se reconstruit à l'identique. C'est le principe du GitOps.</li>
+            <li><strong>L'isolation est native.</strong> Espaces de noms, quotas et politiques réseau séparent les équipes sans mécanisme supplémentaire.</li>
+          </ul>
+
+          <h2>De quoi une plateforme data Kubernetes est-elle composée&nbsp;?</h2>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Couche</th><th>Rôle</th><th>Exemples open source</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Stockage</th><td>Conserver les fichiers de données</td><td>Stockage objet compatible S3</td></tr>
+                <tr><th scope="row">Format de table</th><td>Transactions et évolution de schéma</td><td>Apache Iceberg</td></tr>
+                <tr><th scope="row">Catalogue</th><td>Savoir quelles tables existent, et où</td><td>Hive Metastore, Apache Polaris</td></tr>
+                <tr><th scope="row">Traitement</th><td>Transformer de gros volumes</td><td>Apache Spark et son opérateur</td></tr>
+                <tr><th scope="row">SQL interactif</th><td>Interroger sans déplacer les données</td><td>Trino</td></tr>
+                <tr><th scope="row">Orchestration</th><td>Enchaîner et planifier les traitements</td><td>Apache Airflow</td></tr>
+                <tr><th scope="row">Exploration</th><td>Notebooks pour les analystes</td><td>JupyterHub</td></tr>
+                <tr><th scope="row">Restitution</th><td>Tableaux de bord</td><td>Apache Superset</td></tr>
+                <tr><th scope="row">Identité</th><td>Une connexion unique pour tous les outils</td><td>OIDC avec Keycloak ou KubAuth</td></tr>
+                <tr><th scope="row">Déploiement</th><td>Installer et mettre à jour l'ensemble</td><td>Helm, Flux, KuboCD</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Les quatre premières couches forment un lakehouse. Nous les détaillons dans <a href="/articles/lakehouse-open-source-kubernetes/">notre guide du lakehouse open source sur Kubernetes</a>.</p>
+
+          <h2>Quelles sont les trois façons de l'obtenir&nbsp;?</h2>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Voie</th><th>Avantage</th><th>Coût réel</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Assembler soi-même</th>
+                  <td>Liberté totale sur chaque choix.</td>
+                  <td>Toute l'intégration, à refaire à chaque montée de version.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Distribution open source</th>
+                  <td>Une intégration déjà faite, sans licence. Exemples&nbsp;: OKDP, Stackable.</td>
+                  <td>Des compétences Kubernetes pour l'exploiter.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Service managé</th>
+                  <td>Presque plus d'exploitation.</td>
+                  <td>Une facture à l'usage et une dépendance au fournisseur.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p><a href="/okdp/">OKDP</a>, l'Open Kubernetes Data Platform, appartient à la deuxième voie. La plateforme assemble les projets Apache d'origine et ajoute un Control Plane qui crée les services par projet. Elle est sous licence Apache&nbsp;2.0.</p>
+
+          <h2>Qu'est-ce qui est réellement difficile&nbsp;?</h2>
+          <p>Installer Spark ou Trino avec un chart Helm prend une journée. Les difficultés commencent après.</p>
+          <ul>
+            <li><strong>L'intégration.</strong> Chaque outil doit partager la même authentification, le même catalogue et le même stockage. C'est la majeure partie du travail.</li>
+            <li><strong>Le multi-équipes.</strong> Donner à chaque équipe ses services, ses droits et ses quotas, sans que tout passe par un administrateur.</li>
+            <li><strong>Les montées de version.</strong> Dix composants évoluent à dix rythmes différents. Leurs compatibilités se testent ensemble.</li>
+            <li><strong>Le réseau et le stockage.</strong> Le calcul lit les données à travers le réseau. Le débit vers le stockage objet devient un paramètre de dimensionnement.</li>
+            <li><strong>Les compétences.</strong> L'équipe doit comprendre à la fois Kubernetes et les moteurs Data.</li>
+          </ul>
+          <p>Une distribution traite les trois premiers points. Les deux derniers restent à votre charge, ou à celle d'un <a href="/articles/support-okdp-accompagnement/">accompagnement</a>.</p>
+
+          <h2>Quand ne pas choisir Kubernetes&nbsp;?</h2>
+          <ul>
+            <li><strong>Vos volumes sont modestes.</strong> Une base PostgreSQL bien tenue suffit à beaucoup de besoins analytiques.</li>
+            <li><strong>Vous n'avez pas d'équipe Kubernetes</strong> et ne comptez pas en former une. Un service managé coûtera moins cher.</li>
+            <li><strong>Votre plateforme actuelle vous convient.</strong> Migrer n'est justifié que par un problème réel&nbsp;: coût, fin de support ou limite d'architecture.</li>
+          </ul>
+
+          <h2>Par où commencer&nbsp;?</h2>
+          <ul>
+            <li><a href="/articles/installer-okdp-sandbox-kind/">Installez le sandbox OKDP en local</a> pour voir une plateforme complète tourner.</li>
+            <li>Lisez <a href="/articles/okdp-architecture-control-plane/">l'architecture d'OKDP</a> pour comprendre le modèle par projet.</li>
+            <li>Si vous partez de Hadoop, suivez <a href="/articles/migration-hadoop-kubernetes/">le guide de migration</a>.</li>
+            <li>Si la localisation des données compte, voyez <a href="/articles/plateforme-data-souveraine/">comment bâtir une plateforme data souveraine</a>.</li>
+          </ul>
+
+          <div class="article-note">
+            <p><strong>Kubotal contribue au code d'OKDP</strong> et accompagne la mise en place de plateformes data sur Kubernetes, du cadrage à l'exploitation. Les modes d'intervention sont décrits sur la page <a href="/accompagnement/">Accompagnement</a>.</p>
+          </div>
+
+          <div class="article-end">
+            <a class="article-back" href="/okdp/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Lire le guide d'OKDP</a>
+            <a class="btn btn-accent btn-sm" href="/contact/">Parler de votre plateforme data</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>

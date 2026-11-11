@@ -23,6 +23,26 @@
     <loc>https://kubotal.io/articles/</loc>
   </url>
   <url>
+    <loc>https://kubotal.io/articles/support-okdp-accompagnement/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://kubotal.io/articles/plateforme-data-kubernetes/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://kubotal.io/articles/plateforme-data-souveraine/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://kubotal.io/articles/lakehouse-open-source-kubernetes/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
+    <loc>https://kubotal.io/articles/alternative-databricks-open-source/</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
     <loc>https://kubotal.io/articles/alternative-cloudera-open-source/</loc>
     <lastmod>2026-11-10</lastmod>
   </url>

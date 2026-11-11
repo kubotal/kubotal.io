@@ -20,6 +20,14 @@ const OKDP_ARTICLES = [
 
 const CLIENT_ARTICLES = ['alternative-cloudera-open-source', 'migration-hadoop-kubernetes'];
 
+const KEYWORD_ARTICLES = [
+  'support-okdp-accompagnement',
+  'plateforme-data-kubernetes',
+  'plateforme-data-souveraine',
+  'lakehouse-open-source-kubernetes',
+  'alternative-databricks-open-source',
+];
+
 const PUBLIC_PAGES = [
   ['index.html', 'https://kubotal.io/'],
   ['expertise/index.html', 'https://kubotal.io/expertise/'],
@@ -32,6 +40,7 @@ const PUBLIC_PAGES = [
     'articles/kubocd-deployer-sans-maitriser-helm/index.html',
     'https://kubotal.io/articles/kubocd-deployer-sans-maitriser-helm/',
   ],
+  ...KEYWORD_ARTICLES.map((slug) => [`articles/${slug}/index.html`, `https://kubotal.io/articles/${slug}/`]),
   ...CLIENT_ARTICLES.map((slug) => [`articles/${slug}/index.html`, `https://kubotal.io/articles/${slug}/`]),
   ...OKDP_ARTICLES.map((slug) => [`articles/${slug}/index.html`, `https://kubotal.io/articles/${slug}/`]),
 ];
@@ -106,7 +115,7 @@ test('publishes only articles with a body and removes stale draft outputs', () =
 
   assert.match(index, /kubocd-deployer-sans-maitriser-helm/);
   assert.doesNotMatch(index, /okdp-distribution-data-kubernetes/);
-  assert.doesNotMatch(index, /11 articles|page 1 sur 2/);
+  assert.doesNotMatch(index, /page 1 sur 2/);
   assert.equal(existsSync(join(buildRoot, 'articles/page/2/index.html')), false);
   assert.equal(
     existsSync(join(buildRoot, 'articles/okdp-distribution-data-kubernetes/index.html')),
@@ -418,4 +427,25 @@ test('publishes client-need articles linked with the pillar page and each other'
   }
   assert.match(read(`articles/${first}/index.html`), new RegExp(`href="/articles/${second}/"`));
   assert.match(read(`articles/${second}/index.html`), new RegExp(`href="/articles/${first}/"`));
+});
+
+test('publishes keyword articles linked with the pillar page and each other', () => {
+  const pillar = read('okdp/index.html');
+
+  for (const slug of KEYWORD_ARTICLES) {
+    const html = read(`articles/${slug}/index.html`);
+    const title = html.match(/<title>([^<]+)<\/title>/)[1];
+    const description = html.match(/<meta name="description" content="([^"]+)">/)[1];
+    const linked = KEYWORD_ARTICLES.filter((other) => other !== slug && html.includes(`href="/articles/${other}/"`));
+
+    assert.ok(title.length <= 60, `${slug} title ${title.length}`);
+    assert.ok(description.length <= 155, `${slug} description ${description.length}`);
+    assert.match(html, /href="\/okdp\/"/, slug);
+    assert.match(html, /href="\/contact\/"/, slug);
+    assert.match(html, /href="\/accompagnement\/"/, slug);
+    assert.match(html, /Par l'équipe Kubotal/, slug);
+    assert.doesNotMatch(html, /noindex/, slug);
+    assert.ok(linked.length >= 1, `${slug} links to no other keyword article`);
+    assert.match(pillar, new RegExp(`href="/articles/${slug}/"`), slug);
+  }
 });
