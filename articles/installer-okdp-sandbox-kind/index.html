@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Installer OKDP en local avec Kind, Flux et KuboCD — Kubotal</title>
-<meta name="description" content="Le sandbox officiel d’OKDP pas à pas : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.">
+<title>Installer OKDP : le sandbox pas à pas avec Kind — Kubotal</title>
+<meta name="description" content="Installer le sandbox OKDP en local : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.">
 <link rel="canonical" href="https://kubotal.io/articles/installer-okdp-sandbox-kind/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Kubotal">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:title" content="Installer OKDP en local avec Kind, Flux et KuboCD — Kubotal">
-<meta property="og:description" content="Le sandbox officiel d’OKDP pas à pas : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.">
+<meta property="og:title" content="Installer OKDP : le sandbox pas à pas avec Kind — Kubotal">
+<meta property="og:description" content="Installer le sandbox OKDP en local : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.">
 <meta property="og:url" content="https://kubotal.io/articles/installer-okdp-sandbox-kind/">
 <meta property="og:image" content="https://kubotal.io/kubotal-logo-hero.png">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://kubotal.io/#organization","name":"Kubotal","url":"https://kubotal.io/","logo":{"@type":"ImageObject","url":"https://kubotal.io/kubotal-logo-mark.png"},"email":"contact@kubotal.io","description":"Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes.","knowsAbout":["Data platform","Artificial intelligence","Kubernetes","GitOps","MLOps","Open source","OKDP","Open Kubernetes Data Platform","KuboCD","KubAuth"],"sameAs":["https://www.linkedin.com/company/kubotal","https://github.com/kubotal","https://github.com/kubocd","https://github.com/kubauth"]},{"@type":"WebSite","@id":"https://kubotal.io/#website","url":"https://kubotal.io/","name":"Kubotal","publisher":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"},{"@type":"WebPage","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#webpage","url":"https://kubotal.io/articles/installer-okdp-sandbox-kind/","name":"Installer OKDP en local avec Kind, Flux et KuboCD — Kubotal","description":"Le sandbox officiel d’OKDP pas à pas : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.","isPartOf":{"@id":"https://kubotal.io/#website"},"about":{"@id":"https://kubotal.io/#organization"},"mainEntity":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#article"},"breadcrumb":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#breadcrumb"},"inLanguage":"fr-FR"},{"@type":"BlogPosting","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#article","url":"https://kubotal.io/articles/installer-okdp-sandbox-kind/","headline":"Installer OKDP en local avec Kind, Flux et KuboCD","description":"Le sandbox officiel d’OKDP pas à pas : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.","datePublished":"2026-11-10","dateModified":"2026-11-10","articleSection":"OKDP","timeRequired":"PT7M","mainEntityOfPage":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#webpage"},"author":{"@type":"Organization","name":"Kubotal","url":"https://kubotal.io/"},"publisher":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"},{"@type":"BreadcrumbList","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Articles","item":"https://kubotal.io/articles/"},{"@type":"ListItem","position":2,"name":"Installer OKDP en local avec Kind, Flux et KuboCD","item":"https://kubotal.io/articles/installer-okdp-sandbox-kind/"}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://kubotal.io/#organization","name":"Kubotal","url":"https://kubotal.io/","logo":{"@type":"ImageObject","url":"https://kubotal.io/kubotal-logo-mark.png"},"email":"contact@kubotal.io","description":"Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes.","knowsAbout":["Data platform","Artificial intelligence","Kubernetes","GitOps","MLOps","Open source","OKDP","Open Kubernetes Data Platform","KuboCD","KubAuth"],"sameAs":["https://www.linkedin.com/company/kubotal","https://github.com/kubotal","https://github.com/kubocd","https://github.com/kubauth"]},{"@type":"WebSite","@id":"https://kubotal.io/#website","url":"https://kubotal.io/","name":"Kubotal","publisher":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"},{"@type":"WebPage","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#webpage","url":"https://kubotal.io/articles/installer-okdp-sandbox-kind/","name":"Installer OKDP : le sandbox pas à pas avec Kind — Kubotal","description":"Installer le sandbox OKDP en local : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.","isPartOf":{"@id":"https://kubotal.io/#website"},"about":{"@id":"https://kubotal.io/#organization"},"mainEntity":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#article"},"breadcrumb":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#breadcrumb"},"inLanguage":"fr-FR"},{"@type":"BlogPosting","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#article","url":"https://kubotal.io/articles/installer-okdp-sandbox-kind/","headline":"Installer OKDP : le sandbox pas à pas avec Kind","description":"Installer le sandbox OKDP en local : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.","datePublished":"2026-11-10","dateModified":"2026-11-10","articleSection":"OKDP","timeRequired":"PT7M","mainEntityOfPage":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#webpage"},"author":{"@type":"Organization","name":"Kubotal","url":"https://kubotal.io/"},"publisher":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"},{"@type":"BreadcrumbList","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Articles","item":"https://kubotal.io/articles/"},{"@type":"ListItem","position":2,"name":"Installer OKDP : le sandbox pas à pas avec Kind","item":"https://kubotal.io/articles/installer-okdp-sandbox-kind/"}]}]}</script>
 <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../assets/styles.css">
@@ -86,6 +86,7 @@
     <nav class="nav-links" id="nav-menu">
       <a href="/expertise/">Expertise</a>
       <a href="/open-source/">Open source</a>
+      <a href="/okdp/">OKDP</a>
       <a href="/accompagnement/">Accompagnement</a>
       <a href="/contact/">Contact</a>
       <a href="/articles/" aria-current="page">Articles</a>
@@ -107,8 +108,8 @@
             <span aria-hidden="true">/</span>
             <span aria-current="page">Installer OKDP en local</span>
           </nav>
-          <h1>Installer OKDP en local avec Kind, Flux et KuboCD</h1>
-          <p class="article-sub">Le sandbox officiel d'OKDP, étape par étape&nbsp;: ce que fait chaque
+          <h1>Installer OKDP : le sandbox pas à pas avec Kind</h1>
+          <p class="article-sub">Installer le sandbox OKDP en local avec Kind, Flux et KuboCD&nbsp;: ce que fait chaque
             commande, dans quel ordre attendre, et les quatre points où l'installation cale le plus souvent.</p>
           <div class="post-meta" style="--tint:#5B3DF5;margin-top:22px">
             <span class="post-tag">OKDP</span>

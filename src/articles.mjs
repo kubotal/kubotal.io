@@ -95,13 +95,13 @@ export const ARTICLES = [
   {
     slug: 'installer-okdp-sandbox-kind',
     corps: 'article-okdp-sandbox',
-    titre: 'Installer OKDP en local avec Kind, Flux et KuboCD',
+    titre: 'Installer OKDP : le sandbox pas à pas avec Kind',
     tag: 'OKDP',
     tint: '#5B3DF5',
     date: '2026-11-10',
     minutes: 7,
     resume:
-      'Le sandbox officiel d’OKDP pas à pas : prérequis, cluster Kind, Flux, KuboCD, ' +
+      'Installer le sandbox OKDP en local : prérequis, cluster Kind, Flux, KuboCD, ' +
       'ordre de déploiement et les quatre pièges qui bloquent l’installation.',
   },
   {

@@ -173,6 +173,22 @@ const OKDP_FAQ = [
     a: 'Oui. OKDP s’installe sur un cluster Kubernetes que vous gérez. Pour un essai, le sandbox officiel crée un cluster local avec Kind sur une machine de 16 Go de RAM.',
   },
   {
+    q: 'Comment installer OKDP ?',
+    a: 'Le plus simple est le sandbox officiel : il crée un cluster Kubernetes local avec Kind, puis installe Flux, KuboCD et la plateforme. En production, OKDP se déploie en GitOps sur votre cluster.',
+  },
+  {
+    q: 'OKDP peut-il remplacer Cloudera ou Hadoop ?',
+    a: 'Oui pour les usages de traitement Spark, de SQL et d’orchestration : OKDP remplace HDFS par un stockage objet, YARN par Kubernetes et Oozie par Airflow. Les usages centrés sur HBase ou le temps réel demandent une étude préalable.',
+  },
+  {
+    q: 'Qui propose du support pour OKDP ?',
+    a: 'OKDP n’a pas d’éditeur. Le support vient de la communauté, de votre équipe interne et des sociétés de services qui contribuent au projet. Kubotal, contributeur du code, propose cadrage, build, run et transfert.',
+  },
+  {
+    q: 'OKDP est-il une plateforme souveraine ?',
+    a: 'OKDP apporte la maîtrise technique : licence Apache 2.0, composants standards, déploiement sur l’infrastructure de votre choix. La souveraineté juridique dépend ensuite de votre hébergeur.',
+  },
+  {
     q: 'Peut-on installer un seul composant d’OKDP ?',
     a: 'Oui. Les modules sont utilisables séparément avec Helm, sans le Control Plane. Le Control Plane devient utile quand plusieurs équipes partagent la plateforme.',
   },
@@ -233,10 +249,10 @@ const PAGES = [
     corpsHtml: page('okdp-detail').replace('<!--FAQ-->', faqHtml(OKDP_FAQ)),
     out: 'okdp/index.html',
     depth: 1,
-    nav: 'open-source',
+    nav: 'okdp',
     url: '/okdp/',
     flow: true,
-    lastmod: '2026-11-10',
+    lastmod: '2026-11-12',
     faq: OKDP_FAQ,
     software: {
       name: 'OKDP',

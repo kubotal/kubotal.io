@@ -11,7 +11,7 @@
           <p class="article-sub">Ce qu'est l'Open Kubernetes Data Platform, comment elle est construite, comment l'essayer, et ce que Kubotal y apporte en tant que contributeur du projet.</p>
           <div class="post-meta" style="--tint:#5B3DF5;margin-top:22px">
             <span class="post-tag">OKDP</span>
-            <time datetime="2026-11-10">Mis à jour le 10 novembre 2026</time>
+            <time datetime="2026-11-12">Mis à jour le 12 novembre 2026</time>
             <span aria-hidden="true">·</span>
             <span>Par l'équipe Kubotal</span>
           </div>
@@ -53,6 +53,27 @@
           <p>Dans la pratique, la plateforme pose d'abord des fondations partagées&nbsp;: Keycloak pour l'identité, CloudNativePG pour PostgreSQL, External Secrets pour les secrets, le Spark Operator pour les traitements, cert-manager et ingress-nginx pour le TLS et le routage. Les services Data ne sont pas installés une fois pour tous&nbsp;: le Control Plane les crée pour chaque projet, avec ses propres ressources et ses propres accès.</p>
           <p>Ce découpage a une conséquence directe sur le dimensionnement. Le coût fixe est celui des fondations et du Control Plane&nbsp;; le coût variable suit le nombre de projets et les services que chacun active.</p>
 
+          <h2>Quels sont les composants d'OKDP&nbsp;?</h2>
+          <p>Chaque composant est un projet open source reconnu, déployé avec son chart d'origine ou un chart maintenu par OKDP.</p>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Besoin</th><th>Composant</th><th>À quoi il sert</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Traitement</th><td>Apache Spark et le Spark Operator</td><td>Transformer de gros volumes, en lots.</td></tr>
+                <tr><th scope="row">SQL interactif</th><td>Trino</td><td>Interroger les données là où elles sont.</td></tr>
+                <tr><th scope="row">Catalogue</th><td>Hive Metastore, Apache Polaris</td><td>Référencer les tables, dont les tables Iceberg.</td></tr>
+                <tr><th scope="row">Orchestration</th><td>Apache Airflow</td><td>Planifier et enchaîner les traitements.</td></tr>
+                <tr><th scope="row">Notebooks</th><td>JupyterHub</td><td>Explorer et prototyper.</td></tr>
+                <tr><th scope="row">Tableaux de bord</th><td>Apache Superset</td><td>Restituer les données.</td></tr>
+                <tr><th scope="row">Identité</th><td>Keycloak ou KubAuth</td><td>Une connexion unique en OIDC pour tous les services.</td></tr>
+                <tr><th scope="row">Pilotage</th><td>Control Plane OKDP</td><td>Créer et suivre les services, projet par projet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Ensemble, le stockage objet, le catalogue, Spark et Trino forment un lakehouse. Nous le détaillons dans <a href="/articles/lakehouse-open-source-kubernetes/">notre guide du lakehouse open source sur Kubernetes</a>, et le fonctionnement interne dans <a href="/articles/okdp-architecture-control-plane/">l'architecture d'OKDP</a>.</p>
+
           <h2>Comment OKDP est-il déployé&nbsp;?</h2>
           <p>Le déploiement de référence est GitOps. Flux applique l'état décrit dans Git, et KuboCD emballe chaque composant dans un package OCI exposé par une ressource <code>Release</code> courte. Un cluster OKDP se lit donc comme une liste de releases, chacune avec sa version et ses paramètres, et non comme un empilement de fichiers <code>values.yaml</code>.</p>
           <p>KuboCD est le projet de livraison continue porté par Kubotal. Ses ressources Kubernetes appartiennent au groupe d'API <code>kubocd.kubotal.io</code>, visible dans la documentation du sandbox OKDP. Pour comprendre ce mécanisme avant d'ouvrir le dépôt, lisez <a href="/articles/kubocd-deployer-sans-maitriser-helm/">notre analyse de KuboCD, Helm et Flux</a>.</p>
@@ -69,6 +90,7 @@
 cd okdp-sandbox
 # puis suivre le « Quick start » du README : cluster Kind, Flux, releases KuboCD</code></pre>
           <p>Le sandbox se lit en trois niveaux&nbsp;: la plateforme, un projet de démonstration complet, puis des exemples de traitements qui alimentent un lakehouse en couches. Chaque niveau est optionnel et s'appuie sur le précédent. Suivez le README officiel pour les commandes exactes&nbsp;: elles évoluent avec les versions.</p>
+          <p>Pour le détail de chaque étape et les blocages les plus fréquents, suivez <a href="/articles/installer-okdp-sandbox-kind/">notre tutoriel d'installation du sandbox OKDP</a>.</p>
 
           <h2>Quand choisir OKDP, et quand s'en passer&nbsp;?</h2>
           <p>OKDP convient quand trois conditions sont réunies&nbsp;: l'organisation exploite déjà Kubernetes ou a décidé de le faire, elle veut garder la maîtrise de son infrastructure et de ses données, et plusieurs équipes doivent partager une même plateforme avec une isolation par projet.</p>
@@ -78,6 +100,23 @@ cd okdp-sandbox
             <li><strong>Coût&nbsp;:</strong> il n'y a pas de licence. Le budget se déplace vers l'infrastructure et vers les compétences d'exploitation.</li>
           </ul>
           <p>OKDP n'est pas le bon choix dans deux cas. Une équipe sans compétence Kubernetes et sans intention d'en acquérir paiera l'exploitation plus cher qu'un service managé. Et un besoin centré sur l'ingestion temps réel ou le service de modèles de langage devra composer avec la feuille de route&nbsp;: ces domaines y figurent comme des évolutions à venir, à vérifier sur la <a href="https://okdp.io/" target="_blank" rel="noopener">roadmap officielle</a>.</p>
+
+          <h2>Comment OKDP se compare-t-il aux alternatives&nbsp;?</h2>
+          <div class="article-table-wrap">
+            <table class="article-table">
+              <thead>
+                <tr><th>Critère</th><th>OKDP</th><th>Plateforme Hadoop sous licence</th><th>Service managé dans le cloud</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Licence</th><td>Apache&nbsp;2.0, sans coût</td><td>Payante, liée à la taille du cluster</td><td>Facturation à l'usage</td></tr>
+                <tr><th scope="row">Hébergement</th><td>Tout cluster Kubernetes, sur site ou cloud</td><td>Sur site ou cloud</td><td>Cloud du fournisseur</td></tr>
+                <tr><th scope="row">Stockage et calcul</th><td>Séparés</td><td>Liés sur les mêmes machines</td><td>Séparés</td></tr>
+                <tr><th scope="row">Exploitation</th><td>À votre charge, ou accompagnée</td><td>À votre charge, avec support éditeur</td><td>Assurée par le fournisseur</td></tr>
+                <tr><th scope="row">Réversibilité</th><td>Forte&nbsp;: moteurs et formats standards</td><td>Moyenne</td><td>Variable selon les fonctions utilisées</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Deux comparatifs détaillent ces choix&nbsp;: <a href="/articles/alternative-cloudera-open-source/">les alternatives open source à Cloudera</a> et <a href="/articles/alternative-databricks-open-source/">les alternatives open source à Databricks</a>. Si vous partez d'un cluster Hadoop, voyez <a href="/articles/migration-hadoop-kubernetes/">le guide de migration vers Kubernetes</a>.</p>
 
           <h2>Quel est le rôle de Kubotal dans OKDP&nbsp;?</h2>
           <p>Kubotal contribue au code d'OKDP. Les chiffres ci-dessous viennent des pages publiques de contributeurs GitHub, relevées le 10&nbsp;novembre 2026, en comptant les comptes dont le profil indique Kubotal.</p>
@@ -115,11 +154,11 @@ cd okdp-sandbox
             <li><strong>Run&nbsp;:</strong> opérer les montées de version, la sécurité et la capacité.</li>
             <li><strong>Transfert&nbsp;:</strong> former l'équipe interne pour qu'elle exploite la plateforme sans nous.</li>
           </ul>
-          <p>Le détail de ces modes est décrit sur la page <a href="/accompagnement/">Accompagnement</a>, et nos domaines d'intervention sur la page <a href="/expertise/">Expertise</a>.</p>
+          <p>Le détail de ces modes est décrit sur la page <a href="/accompagnement/">Accompagnement</a>, et nos domaines d'intervention sur la page <a href="/expertise/">Expertise</a>. Pour comparer les sources de support possibles, lisez <a href="/articles/support-okdp-accompagnement/">Support OKDP&nbsp;: qui peut vous accompagner&nbsp;?</a></p>
 
           <h2>Quels articles lire pour aller plus loin&nbsp;?</h2>
           <ul>
-            <li><a href="/articles/installer-okdp-sandbox-kind/">Installer OKDP en local avec Kind, Flux et KuboCD</a>&nbsp;: le sandbox pas à pas et ses pièges.</li>
+            <li><a href="/articles/installer-okdp-sandbox-kind/">Installer OKDP&nbsp;: le sandbox pas à pas avec Kind</a>&nbsp;: le sandbox pas à pas et ses pièges.</li>
             <li><a href="/articles/okdp-architecture-control-plane/">Architecture d'OKDP&nbsp;: le rôle du Control Plane</a>&nbsp;: projets, catalogue et identité.</li>
             <li><a href="/articles/alternative-cloudera-open-source/">Alternative à Cloudera open source&nbsp;: que choisir&nbsp;?</a>&nbsp;: les quatre voies et leurs coûts.</li>
             <li><a href="/articles/migration-hadoop-kubernetes/">Migrer de Hadoop vers Kubernetes</a>&nbsp;: la méthode en six étapes.</li>
