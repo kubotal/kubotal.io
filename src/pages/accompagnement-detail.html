@@ -13,6 +13,45 @@
 
         <div class="article-body">
           <p>Le bon point de départ dépend de l'état de la plateforme. Une cible encore ouverte demande un cadrage. Une cible validée peut passer au build. Une plateforme en service demande du run ou un transfert de compétences.</p>
+          <figure class="arch-schema">
+            <svg viewBox="0 0 760 144" role="img" aria-label="Trajectoire d'accompagnement Kubotal : Cadrage, Build, Run et Transfert">
+              <defs>
+                <marker id="acc-arr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M1 1 L8 5 L1 9" fill="none" stroke="#0B63F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </marker>
+              </defs>
+              <rect x="12" y="18" width="164" height="106" rx="12" fill="#F1F6FF" stroke="#1685FF" stroke-width="1.5"/>
+              <text x="26" y="44" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#0B63F6">1. Cadrage</text>
+              <text x="26" y="66" font-size="12" fill="#26324A">Audit de l'existant</text>
+              <text x="26" y="84" font-size="12" fill="#26324A">Cible d'architecture</text>
+              <text x="26" y="102" font-size="12" fill="#55637A">Trajectoire et coûts</text>
+
+              <line x1="176" y1="71" x2="198" y2="71" stroke="#0B63F6" stroke-width="1.8" marker-end="url(#acc-arr)"/>
+
+              <rect x="202" y="18" width="164" height="106" rx="12" fill="#FFFFFF" stroke="#0B63F6" stroke-width="1.5"/>
+              <text x="216" y="44" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#0B1220">2. Build</text>
+              <text x="216" y="66" font-size="12" fill="#26324A">Dépôt GitOps Flux</text>
+              <text x="216" y="84" font-size="12" fill="#26324A">Packages KuboCD</text>
+              <text x="216" y="102" font-size="12" fill="#55637A">OIDC, S3, observabilité</text>
+
+              <line x1="366" y1="71" x2="388" y2="71" stroke="#0B63F6" stroke-width="1.8" marker-end="url(#acc-arr)"/>
+
+              <rect x="392" y="18" width="164" height="106" rx="12" fill="#EFFAF6" stroke="#00966A" stroke-width="1.5"/>
+              <text x="406" y="44" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#00966A">3. Run</text>
+              <text x="406" y="66" font-size="12" fill="#26324A">Supervision et MCO</text>
+              <text x="406" y="84" font-size="12" fill="#26324A">Montées de version</text>
+              <text x="406" y="102" font-size="12" fill="#55637A">Capacité et sécurité</text>
+
+              <line x1="556" y1="71" x2="578" y2="71" stroke="#0B63F6" stroke-width="1.8" marker-end="url(#acc-arr)"/>
+
+              <rect x="582" y="18" width="166" height="106" rx="12" fill="#F4F1FF" stroke="#5B3DF5" stroke-width="1.5"/>
+              <text x="596" y="44" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#5B3DF5">4. Transfert</text>
+              <text x="596" y="66" font-size="12" fill="#26324A">Ateliers pratiques</text>
+              <text x="596" y="84" font-size="12" fill="#26324A">Runbooks internes</text>
+              <text x="596" y="102" font-size="12" fill="#55637A">Autonomie complète</text>
+            </svg>
+            <figcaption>Quatre modes d'intervention progressifs adaptés à la maturité de votre plateforme et de vos équipes.</figcaption>
+          </figure>
 
           <h2>Quand commencer par un cadrage&nbsp;?</h2>
           <p>Le cadrage analyse l'existant, définit une cible d'architecture et ordonne la trajectoire. Il convient lorsque plusieurs choix de stockage, de calcul, de déploiement ou de gouvernance restent liés.</p>

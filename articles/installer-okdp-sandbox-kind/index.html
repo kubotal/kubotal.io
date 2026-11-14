@@ -15,7 +15,7 @@
 <meta property="og:url" content="https://kubotal.io/articles/installer-okdp-sandbox-kind/">
 <meta property="og:image" content="https://kubotal.io/kubotal-logo-hero.png">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://kubotal.io/#organization","name":"Kubotal","url":"https://kubotal.io/","logo":{"@type":"ImageObject","url":"https://kubotal.io/kubotal-logo-mark.png"},"email":"contact@kubotal.io","description":"Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes.","knowsAbout":["Data platform","Artificial intelligence","Kubernetes","GitOps","MLOps","Open source","OKDP","Open Kubernetes Data Platform","KuboCD","KubAuth"],"sameAs":["https://www.linkedin.com/company/kubotal","https://github.com/kubotal","https://github.com/kubocd","https://github.com/kubauth"]},{"@type":"WebSite","@id":"https://kubotal.io/#website","url":"https://kubotal.io/","name":"Kubotal","publisher":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"},{"@type":"WebPage","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#webpage","url":"https://kubotal.io/articles/installer-okdp-sandbox-kind/","name":"Installer OKDP : le sandbox pas à pas avec Kind — Kubotal","description":"Installer le sandbox OKDP en local : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.","isPartOf":{"@id":"https://kubotal.io/#website"},"about":{"@id":"https://kubotal.io/#organization"},"mainEntity":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#article"},"breadcrumb":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#breadcrumb"},"inLanguage":"fr-FR"},{"@type":"BlogPosting","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#article","url":"https://kubotal.io/articles/installer-okdp-sandbox-kind/","headline":"Installer OKDP : le sandbox pas à pas avec Kind","description":"Installer le sandbox OKDP en local : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.","datePublished":"2026-11-10","dateModified":"2026-11-10","articleSection":"OKDP","timeRequired":"PT7M","mainEntityOfPage":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#webpage"},"author":{"@type":"Organization","name":"Kubotal","url":"https://kubotal.io/"},"publisher":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"},{"@type":"BreadcrumbList","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Articles","item":"https://kubotal.io/articles/"},{"@type":"ListItem","position":2,"name":"Installer OKDP : le sandbox pas à pas avec Kind","item":"https://kubotal.io/articles/installer-okdp-sandbox-kind/"}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://kubotal.io/#organization","name":"Kubotal","url":"https://kubotal.io/","logo":{"@type":"ImageObject","url":"https://kubotal.io/kubotal-logo-mark.png"},"email":"contact@kubotal.io","description":"Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes.","knowsAbout":["Data platform","Artificial intelligence","Kubernetes","GitOps","MLOps","Open source","OKDP","Open Kubernetes Data Platform","KuboCD"],"sameAs":["https://www.linkedin.com/company/kubotal","https://github.com/kubotal","https://github.com/kubocd","https://github.com/OKDP"]},{"@type":"WebSite","@id":"https://kubotal.io/#website","url":"https://kubotal.io/","name":"Kubotal","publisher":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"},{"@type":"WebPage","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#webpage","url":"https://kubotal.io/articles/installer-okdp-sandbox-kind/","name":"Installer OKDP : le sandbox pas à pas avec Kind — Kubotal","description":"Installer le sandbox OKDP en local : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.","isPartOf":{"@id":"https://kubotal.io/#website"},"about":{"@id":"https://kubotal.io/#organization"},"mainEntity":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#article"},"breadcrumb":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#breadcrumb"},"inLanguage":"fr-FR"},{"@type":"BlogPosting","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#article","url":"https://kubotal.io/articles/installer-okdp-sandbox-kind/","headline":"Installer OKDP : le sandbox pas à pas avec Kind","description":"Installer le sandbox OKDP en local : prérequis, cluster Kind, Flux, KuboCD, ordre de déploiement et les quatre pièges qui bloquent l’installation.","datePublished":"2026-11-10","dateModified":"2026-11-10","articleSection":"OKDP","timeRequired":"PT7M","mainEntityOfPage":{"@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#webpage"},"author":{"@type":"Organization","name":"Kubotal","url":"https://kubotal.io/"},"publisher":{"@id":"https://kubotal.io/#organization"},"inLanguage":"fr-FR"},{"@type":"BreadcrumbList","@id":"https://kubotal.io/articles/installer-okdp-sandbox-kind/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Articles","item":"https://kubotal.io/articles/"},{"@type":"ListItem","position":2,"name":"Installer OKDP : le sandbox pas à pas avec Kind","item":"https://kubotal.io/articles/installer-okdp-sandbox-kind/"}]}]}</script>
 <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../assets/styles.css">
@@ -53,6 +53,7 @@
     <g id="i-minio"><path d="M13.2072.006c-.6216-.0478-1.2.1943-1.6211.582a2.15 2.15 0 0 0-.0938 3.0352l3.4082 3.5507a3.042 3.042 0 0 1-.664 4.6875l-.463.2383V7.2853a15.4198 15.4198 0 0 0-8.0174 10.4862v.0176l6.5487-3.3281v7.621L13.7794 24V13.6817l.8965-.4629a4.4432 4.4432 0 0 0 1.2207-7.0292l-3.371-3.5254a.7489.7489 0 0 1 .037-1.0547.7522.7522 0 0 1 1.0567.0371l.4668.4863-.006.0059 4.0704 4.2441a.0566.0566 0 0 0 .082 0 .06.06 0 0 0 0-.0703l-3.1406-5.1425-.1484.1425.1484-.1445C14.4945.3926 13.8287.0538 13.2072.006Zm-.9024 9.8652v2.9941l-4.1523 2.1484a13.9787 13.9787 0 0 1 2.7676-3.9277 14.1784 14.1784 0 0 1 1.3847-1.2148z"/></g>
     <g id="i-kafka"><path d="M9.71 2.136a1.43 1.43 0 0 0-2.047 0h-.007a1.48 1.48 0 0 0-.421 1.042c0 .41.161.777.422 1.039l.007.007c.257.264.616.426 1.019.426.404 0 .766-.162 1.027-.426l.003-.007c.261-.262.421-.629.421-1.039 0-.408-.159-.777-.421-1.042H9.71zM8.683 22.295c.404 0 .766-.167 1.027-.429l.003-.008c.261-.261.421-.631.421-1.036 0-.41-.159-.778-.421-1.044H9.71a1.42 1.42 0 0 0-1.027-.432 1.4 1.4 0 0 0-1.02.432h-.007c-.26.266-.422.634-.422 1.044 0 .406.161.775.422 1.036l.007.008c.258.262.617.429 1.02.429zm7.89-4.462c.359-.096.683-.33.882-.684l.027-.052a1.47 1.47 0 0 0 .114-1.067 1.454 1.454 0 0 0-.675-.896l-.021-.014a1.425 1.425 0 0 0-1.078-.132c-.36.091-.684.335-.881.686-.2.349-.241.75-.146 1.119.099.363.33.691.675.896h.002c.346.203.737.239 1.101.144zm-6.405-7.342a2.083 2.083 0 0 0-1.485-.627c-.58 0-1.103.242-1.482.627-.378.385-.612.916-.612 1.507s.233 1.124.612 1.514a2.08 2.08 0 0 0 2.967 0c.379-.39.612-.923.612-1.514s-.233-1.122-.612-1.507zm-.835-2.51c.843.141 1.6.552 2.178 1.144h.004c.092.093.182.196.265.299l1.446-.851a3.176 3.176 0 0 1-.047-1.808 3.149 3.149 0 0 1 1.456-1.926l.025-.016a3.062 3.062 0 0 1 2.345-.306c.77.21 1.465.721 1.898 1.482v.002c.431.757.518 1.626.313 2.408a3.145 3.145 0 0 1-1.456 1.928l-.198.118h-.02a3.095 3.095 0 0 1-2.154.201 3.127 3.127 0 0 1-1.514-.944l-1.444.848a4.162 4.162 0 0 1 0 2.879l1.444.846c.413-.47.939-.789 1.514-.944a3.041 3.041 0 0 1 2.371.319l.048.023v.002a3.17 3.17 0 0 1 1.408 1.906 3.215 3.215 0 0 1-.313 2.405l-.026.053-.003-.005a3.147 3.147 0 0 1-1.867 1.436 3.096 3.096 0 0 1-2.371-.318v-.006a3.156 3.156 0 0 1-1.456-1.927 3.175 3.175 0 0 1 .047-1.805l-1.446-.848a3.905 3.905 0 0 1-.265.294l-.004.005a3.938 3.938 0 0 1-2.178 1.138v1.699a3.09 3.09 0 0 1 1.56.862l.002.004c.565.572.914 1.368.914 2.243 0 .873-.35 1.664-.914 2.239l-.002.009a3.1 3.1 0 0 1-2.21.931 3.1 3.1 0 0 1-2.206-.93h-.002v-.009a3.186 3.186 0 0 1-.916-2.239c0-.875.35-1.672.916-2.243v-.004h.002a3.1 3.1 0 0 1 1.558-.862v-1.699a3.926 3.926 0 0 1-2.176-1.138l-.006-.005a4.098 4.098 0 0 1-1.173-2.874c0-1.122.452-2.136 1.173-2.872h.006a3.947 3.947 0 0 1 2.176-1.144V6.289a3.137 3.137 0 0 1-1.558-.864h-.002v-.004a3.192 3.192 0 0 1-.916-2.243c0-.871.35-1.669.916-2.243l.002-.002A3.084 3.084 0 0 1 8.683 0c.861 0 1.641.355 2.21.932v.002h.002c.565.574.914 1.372.914 2.243 0 .876-.35 1.667-.914 2.243l-.002.005a3.142 3.142 0 0 1-1.56.864v1.692zm8.121-1.129l-.012-.019a1.452 1.452 0 0 0-.87-.668 1.43 1.43 0 0 0-1.103.146h.002c-.347.2-.58.529-.677.896-.095.365-.054.768.146 1.119l.007.009c.2.347.519.579.874.673.357.103.755.059 1.098-.144l.019-.009a1.47 1.47 0 0 0 .657-.885 1.493 1.493 0 0 0-.141-1.118"/></g>
 
+    <g id="i-jupyter" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.5"/><ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(-24 12 12)"/><circle cx="19" cy="6.2" r="1.4" fill="currentColor" stroke="none"/><circle cx="5.2" cy="17.8" r="1.4" fill="currentColor" stroke="none"/><circle cx="17.5" cy="18.2" r="1.1" fill="currentColor" stroke="none"/></g>
     <!-- icônes UI -->
     <g id="i-layers"><path d="m12 3 9 5-9 5-9-5z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="m3 13 9 5 9-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></g>
     <g id="i-git"><circle cx="6" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="18" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="9" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 8.6v6.8M8.5 7.4C13 7.4 15.4 9 15.4 9M15.4 9c0 4-9.4 2.4-9.4 6.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
@@ -60,6 +61,9 @@
     <g id="i-brain"><path d="M12 5.5a3.5 3.5 0 0 0-6.6 1.6A3.2 3.2 0 0 0 4 13a3.4 3.4 0 0 0 2.4 5H12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 5.5a3.5 3.5 0 0 1 6.6 1.6A3.2 3.2 0 0 1 20 13a3.4 3.4 0 0 1-2.4 5H12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 5.5V21" stroke="currentColor" stroke-width="1.8"/></g>
     <g id="i-arrow"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>
     <g id="i-mail"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g>
+    <g id="i-github"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></g>
+    <g id="i-linkedin"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></g>
+    <g id="i-check"><path d="m5 12.5 4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>
   </defs>
 </svg>
 
@@ -68,30 +72,33 @@
   <div class="wrap nav-inner">
     <a class="brand" href="/">
       <svg class="brand-mark" viewBox="20 11 59 78" aria-hidden="true">
-        <!-- tracés en clair (pas de <use>) : les jambes doivent être animables séparément -->
+        <!-- tracés en clair (pas de <use>) : les jambes restent animables au survol/focus -->
         <path class="k-body" d="M28 20v60" stroke="#0B1220" stroke-width="13" stroke-linecap="round" fill="none"/>
         <path class="k-leg k-leg-up" d="M35 34C52 34 60 27 74 15 65 33 53 42 35 48Z" fill="url(#kUp)"/>
         <path class="k-leg k-leg-dn" d="M35 52C53 58 64 67 74 82 61 68 51 62 35 66Z" fill="url(#kDn)"/>
       </svg>
-      <span class="wm" aria-hidden="true">UBO<i class="t">TAL</i></span><span class="sr-only">Kubotal</span>
+      <span class="wm" aria-hidden="true">KUBO<i class="t">TAL</i></span><span class="sr-only">Kubotal</span>
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu">
-      <span class="sr-only">Ouvrir le menu</span>
-      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round">
-        <path class="nav-burger" d="M4 7h16M4 12h16M4 17h16"/>
-        <path class="nav-close" d="M6 6l12 12M18 6L6 18"/>
-      </svg>
-    </button>
-    <nav class="nav-links" id="nav-menu">
-      <a href="/expertise/">Expertise</a>
-      <a href="/open-source/">Open source</a>
-      <a href="/okdp/">OKDP</a>
-      <a href="/accompagnement/">Accompagnement</a>
-      <a href="/contact/">Contact</a>
-      <a href="/articles/" aria-current="page">Articles</a>
+    <nav class="nav-links" aria-label="Navigation principale">
+      <button class="nav-toggle" type="button" popovertarget="nav-menu" popovertargetaction="toggle"
+              aria-expanded="false" aria-controls="nav-menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round">
+          <path class="nav-burger" d="M4 7h16M4 12h16M4 17h16"/>
+          <path class="nav-close" d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+        <span>Menu</span>
+      </button>
+      <ul class="nav-menu" id="nav-menu" popover="auto">
+        <li><a href="/expertise/">Expertise</a></li>
+        <li><a href="/open-source/">Open source</a></li>
+        <li><a href="/okdp/">OKDP</a></li>
+        <li><a href="/accompagnement/">Accompagnement</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/articles/" aria-current="page">Articles</a></li>
+      </ul>
     </nav>
-    <a class="btn btn-accent btn-sm" href="/contact/">Parler projet</a>
+    <a class="btn btn-accent btn-sm nav-cta" href="/contact/">Parler projet</a>
   </div>
 </header>
 
@@ -270,6 +277,58 @@ rm /tmp/okdp-sandbox-config.yaml</code></pre>
 
 </main>
 
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand-col">
+      <a class="brand footer-brand" href="/">
+        <svg class="brand-mark" viewBox="20 11 59 78" aria-hidden="true">
+          <use href="#mark"/>
+        </svg>
+        <span class="wm" aria-hidden="true">KUBO<i class="t">TAL</i></span><span class="sr-only">Kubotal</span>
+      </a>
+      <p class="footer-desc">Ingénierie de plateformes Data et IA open source sur Kubernetes. Conception, déploiement GitOps, exploitation et transfert de compétences.</p>
+      <a class="footer-mail" href="mailto:contact@kubotal.io">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-mail"/></svg>
+        <span>contact@kubotal.io</span>
+      </a>
+    </div>
+
+    <div class="footer-col">
+      <h3>Offre &amp; Ressources</h3>
+      <ul>
+        <li><a href="/expertise/">Expertise plateforme</a></li>
+        <li><a href="/accompagnement/">Accompagnement</a></li>
+        <li><a href="/okdp/">Guide complet OKDP</a></li>
+        <li><a href="/articles/">Notes de terrain</a></li>
+        <li><a href="/contact/">Prendre contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3>Open Source</h3>
+      <ul>
+        <li><a href="/open-source/">Vue d'ensemble</a></li>
+        <li><a href="https://okdp.io/" target="_blank" rel="noopener">OKDP (okdp.io)</a></li>
+        <li><a href="https://www.kubocd.io/" target="_blank" rel="noopener">KuboCD (kubocd.io)</a></li>
+        <li><a href="https://github.com/OKDP/okdp-sandbox" target="_blank" rel="noopener">Sandbox OKDP (GitHub)</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3>Présence &amp; Écosystème</h3>
+      <ul>
+        <li><a href="https://github.com/kubotal" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-github"/></svg>GitHub Kubotal</a></li>
+        <li><a href="https://www.linkedin.com/company/kubotal" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-linkedin"/></svg>LinkedIn Kubotal</a></li>
+        <li><a href="https://github.com/OKDP" target="_blank" rel="noopener">Organisation OKDP (TOSIT)</a></li>
+      </ul>
+      <p class="footer-proof">Kubotal est contributeur principal d'OKDP (projet multi-organisations hébergé par TOSIT) et créateur de KuboCD, sous licence Apache 2.0.</p>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <p>© 2026 Kubotal. Tous droits réservés.</p>
+    <p>Plateformes Data &amp; IA souveraines sur Kubernetes.</p>
+  </div>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="../../assets/app.js" defer></script>
 

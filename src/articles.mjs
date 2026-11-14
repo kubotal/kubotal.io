@@ -240,17 +240,6 @@ export const ARTICLES = [
       'Ordre des dépendances, amorçage des secrets, problème de l’œuf et de la poule : ' +
       'comment amener un cluster vide à l’état de production de façon rejouable.',
   },
-  {
-    slug: 'kubauth-acces-clusters',
-    titre: 'KubAuth : donner accès à vos clusters sans kubeconfig baladeur',
-    tag: 'Open source',
-    tint: '#5B3DF5',
-    date: '2026-03-27',
-    minutes: 7,
-    resume:
-      'Le fichier kubeconfig qui circule par messagerie reste la faille la plus banale. ' +
-      'Une approche fondée sur l’identité, et ce qu’elle change à l’exploitation.',
-  },
 ];
 
 /** Nombre d'articles affichés par page de liste. */

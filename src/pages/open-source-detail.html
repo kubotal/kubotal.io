@@ -8,11 +8,11 @@
             <span aria-hidden="true">/</span><span aria-current="page">Open source</span>
           </nav>
           <h1>Écosystème open source pour les plateformes Data</h1>
-          <p class="article-sub">Kubotal présente OKDP, KuboCD et KubAuth pour couvrir la plateforme Data, la livraison GitOps et les accès Kubernetes.</p>
+          <p class="article-sub">OKDP est un projet communautaire hébergé par TOSIT et co-développé par plusieurs organisations, dont Kubotal est le contributeur principal, complété par KuboCD développé par Kubotal pour la livraison GitOps sur Kubernetes.</p>
         </header>
 
         <div class="article-body">
-          <p>Ces trois projets répondent à des responsabilités différentes. Les distinguer permet de choisir une brique sans lui attribuer le rôle de toute la plateforme.</p>
+          <p>Ces briques répondent à des responsabilités distinctes dans l'architecture de la plateforme, tout en se connectant aux systèmes d'entreprise existants (Keycloak pour l'authentification OIDC, HashiCorp Vault externe pour les secrets, stockage S3).</p>
 
           <h2>Quel est le rôle de chaque projet&nbsp;?</h2>
           <div class="article-table-wrap">
@@ -23,31 +23,31 @@
               <tbody>
                 <tr>
                   <th scope="row"><a href="/okdp/">OKDP</a></th>
-                  <td>Distribution open source pour plateformes Data sur Kubernetes.</td>
+                  <td>Distribution open source de services Data et IA sur Kubernetes, gérée par projet.</td>
                   <td><a href="https://okdp.io/" target="_blank" rel="noopener">okdp.io</a></td>
                 </tr>
                 <tr>
                   <th scope="row">KuboCD</th>
-                  <td>Livraison continue GitOps pensée pour les plateformes complexes.</td>
+                  <td>Livraison continue GitOps OCI pensée pour les plateformes complexes (Context, Release, Connection).</td>
                   <td><a href="https://www.kubocd.io/" target="_blank" rel="noopener">kubocd.io</a></td>
                 </tr>
                 <tr>
-                  <th scope="row">KubAuth</th>
-                  <td>Authentification et gestion des accès pour les clusters Kubernetes.</td>
-                  <td><a href="https://github.com/kubauth/kubauth" target="_blank" rel="noopener">GitHub</a></td>
+                  <th scope="row">Control Plane &amp; Packages OKDP</th>
+                  <td>Console web, serveur d'API Go (<code>okdp-control-plane-server</code>) et catalogue de packages OCI (<code>platform-packages</code>).</td>
+                  <td><a href="https://github.com/OKDP" target="_blank" rel="noopener">GitHub OKDP</a></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
           <h2>Quand regarder OKDP&nbsp;?</h2>
-          <p>OKDP concerne les équipes qui cherchent une distribution de services Data déployée sur Kubernetes. La plateforme regroupe les briques nécessaires aux traitements et aux usages Data sans enfermer l'architecture dans une offre propriétaire unique. Kubotal contribue au code du projet&nbsp;: architecture, sandbox, cas d'usage et limites sont détaillés dans <a href="/okdp/">notre guide d'OKDP</a>.</p>
+          <p>OKDP concerne les équipes qui cherchent une distribution de services Data déployée sur Kubernetes. Développée conjointement par plusieurs organisations au sein de l'association TOSIT (dont la DGFiP et Orange), la plateforme regroupe les briques nécessaires aux traitements et aux usages Data sans enfermer l'architecture dans une offre propriétaire unique. Kubotal en est le contributeur principal&nbsp;: architecture, sandbox, cas d'usage et limites sont détaillés dans <a href="/okdp/">notre guide d'OKDP</a>.</p>
 
           <h2>Quand regarder KuboCD&nbsp;?</h2>
           <p>KuboCD s'adresse aux équipes plateforme qui veulent emballer la complexité d'un chart Helm et exposer un contrat de déploiement plus court aux utilisateurs techniques. Flux reste le moteur GitOps qui applique les ressources générées.</p>
 
-          <h2>Quand regarder KubAuth&nbsp;?</h2>
-          <p>KubAuth concerne la gestion des identités et des accès aux clusters Kubernetes. Le projet vise à éviter que l'accès repose sur des fichiers kubeconfig qui circulent entre les équipes.</p>
+          <h2>Comment OKDP se raccorde-t-il au SI existant&nbsp;?</h2>
+          <p>La plateforme ne duplique pas les services transverses déjà en place dans l'entreprise. En production, OKDP s'appuie sur le <code>Context</code> KuboCD et External Secrets pour se connecter à un fournisseur OIDC existant (comme un Keycloak d'entreprise), à un coffre Vault externe et au stockage objet S3 déjà exploité par vos équipes.</p>
 
           <div class="article-end">
             <a class="article-back" href="/articles/kubocd-deployer-sans-maitriser-helm/"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>Lire l'analyse de KuboCD</a>

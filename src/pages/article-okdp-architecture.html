@@ -72,6 +72,57 @@
             <li>il <strong>crée des ressources KuboCD <code>Release</code></strong>, une par service à déployer.</li>
           </ul>
           <p>KuboCD, déjà utilisé pour installer la plateforme, fait le reste&nbsp;: il résout la configuration, produit les ressources Flux et Flux applique les charts. Le serveur réutilise le moteur GitOps en place au lieu d'en dupliquer la logique.</p>
+          <figure class="arch-schema">
+            <svg viewBox="0 0 760 228" role="img" aria-label="Flux de délégation du Control Plane OKDP vers KuboCD, Flux et le Namespace du projet">
+              <defs>
+                <marker id="cp-arr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M1 1 L8 5 L1 9" fill="none" stroke="#1685FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </marker>
+              </defs>
+              <!-- Étape 1 -->
+              <rect x="14" y="18" width="214" height="68" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+              <text x="121" y="45" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Console Web</text>
+              <text x="121" y="65" text-anchor="middle" font-size="12" fill="#55637A">Navigateur utilisateur</text>
+
+              <line x1="228" y1="52" x2="266" y2="52" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+
+              <!-- Étape 2 -->
+              <rect x="272" y="18" width="216" height="68" rx="10" fill="#F4F1FF" stroke="#5B3DF5" stroke-width="1.6"/>
+              <text x="380" y="45" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Control Plane Server</text>
+              <text x="380" y="65" text-anchor="middle" font-size="12" fill="#5B3DF5">Go · API REST + flux SSE</text>
+
+              <line x1="488" y1="52" x2="526" y2="52" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+
+              <!-- Étape 3 -->
+              <rect x="532" y="18" width="214" height="68" rx="10" fill="#FFFFFF" stroke="#5B3DF5" stroke-opacity=".55" stroke-width="1.5"/>
+              <text x="639" y="45" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Release KuboCD</text>
+              <text x="639" y="65" text-anchor="middle" font-size="12" fill="#55637A">kubocd.kubotal.io/v1alpha1</text>
+
+              <!-- Retour vers ligne 2 -->
+              <path d="M639 86 V112 H121 V134" fill="none" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+              <text x="380" y="106" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0B63F6">Aucun YAML généré par le serveur : délégation au contrôleur GitOps</text>
+
+              <!-- Étape 4 -->
+              <rect x="14" y="140" width="214" height="70" rx="10" fill="#EFFAF6" stroke="#00966A" stroke-width="1.6"/>
+              <text x="121" y="167" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Contrôleur KuboCD</text>
+              <text x="121" y="187" text-anchor="middle" font-size="12" fill="#00966A">Injecte Context + Connections</text>
+
+              <line x1="228" y1="175" x2="266" y2="175" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+
+              <!-- Étape 5 -->
+              <rect x="272" y="140" width="216" height="70" rx="10" fill="#F1F6FF" stroke="#326CE5" stroke-width="1.5"/>
+              <text x="380" y="167" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Ressources Flux CD</text>
+              <text x="380" y="187" text-anchor="middle" font-size="12" fill="#326CE5">OCIRepository + HelmRelease</text>
+
+              <line x1="488" y1="175" x2="526" y2="175" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+
+              <!-- Étape 6 -->
+              <rect x="532" y="140" width="214" height="70" rx="10" fill="#0B1220"/>
+              <text x="639" y="167" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF">Namespace Projet</text>
+              <text x="639" y="187" text-anchor="middle" font-size="12" fill="#93C5FD">Pods et services isolés</text>
+            </svg>
+            <figcaption>Chaîne d'exécution : la console et le serveur produisent une ressource Release que KuboCD et Flux traduisent en services.</figcaption>
+          </figure>
           <p>Deux bénéfices en découlent. D'abord, ce que la console déploie et ce qu'un administrateur déploie avec <code>kubectl</code> passent par le même chemin et donnent le même résultat. Ensuite, tout ce que fait la console est visible dans le cluster sous forme de ressources lisibles&nbsp;:</p>
 <pre><code>kubectl get releases -A
 kubectl -n okdp-system get context platform -o yaml</code></pre>
@@ -101,10 +152,9 @@ spec:
     - name: platform
       namespace: okdp-system</code></pre>
 
-          <h2>Comment l'identité est-elle gérée&nbsp;?</h2>
-          <p>Tous les services s'authentifient en OIDC auprès d'un même fournisseur, dont les adresses sont lues dans le contexte. Le sandbox utilise Keycloak.</p>
-          <p>OKDP prend aussi en charge KubAuth, proposé comme composant optionnel. La différence est concrète&nbsp;: KubAuth stocke les utilisateurs, les groupes et les clients OIDC comme des ressources Kubernetes. C'est ce qui permet au Control Plane de les gérer depuis la console. Avec Keycloak seul, la rubrique Identité de la console est masquée&nbsp;: c'est un état normal, pas une panne.</p>
-          <p>Installer KubAuth ne bascule pas la plateforme. La bascule est une décision séparée, qui modifie le contexte et fait réconcilier tous les services sur le nouveau fournisseur. Elle se prépare.</p>
+          <h2>Comment l'identité et les secrets externes sont-ils raccordés&nbsp;?</h2>
+          <p>Tous les services d'OKDP s'authentifient en OIDC auprès d'un fournisseur unique dont les adresses et le royaume sont déclarés dans le <code>Context</code>. En développement, le sandbox déploie un Keycloak dédié pour faciliter les tests.</p>
+          <p>En production, Keycloak et HashiCorp Vault restent généralement à l'extérieur de la plateforme OKDP, dans le SI existant de l'organisation. OKDP s'y raccorde via les paramètres OIDC du contexte partagé et via External Secrets pour injecter les secrets des projets sans dupliquer les annuaires ni les coffres déjà exploités.</p>
 
           <h2>Que retenir pour une équipe plateforme&nbsp;?</h2>
           <ul>

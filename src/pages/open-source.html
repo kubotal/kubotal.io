@@ -2,28 +2,88 @@
   <section class="section landing-section" id="open-source" data-nav-section>
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow" data-anim>Open source</span>
-        <h2 data-anim>Ce qu'on construit au grand jour.</h2>
+        <h2 data-anim>Une contribution directe aux projets open source qui fondent votre plateforme.</h2>
+        <p class="lead" data-anim>OKDP est un projet communautaire co-développé par plusieurs organisations au sein de TOSIT, dont Kubotal est le contributeur principal. Kubotal développe également KuboCD sous licence Apache 2.0.</p>
       </div>
       <div class="os">
         <article class="glass os-card" data-anim style="--tint:#5B3DF5">
-          <svg class="os-mark" viewBox="-2 -2 100 100" style="color:#5B3DF5"><use href="#markMono"/></svg>
-          <h3>OKDP</h3>
-          <p>Distribution open source pour plateformes data sur Kubernetes. <a href="/okdp/" style="color:inherit;font-weight:700">Lire notre guide d'OKDP</a></p>
-          <a class="os-link" href="https://okdp.io/" target="_blank" rel="noopener" aria-label="Ouvrir okdp.io dans un nouvel onglet">okdp.io<svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
+          <div class="os-head">
+            <span class="os-ico" aria-hidden="true"><svg class="os-mark" viewBox="20 11 59 78" style="color:#5B3DF5"><use href="#markMono"/></svg></span>
+            <div>
+              <h3>OKDP</h3>
+              <p class="os-role">Plateforme Data sur Kubernetes</p>
+            </div>
+          </div>
+          <p>Distribution open source de services Data (Spark, Trino, Airflow, Superset, JupyterHub, Polaris) isolés par projet et raccordés à votre Keycloak OIDC. <a href="/okdp/" class="inline-link">Lire notre guide d'OKDP</a>.</p>
+          <svg class="os-diagram" viewBox="0 0 340 66" role="img" aria-label="Flux OKDP : Control Plane vers espaces de noms projets Spark, Trino, Airflow et Superset">
+            <rect x="2" y="14" width="112" height="38" rx="8" fill="#5B3DF5" fill-opacity=".1" stroke="#5B3DF5" stroke-width="1.4"/>
+            <text x="58" y="31" text-anchor="middle" font-size="11" font-weight="700" fill="#0B1220">Control Plane</text>
+            <text x="58" y="44" text-anchor="middle" font-size="9.5" fill="#55637A">API · Quotas · UI</text>
+            <path d="M116 33 H146" stroke="#5B3DF5" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M141 28 L147 33 L141 38" fill="none" stroke="#5B3DF5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="150" y="6" width="188" height="54" rx="8" fill="#FFFFFF" stroke="#5B3DF5" stroke-opacity=".38" stroke-width="1.4"/>
+            <text x="244" y="24" text-anchor="middle" font-size="11" font-weight="700" fill="#0B1220">Namespace Projet isolé</text>
+            <text x="244" y="42" text-anchor="middle" font-size="10" fill="#55637A">Spark · Trino · Airflow · Jupyter</text>
+          </svg>
+          <a class="os-link" href="https://okdp.io/" target="_blank" rel="noopener" aria-label="Ouvrir okdp.io dans un nouvel onglet">okdp.io<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </article>
+
         <article class="glass os-card" data-anim style="--tint:#00966A">
-          <svg class="os-mark" viewBox="-2 -2 100 100" style="color:#00966A"><use href="#markMono"/></svg>
-          <h3>KuboCD</h3>
-          <p>Livraison continue GitOps, pensée pour les plateformes complexes.</p>
-          <a class="os-link" href="https://www.kubocd.io/" target="_blank" rel="noopener" aria-label="Ouvrir kubocd.io dans un nouvel onglet">kubocd.io<svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
+          <div class="os-head">
+            <span class="os-ico" aria-hidden="true"><svg class="os-mark" viewBox="20 11 59 78" style="color:#00966A"><use href="#markMono"/></svg></span>
+            <div>
+              <h3>KuboCD</h3>
+              <p class="os-role">Livraison continue GitOps OCI</p>
+            </div>
+          </div>
+          <p>Empaquette la complexité des charts Helm dans des artefacts OCI et expose aux équipes un contrat de déploiement court via des Releases et Connections typées.</p>
+          <svg class="os-diagram" viewBox="0 0 340 66" role="img" aria-label="Flux KuboCD : Package OCI et Context assemblés en Release pour piloter HelmRelease Flux">
+            <rect x="2" y="14" width="96" height="38" rx="8" fill="#00966A" fill-opacity=".1" stroke="#00966A" stroke-width="1.4"/>
+            <text x="50" y="31" text-anchor="middle" font-size="11" font-weight="700" fill="#0B1220">Package OCI</text>
+            <text x="50" y="44" text-anchor="middle" font-size="9.5" fill="#55637A">+ Context</text>
+            <path d="M100 33 H124" stroke="#00966A" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M119 28 L125 33 L119 38" fill="none" stroke="#00966A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="128" y="14" width="84" height="38" rx="8" fill="#FFFFFF" stroke="#00966A" stroke-opacity=".45" stroke-width="1.4"/>
+            <text x="170" y="31" text-anchor="middle" font-size="11" font-weight="700" fill="#0B1220">Release</text>
+            <text x="170" y="44" text-anchor="middle" font-size="9.5" fill="#55637A">Paramètres</text>
+            <path d="M214 33 H238" stroke="#00966A" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M233 28 L239 33 L233 38" fill="none" stroke="#00966A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="242" y="14" width="96" height="38" rx="8" fill="#FFFFFF" stroke="#00966A" stroke-opacity=".45" stroke-width="1.4"/>
+            <text x="290" y="31" text-anchor="middle" font-size="11" font-weight="700" fill="#0B1220">Flux CD</text>
+            <text x="290" y="44" text-anchor="middle" font-size="9.5" fill="#55637A">HelmRelease</text>
+          </svg>
+          <a class="os-link" href="https://www.kubocd.io/" target="_blank" rel="noopener" aria-label="Ouvrir kubocd.io dans un nouvel onglet">kubocd.io<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </article>
-        <article class="glass os-card" data-anim style="--tint:#D97706">
-          <svg class="os-mark" viewBox="-2 -2 100 100" style="color:#D97706"><use href="#markMono"/></svg>
-          <h3>KubAuth</h3>
-          <p>Authentification et gestion des accès pour vos clusters Kubernetes.</p>
-          <a class="os-link" href="https://github.com/kubauth/kubauth" target="_blank" rel="noopener" aria-label="Ouvrir le dépôt KubAuth dans un nouvel onglet">GitHub<svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></a>
+
+        <article class="glass os-card" data-anim style="--tint:#0B63F6">
+          <div class="os-head">
+            <span class="os-ico" aria-hidden="true"><svg class="os-mark" viewBox="20 11 59 78" style="color:#0B63F6"><use href="#markMono"/></svg></span>
+            <div>
+              <h3>Packages &amp; Control Plane OKDP</h3>
+              <p class="os-role">Pilotage multi-équipes et catalogue OCI</p>
+            </div>
+          </div>
+          <p>Au sein du collectif OKDP, Kubotal est le contributeur principal sur le serveur d'API Go du Control Plane et le sandbox Kind, et contribue au catalogue de packages OCI (<code>platform-packages</code>).</p>
+          <svg class="os-diagram" viewBox="0 0 340 66" role="img" aria-label="Flux OKDP Control Plane : Console UI vers Serveur Go puis Packages OCI KuboCD">
+            <rect x="2" y="14" width="94" height="38" rx="8" fill="#0B63F6" fill-opacity=".1" stroke="#0B63F6" stroke-width="1.4"/>
+            <text x="49" y="31" text-anchor="middle" font-size="11" font-weight="700" fill="#0B1220">okdp-ui</text>
+            <text x="49" y="44" text-anchor="middle" font-size="9.5" fill="#55637A">Portail Web</text>
+            <path d="M98 33 H124" stroke="#0B63F6" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M119 28 L125 33 L119 38" fill="none" stroke="#0B63F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="128" y="14" width="88" height="38" rx="8" fill="#FFFFFF" stroke="#0B63F6" stroke-opacity=".45" stroke-width="1.4"/>
+            <text x="172" y="31" text-anchor="middle" font-size="11" font-weight="700" fill="#0B1220">API Server</text>
+            <text x="172" y="44" text-anchor="middle" font-size="9.5" fill="#55637A">Go REST + SSE</text>
+            <path d="M218 33 H240" stroke="#0B63F6" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M235 28 L241 33 L235 38" fill="none" stroke="#0B63F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="244" y="14" width="94" height="38" rx="8" fill="#FFFFFF" stroke="#0B63F6" stroke-opacity=".45" stroke-width="1.4"/>
+            <text x="291" y="31" text-anchor="middle" font-size="11" font-weight="700" fill="#0B1220">Packages</text>
+            <text x="291" y="44" text-anchor="middle" font-size="9.5" fill="#55637A">catalogue OCI</text>
+          </svg>
+          <a class="os-link" href="https://github.com/OKDP" target="_blank" rel="noopener" aria-label="Ouvrir l'organisation GitHub OKDP dans un nouvel onglet">GitHub OKDP<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </article>
+      </div>
+      <div class="section-foot">
+        <a class="section-more" href="/open-source/">Comparer le rôle de chaque projet<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
     </div>
   </section>

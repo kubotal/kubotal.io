@@ -20,11 +20,11 @@ les réponses longues, les métadonnées propres et les liens internes.
 |---|---|
 | `/` | Landing complète |
 | `/#expertise` | Les 4 domaines d'intervention |
-| `/#open-source` | OKDP, KuboCD, KubAuth |
+| `/#open-source` | OKDP, KuboCD, Control Plane & Packages |
 | `/#accompagnement` | Cadrage, Build, Run, Transfert |
 | `/#contact` | Prise de contact |
 | `/expertise/` | Expertise Data, Kubernetes, GitOps et MLOps |
-| `/open-source/` | Écosystème OKDP, KuboCD et KubAuth |
+| `/open-source/` | Écosystème OKDP et KuboCD |
 | `/accompagnement/` | Détail du cadrage, du build, du run et du transfert |
 | `/contact/` | Cadrage du premier échange |
 | `/articles/` | Catalogue d'articles |
@@ -287,7 +287,7 @@ Seuls les **deux flux du K bougent**, comme des jambes.
 
 ## Famille open source
 
-OKDP, KuboCD et KubAuth reprennent le système du kit de marque : marque Kubotal en
+OKDP et KuboCD reprennent le système du kit de marque : marque Kubotal en
 monochrome teintée à la couleur du produit (violet / vert / ambre), halo assorti.
 
 ## Animations — ce qu'il a fallu ajouter

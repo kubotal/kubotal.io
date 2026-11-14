@@ -82,7 +82,6 @@ const pageListe = (num, prefixe) => {
   return `  <section class="section" id="articles">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow" data-anim>Articles</span>
         <h1 data-anim>Notes de terrain.</h1>
         <p class="lead" data-anim>Ce qu'on lit, ce qu'on teste et ce qu'on retient sur les plateformes
           data, Kubernetes et le GitOps.</p>
@@ -241,8 +240,8 @@ const PAGES = [
       {name: 'Accueil', url: '/'},
       {name: 'Open source', url: '/open-source/'},
     ],
-    title: 'Open source : OKDP, KuboCD et KubAuth — Kubotal',
-    desc: 'Kubotal présente OKDP, KuboCD et KubAuth pour les plateformes Data, la livraison GitOps et les accès Kubernetes.',
+    title: 'Open source : OKDP et KuboCD — Kubotal',
+    desc: 'Kubotal présente OKDP et KuboCD pour les plateformes Data et la livraison GitOps sur Kubernetes.',
   },
   {
     id: 'okdp',
@@ -340,9 +339,9 @@ const organizationNode = () => ({
     'Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes.',
   knowsAbout: [
     'Data platform', 'Artificial intelligence', 'Kubernetes', 'GitOps', 'MLOps', 'Open source',
-    'OKDP', 'Open Kubernetes Data Platform', 'KuboCD', 'KubAuth',
+    'OKDP', 'Open Kubernetes Data Platform', 'KuboCD',
   ],
-  sameAs: ['https://www.linkedin.com/company/kubotal', 'https://github.com/kubotal','https://github.com/kubocd', 'https://github.com/kubauth'],
+  sameAs: ['https://www.linkedin.com/company/kubotal', 'https://github.com/kubotal', 'https://github.com/kubocd', 'https://github.com/OKDP'],
 });
 
 const websiteNode = () => ({

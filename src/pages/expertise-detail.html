@@ -13,6 +13,30 @@
 
         <div class="article-body">
           <p>Une plateforme utile relie l'architecture Data, l'exploitation Kubernetes et les usages IA. Kubotal traite ces sujets ensemble pour éviter qu'un choix de stockage, de déploiement ou de sécurité ne bloque la suite.</p>
+          <figure class="arch-schema">
+            <svg viewBox="0 0 760 214" role="img" aria-label="Pile de référence Kubotal : Data et Lakehouse, MLOps et IA, Kubernetes et GitOps, Sécurité et gouvernance">
+              <rect x="14" y="14" width="356" height="86" rx="12" fill="#F1F6FF" stroke="#1685FF" stroke-width="1.5"/>
+              <text x="30" y="40" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#0B63F6">1. Data et Lakehouse</text>
+              <text x="30" y="62" font-size="12.5" fill="#26324A">Stockage objet S3/MinIO · Apache Iceberg · Polaris</text>
+              <text x="30" y="82" font-size="12" fill="#55637A">Traitements Spark, SQL Trino, orchestration Airflow</text>
+
+              <rect x="390" y="14" width="356" height="86" rx="12" fill="#F4F1FF" stroke="#5B3DF5" stroke-width="1.5"/>
+              <text x="406" y="40" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#5B3DF5">2. MLOps et usages IA</text>
+              <text x="406" y="62" font-size="12.5" fill="#26324A">Notebooks JupyterHub · Pipelines d'entraînement</text>
+              <text x="406" y="82" font-size="12" fill="#55637A">Registre de modèles · Inférence et supervision</text>
+
+              <rect x="14" y="116" width="356" height="84" rx="12" fill="#EFFAF6" stroke="#00966A" stroke-width="1.5"/>
+              <text x="30" y="142" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#00966A">3. Kubernetes et GitOps</text>
+              <text x="30" y="164" font-size="12.5" fill="#26324A">Réconciliation Flux CD · Packages OCI KuboCD</text>
+              <text x="30" y="184" font-size="12" fill="#55637A">Environnements déclaratifs, versionnés et rejouables</text>
+
+              <rect x="390" y="116" width="356" height="84" rx="12" fill="#FFF8EE" stroke="#D97706" stroke-width="1.5"/>
+              <text x="406" y="142" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#B45309">4. Sécurité et raccordement SI</text>
+              <text x="406" y="164" font-size="12.5" fill="#26324A">SSO OIDC connecté au Keycloak / IdP client · RBAC</text>
+              <text x="406" y="184" font-size="12" fill="#55637A">Coffre Vault externe raccordé via External Secrets</text>
+            </svg>
+            <figcaption>Les quatre piliers techniques assemblés par Kubotal sur une plateforme Data et IA Kubernetes.</figcaption>
+          </figure>
 
           <h2>Comment concevoir l'architecture d'une plateforme Data&nbsp;?</h2>
           <p>Kubotal assemble le stockage objet, le lakehouse et les moteurs de traitement selon les usages, les contraintes d'exploitation et les compétences de l'équipe. Le cadrage part de l'existant, fixe une cible d'architecture et établit une trajectoire.</p>

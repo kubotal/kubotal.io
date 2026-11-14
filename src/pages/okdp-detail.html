@@ -50,7 +50,58 @@
               </tbody>
             </table>
           </div>
-          <p>Dans la pratique, la plateforme pose d'abord des fondations partagées&nbsp;: Keycloak pour l'identité, CloudNativePG pour PostgreSQL, External Secrets pour les secrets, le Spark Operator pour les traitements, cert-manager et ingress-nginx pour le TLS et le routage. Les services Data ne sont pas installés une fois pour tous&nbsp;: le Control Plane les crée pour chaque projet, avec ses propres ressources et ses propres accès.</p>
+          <figure class="arch-schema">
+            <svg viewBox="0 0 760 360" role="img" aria-label="Architecture en couches d'OKDP : projets Data isolés par espace de noms, Control Plane OKDP, et fondations partagées GitOps">
+              <defs>
+                <marker id="okdp-arr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M1 1 L8 5 L1 9" fill="none" stroke="#5B3DF5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </marker>
+                <marker id="okdp-arr-g" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M1 1 L8 5 L1 9" fill="none" stroke="#00966A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </marker>
+              </defs>
+              <!-- Couche 1 : Projets Data isolés -->
+              <rect x="12" y="10" width="736" height="122" rx="14" fill="#F8FAFF" stroke="#CBD5E1" stroke-width="1.4"/>
+              <text x="28" y="34" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#0B1220">1. Projets Data isolés (Namespaces Kubernetes)</text>
+
+              <rect x="28" y="48" width="340" height="70" rx="10" fill="#FFFFFF" stroke="#5B3DF5" stroke-opacity=".45" stroke-width="1.5"/>
+              <text x="44" y="70" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#5B3DF5">Namespace Projet A</text>
+              <text x="44" y="90" font-size="12.5" fill="#26324A">Spark · Trino · Airflow · Superset</text>
+              <text x="44" y="107" font-size="11.5" fill="#55637A">Base PostgreSQL dédiée + quotas + politiques réseau</text>
+
+              <rect x="392" y="48" width="340" height="70" rx="10" fill="#FFFFFF" stroke="#1685FF" stroke-opacity=".45" stroke-width="1.5"/>
+              <text x="408" y="70" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B63F6">Namespace Projet B</text>
+              <text x="408" y="90" font-size="12.5" fill="#26324A">JupyterHub · Spark · Trino · Polaris</text>
+              <text x="408" y="107" font-size="11.5" fill="#55637A">Accès OIDC et stockage objet cloisonnés</text>
+
+              <!-- Flèches Control Plane -> Projets -->
+              <line x1="250" y1="168" x2="200" y2="122" stroke="#5B3DF5" stroke-width="1.8" marker-end="url(#okdp-arr)"/>
+              <line x1="510" y1="168" x2="560" y2="122" stroke="#5B3DF5" stroke-width="1.8" marker-end="url(#okdp-arr)"/>
+              <text x="380" y="153" text-anchor="middle" font-size="11.5" font-weight="700" fill="#5B3DF5">Instancie par projet via KuboCD</text>
+
+              <!-- Couche 2 : Control Plane OKDP -->
+              <rect x="12" y="168" width="736" height="74" rx="14" fill="#F4F1FF" stroke="#5B3DF5" stroke-width="1.6"/>
+              <text x="28" y="192" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#0B1220">2. Control Plane OKDP (Automatisation multi-équipes)</text>
+              <rect x="28" y="202" width="190" height="28" rx="7" fill="#FFFFFF" stroke="#5B3DF5" stroke-opacity=".35"/>
+              <text x="123" y="220" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0B1220">Console Web (Portail)</text>
+              <rect x="234" y="202" width="220" height="28" rx="7" fill="#FFFFFF" stroke="#5B3DF5" stroke-opacity=".35"/>
+              <text x="344" y="220" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0B1220">Serveur d'API Go (REST + SSE)</text>
+              <rect x="470" y="202" width="262" height="28" rx="7" fill="#5B3DF5"/>
+              <text x="601" y="220" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFFFFF">Lit Context · Crée Release KuboCD</text>
+
+              <!-- Flèches Control Plane <-> Fondations -->
+              <line x1="380" y1="242" x2="380" y2="270" stroke="#00966A" stroke-width="1.8" marker-end="url(#okdp-arr-g)"/>
+              <text x="394" y="261" font-size="11.5" font-weight="700" fill="#00966A">Réconciliation GitOps et services transverses</text>
+
+              <!-- Couche 3 : Fondations partagées -->
+              <rect x="12" y="274" width="736" height="76" rx="14" fill="#EFFAF6" stroke="#00966A" stroke-opacity=".55" stroke-width="1.4"/>
+              <text x="28" y="298" font-family="'Space Grotesk',sans-serif" font-size="14" font-weight="700" fill="#0B1220">3. Fondations GitOps et raccordement au SI externe du client</text>
+              <text x="28" y="320" font-size="12.5" font-weight="600" fill="#26324A">Flux + KuboCD · CloudNativePG · Spark Operator · External Secrets · Cert-Manager</text>
+              <text x="28" y="338" font-size="12" fill="#55637A">Connecté au SI externe : Keycloak OIDC existant · Vault externe · Stockage objet compatible S3</text>
+            </svg>
+            <figcaption>Découpage d'OKDP en trois niveaux : fondations GitOps connectées au SI externe, Control Plane et services Data instanciés par projet.</figcaption>
+          </figure>
+          <p>Dans la pratique, la plateforme pose d'abord des fondations partagées&nbsp;: CloudNativePG pour PostgreSQL, External Secrets pour synchroniser les secrets depuis le Vault du client, le Spark Operator pour les traitements, cert-manager et ingress-nginx pour le TLS et le routage. En production, OKDP se raccorde en OIDC à votre Keycloak ou annuaire d'entreprise existant (le sandbox local inclut un Keycloak de démonstration). Les services Data ne sont pas installés une fois pour tous&nbsp;: le Control Plane les crée pour chaque projet, avec ses propres ressources et ses propres accès.</p>
           <p>Ce découpage a une conséquence directe sur le dimensionnement. Le coût fixe est celui des fondations et du Control Plane&nbsp;; le coût variable suit le nombre de projets et les services que chacun active.</p>
 
           <h2>Quels sont les composants d'OKDP&nbsp;?</h2>
@@ -67,7 +118,7 @@
                 <tr><th scope="row">Orchestration</th><td>Apache Airflow</td><td>Planifier et enchaîner les traitements.</td></tr>
                 <tr><th scope="row">Notebooks</th><td>JupyterHub</td><td>Explorer et prototyper.</td></tr>
                 <tr><th scope="row">Tableaux de bord</th><td>Apache Superset</td><td>Restituer les données.</td></tr>
-                <tr><th scope="row">Identité</th><td>Keycloak ou KubAuth</td><td>Une connexion unique en OIDC pour tous les services.</td></tr>
+                <tr><th scope="row">Identité (externe)</th><td>Keycloak ou IdP OIDC du client</td><td>Connexion unique OIDC partagée, raccordée au SI existant.</td></tr>
                 <tr><th scope="row">Pilotage</th><td>Control Plane OKDP</td><td>Créer et suivre les services, projet par projet.</td></tr>
               </tbody>
             </table>

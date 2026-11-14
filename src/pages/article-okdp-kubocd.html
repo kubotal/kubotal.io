@@ -68,6 +68,45 @@
               </tbody>
             </table>
           </div>
+          <figure class="arch-schema">
+            <svg viewBox="0 0 760 236" role="img" aria-label="Séparation entre le dépôt platform-packages et le dépôt de déploiement okdp-sandbox avec KuboCD">
+              <defs>
+                <marker id="kcd-arr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M1 1 L8 5 L1 9" fill="none" stroke="#00966A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </marker>
+              </defs>
+              <!-- Dépôt Packages -->
+              <rect x="14" y="14" width="320" height="142" rx="12" fill="#F8FAFF" stroke="#CBD5E1" stroke-width="1.5"/>
+              <text x="30" y="38" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Dépôt 1 : platform-packages</text>
+              <rect x="30" y="52" width="288" height="44" rx="8" fill="#FFFFFF" stroke="#00966A" stroke-width="1.5"/>
+              <text x="44" y="72" font-size="12.5" font-weight="700" fill="#00966A">Package OCI versionné</text>
+              <text x="44" y="88" font-size="11.5" fill="#55637A">Descripteur + charts Helm + schéma de paramètres</text>
+              <rect x="30" y="106" width="288" height="36" rx="8" fill="#FFFFFF" stroke="#CBD5E1"/>
+              <text x="44" y="129" font-size="12" fill="#26324A">Publié vers registre OCI (quay.io / registre privé)</text>
+
+              <!-- Flèche OCI -->
+              <line x1="334" y1="74" x2="416" y2="74" stroke="#00966A" stroke-width="2" marker-end="url(#kcd-arr)"/>
+              <text x="375" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="#00966A">Artéfact OCI</text>
+
+              <!-- Dépôt Déploiement -->
+              <rect x="424" y="14" width="322" height="142" rx="12" fill="#EFFAF6" stroke="#00966A" stroke-width="1.5"/>
+              <text x="440" y="38" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Dépôt 2 : Déploiement (okdp-sandbox)</text>
+              <rect x="440" y="52" width="138" height="44" rx="8" fill="#FFFFFF" stroke="#1685FF" stroke-opacity=".5"/>
+              <text x="509" y="72" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0B63F6">Context</text>
+              <text x="509" y="88" text-anchor="middle" font-size="11" fill="#55637A">Config cluster</text>
+              <rect x="590" y="52" width="140" height="44" rx="8" fill="#FFFFFF" stroke="#D97706" stroke-opacity=".5"/>
+              <text x="660" y="72" text-anchor="middle" font-size="12.5" font-weight="700" fill="#D97706">Connection</text>
+              <text x="660" y="88" text-anchor="middle" font-size="11" fill="#55637A">s3 · hive · trino</text>
+              <rect x="440" y="106" width="290" height="36" rx="8" fill="#0B1220"/>
+              <text x="585" y="129" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFFFFF">Release (tag + paramètres projet)</text>
+
+              <!-- Bas : Réconciliation -->
+              <line x1="585" y1="156" x2="585" y2="176" stroke="#00966A" stroke-width="2" marker-end="url(#kcd-arr)"/>
+              <rect x="14" y="182" width="732" height="42" rx="10" fill="#FFFFFF" stroke="#0B63F6" stroke-opacity=".45" stroke-width="1.5"/>
+              <text x="380" y="208" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13" font-weight="700" fill="#0B1220">KuboCD résout le package, le Context et les Connections, puis confie le déploiement à Flux</text>
+            </svg>
+            <figcaption>Architecture de livraison : le packaging applicatif (OCI) est séparé de la configuration et des déploiements par environnement.</figcaption>
+          </figure>
 
           <h2>Que contient le dépôt des packages&nbsp;?</h2>
           <p>Le dépôt <code>platform-packages</code> ne fait qu'une chose&nbsp;: définir, construire et publier les packages. Il ne contient aucune release, aucun contexte, aucune amorce Flux.</p>

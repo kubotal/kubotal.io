@@ -27,7 +27,7 @@ Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kub
 
 - OKDP : https://okdp.io/
 - KuboCD : https://www.kubocd.io/
-- KubAuth : https://github.com/kubauth/kubauth
+- Organisation GitHub OKDP : https://github.com/OKDP
 
 ## Faits utiles
 
