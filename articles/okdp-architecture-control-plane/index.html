@@ -188,53 +188,29 @@
           </ul>
           <p>KuboCD, déjà utilisé pour installer la plateforme, fait le reste&nbsp;: il résout la configuration, produit les ressources Flux et Flux applique les charts. Le serveur réutilise le moteur GitOps en place au lieu d'en dupliquer la logique.</p>
           <figure class="arch-schema">
-            <svg viewBox="0 0 760 228" role="img" aria-label="Flux de délégation du Control Plane OKDP vers KuboCD, Flux et le Namespace du projet">
+            <svg viewBox="0 0 760 176" role="img" aria-label="Flux de délégation du Control Plane OKDP vers KuboCD, Flux et le Namespace du projet">
               <defs>
                 <marker id="cp-arr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
                   <path d="M1 1 L8 5 L1 9" fill="none" stroke="#1685FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                 </marker>
               </defs>
-              <!-- Étape 1 -->
-              <rect x="14" y="18" width="214" height="68" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
-              <text x="121" y="45" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Console Web</text>
-              <text x="121" y="65" text-anchor="middle" font-size="12" fill="#55637A">Navigateur utilisateur</text>
-
-              <line x1="228" y1="52" x2="266" y2="52" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
-
-              <!-- Étape 2 -->
-              <rect x="272" y="18" width="216" height="68" rx="10" fill="#F4F1FF" stroke="#5B3DF5" stroke-width="1.6"/>
-              <text x="380" y="45" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Control Plane Server</text>
-              <text x="380" y="65" text-anchor="middle" font-size="12" fill="#5B3DF5">Go · API REST + flux SSE</text>
-
-              <line x1="488" y1="52" x2="526" y2="52" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
-
-              <!-- Étape 3 -->
-              <rect x="532" y="18" width="214" height="68" rx="10" fill="#FFFFFF" stroke="#5B3DF5" stroke-opacity=".55" stroke-width="1.5"/>
-              <text x="639" y="45" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Release KuboCD</text>
-              <text x="639" y="65" text-anchor="middle" font-size="12" fill="#55637A">kubocd.kubotal.io/v1alpha1</text>
-
-              <!-- Retour vers ligne 2 -->
-              <path d="M639 86 V112 H121 V134" fill="none" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
-              <text x="380" y="106" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0B63F6">Aucun YAML généré par le serveur : délégation au contrôleur GitOps</text>
-
-              <!-- Étape 4 -->
-              <rect x="14" y="140" width="214" height="70" rx="10" fill="#EFFAF6" stroke="#00966A" stroke-width="1.6"/>
-              <text x="121" y="167" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Contrôleur KuboCD</text>
-              <text x="121" y="187" text-anchor="middle" font-size="12" fill="#00966A">Injecte Context + Connections</text>
-
-              <line x1="228" y1="175" x2="266" y2="175" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
-
-              <!-- Étape 5 -->
-              <rect x="272" y="140" width="216" height="70" rx="10" fill="#F1F6FF" stroke="#326CE5" stroke-width="1.5"/>
-              <text x="380" y="167" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Ressources Flux CD</text>
-              <text x="380" y="187" text-anchor="middle" font-size="12" fill="#326CE5">OCIRepository + HelmRelease</text>
-
-              <line x1="488" y1="175" x2="526" y2="175" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
-
-              <!-- Étape 6 -->
-              <rect x="532" y="140" width="214" height="70" rx="10" fill="#0B1220"/>
-              <text x="639" y="167" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF">Namespace Projet</text>
-              <text x="639" y="187" text-anchor="middle" font-size="12" fill="#93C5FD">Pods et services isolés</text>
+              <rect x="14" y="18" width="214" height="48" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+              <text x="121" y="46.86" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Console Web</text>
+              <line x1="228" y1="42" x2="266" y2="42" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+              <rect x="272" y="18" width="216" height="48" rx="10" fill="#F4F1FF" stroke="#5B3DF5" stroke-width="1.5"/>
+              <text x="380" y="46.86" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Control Plane OKDP</text>
+              <line x1="488" y1="42" x2="526" y2="42" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+              <rect x="532" y="18" width="214" height="48" rx="10" fill="#FFFFFF" stroke="#5B3DF5" stroke-width="1.5"/>
+              <text x="639" y="46.86" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Release KuboCD</text>
+              <path d="M639 66 V88 H121 V104" fill="none" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+              <rect x="14" y="110" width="214" height="48" rx="10" fill="#EFFAF6" stroke="#00966A" stroke-width="1.5"/>
+              <text x="121" y="138.86" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Contrôleur KuboCD</text>
+              <line x1="228" y1="134" x2="266" y2="134" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+              <rect x="272" y="110" width="216" height="48" rx="10" fill="#F1F6FF" stroke="#326CE5" stroke-width="1.5"/>
+              <text x="380" y="138.86" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#0B1220">Flux CD</text>
+              <line x1="488" y1="134" x2="526" y2="134" stroke="#1685FF" stroke-width="1.8" marker-end="url(#cp-arr)"/>
+              <rect x="532" y="110" width="214" height="48" rx="10" fill="#0B1220"/>
+              <text x="639" y="138.86" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF">Namespace du projet</text>
             </svg>
             <figcaption>Chaîne d'exécution : la console et le serveur produisent une ressource Release que KuboCD et Flux traduisent en services.</figcaption>
           </figure>
