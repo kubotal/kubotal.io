@@ -25,6 +25,7 @@ mkdirSync(OUTPUT, {recursive: true});
 
 for (const file of [
   'index.html',
+  '404.html',
   'CNAME',
   'google58a3511232b3ddeb.html',
   'robots.txt',

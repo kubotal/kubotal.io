@@ -132,14 +132,15 @@ export const ARTICLES = [
     slug: 'kubocd-deployer-sans-maitriser-helm',
     corps: 'article-kubocd',
     titre: 'KuboCD : déployer sur Kubernetes sans maîtriser Helm',
+    titreSeo: 'KuboCD : déployer sur Kubernetes sans maîtriser Helm',
     tag: 'GitOps',
     tint: '#00966A',
     date: '2026-08-02',
     modified: '2026-08-24',
     minutes: 8,
     resume:
-      'Un chart Helm emballé dans une image OCI, déployé par une ressource de quelques lignes. ' +
-      'Ce que fait vraiment KuboCD, ce qu’il délègue à Flux, et ce qu’il faut savoir avant de s’y mettre.',
+      'KuboCD emballe un chart Helm dans une image OCI et le déploie en quelques lignes. ' +
+      'Ce qu’il fait, ce qu’il délègue à Flux, et ce qu’il faut savoir avant.',
   },
   {
     slug: 'okdp-distribution-data-kubernetes',
