@@ -138,32 +138,31 @@
             <div class="arch-layer" data-layer-group="data">
               <div class="arch-layer-head">
                 <span class="arch-layer-title">Services Data et IA d'OKDP</span>
-                <span class="arch-layer-note">Instanciés par projet dans des espaces de noms Kubernetes isolés</span>
               </div>
               <div class="arch-row arch-row-6">
                 <span class="tile" data-tile data-layer="data" style="--tint:#E25A1C">
                   <span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"/></svg></span>
-                  <span class="tile-text"><strong>Apache Spark</strong><span>Calcul et Operator</span></span>
+                  <span class="tile-text"><strong>Apache Spark</strong></span>
                 </span>
                 <span class="tile" data-tile data-layer="data" style="--tint:#DD00A1">
                   <span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-trino"/></svg></span>
-                  <span class="tile-text"><strong>Trino</strong><span>SQL fédéré</span></span>
+                  <span class="tile-text"><strong>Trino</strong></span>
                 </span>
                 <span class="tile" data-tile data-layer="data" style="--tint:#017CEE">
                   <span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-airflow"/></svg></span>
-                  <span class="tile-text"><strong>Apache Airflow</strong><span>Orchestration</span></span>
+                  <span class="tile-text"><strong>Apache Airflow</strong></span>
                 </span>
                 <span class="tile" data-tile data-layer="data" style="--tint:#0891B2">
                   <span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-superset"/></svg></span>
-                  <span class="tile-text"><strong>Apache Superset</strong><span>Tableaux de bord</span></span>
+                  <span class="tile-text"><strong>Apache Superset</strong></span>
                 </span>
                 <span class="tile" data-tile data-layer="data" style="--tint:#F37626">
                   <span class="tile-ico tile-ico-mono"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-jupyter"/></svg></span>
-                  <span class="tile-text"><strong>JupyterHub</strong><span>Notebooks IA</span></span>
+                  <span class="tile-text"><strong>JupyterHub</strong></span>
                 </span>
                 <span class="tile" data-tile data-layer="data" style="--tint:#5B3DF5">
                   <span class="tile-ico tile-ico-mono"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-layers"/></svg></span>
-                  <span class="tile-text"><strong>Polaris et Hive</strong><span>Catalogues Iceberg</span></span>
+                  <span class="tile-text"><strong>Polaris et Hive</strong></span>
                 </span>
               </div>
             </div>
@@ -187,20 +186,19 @@
             <div class="arch-layer" data-layer-group="control">
               <div class="arch-layer-head">
                 <span class="arch-layer-title">Control Plane OKDP</span>
-                <span class="arch-layer-note">Automatisation multi-équipes · projet TOSIT dont Kubotal est le contributeur principal</span>
               </div>
               <div class="arch-row arch-row-3">
                 <span class="tile" data-tile data-layer="control" style="--tint:#5B3DF5">
                   <span class="tile-ico tile-ico-mono"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-layers"/></svg></span>
-                  <span class="tile-text"><strong>Console Web OKDP</strong><span>Portail libre-service et suivi en direct (okdp-ui)</span></span>
+                  <span class="tile-text"><strong>Console Web OKDP</strong></span>
                 </span>
                 <span class="tile is-hub" data-tile data-hub data-layer="control">
                   <span class="tile-ico"><svg viewBox="20 11 59 78" aria-hidden="true"><use href="#mark"/></svg></span>
-                  <span class="tile-text"><strong>OKDP Control Plane Server</strong><span>API Go (REST et SSE), lecture du Context et création des Releases</span></span>
+                  <span class="tile-text"><strong>OKDP Control Plane</strong></span>
                 </span>
                 <span class="tile" data-tile data-layer="control" style="--tint:#087CB8">
                   <span class="tile-ico tile-ico-mono"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-shield"/></svg></span>
-                  <span class="tile-text"><strong>Isolation par projet</strong><span>Namespaces dédiés, CloudNativePG, quotas et réseau</span></span>
+                  <span class="tile-text"><strong>Isolation par projet</strong></span>
                 </span>
               </div>
             </div>
@@ -226,20 +224,19 @@
             <div class="arch-layer" data-layer-group="gitops">
               <div class="arch-layer-head">
                 <span class="arch-layer-title">Socle GitOps Kubernetes et intégration au SI client</span>
-                <span class="arch-layer-note">Infrastructure déclarative raccordée à vos briques d'entreprise existantes</span>
               </div>
               <div class="arch-row arch-row-3-eq">
                 <span class="tile" data-tile data-layer="gitops" style="--tint:#00966A">
                   <span class="tile-ico tile-ico-mono"><svg viewBox="20 11 59 78" aria-hidden="true"><use href="#markMono"/></svg></span>
-                  <span class="tile-text"><strong>KuboCD · Kubotal</strong><span>Packages OCI de charts Helm, Contexts et Connections typées</span></span>
+                  <span class="tile-text"><strong>KuboCD</strong></span>
                 </span>
                 <span class="tile" data-tile data-layer="gitops" style="--tint:#326CE5">
                   <span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-kubernetes"/></svg></span>
-                  <span class="tile-text"><strong>Kubernetes et Flux CD</strong><span>Cluster souverain, Cert-Manager et External Secrets</span></span>
+                  <span class="tile-text"><strong>Kubernetes et Flux CD</strong></span>
                 </span>
                 <span class="tile tile-external" data-tile data-layer="gitops" style="--tint:#D97706">
                   <span class="tile-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-vault"/></svg></span>
-                  <span class="tile-text"><strong>SI Client externe (SSO, Vault, S3)</strong><span>Externe à OKDP : Keycloak OIDC, Vault ou S3 existants</span></span>
+                  <span class="tile-text"><strong>SI client externe</strong></span>
                 </span>
               </div>
             </div>
