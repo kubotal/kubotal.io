@@ -121,7 +121,7 @@
         '<span aria-hidden="true">·</span>' +
         '<time datetime="' + a.d + '">' + a.f + '</time>' +
         '<span aria-hidden="true">·</span><span>' + a.m + ' min de lecture</span></div>' +
-        '<h2>' + a.t + '</h2><p>' + a.r + '</p></div>' +
+        '<h3>' + a.t + '</h3><p>' + a.r + '</p></div>' +
         '<span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span></a>';
     }
 

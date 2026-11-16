@@ -41,7 +41,7 @@ const ligneArticle = (a, prefixe) => `
               <span aria-hidden="true">·</span>
               <span>${a.minutes} min de lecture</span>
             </div>
-            <h2>${echappe(a.titre)}</h2>
+            <h3>${echappe(a.titre)}</h3>
             <p>${echappe(a.resume)}</p>
           </div>
           <span class="post-go" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></span>
@@ -82,7 +82,7 @@ const pageListe = (num, prefixe) => {
   return `  <section class="section" id="articles">
     <div class="wrap">
       <div class="section-head">
-        <h1 data-anim>Articles Data et Kubernetes&nbsp;: nos notes de terrain.</h1>
+        <h1 data-anim>Notes de terrain.</h1>
         <p class="lead" data-anim>Ce qu'on lit, ce qu'on teste et ce qu'on retient sur les plateformes
           data, Kubernetes et le GitOps.</p>
       </div>
@@ -107,26 +107,6 @@ ${pagination(num, prefixe)}
     })))}</script>`;
 };
 
-/* « À lire aussi » : trois articles ajoutés en fin de page. On privilégie ceux que
-   le texte ne cite pas encore, puis ceux du même thème : chaque article reçoit
-   ainsi des liens entrants sans liste à tenir à la main. */
-const aLireAussi = (a) => {
-  const corps = page(a.corps);
-  const choix = PUBLISHED_ARTICLES
-    .filter((autre) => autre.slug !== a.slug)
-    .map((autre, rang) => ({
-      autre,
-      rang,
-      score: (corps.includes(`/articles/${autre.slug}/`) ? 0 : 2) + (autre.tag === a.tag ? 1 : 0),
-    }))
-    .sort((x, y) => y.score - x.score || x.rang - y.rang)
-    .slice(0, 3);
-  return `<h2>À lire aussi</h2>
-          <ul>
-${choix.map(({autre}) => `            <li><a href="/articles/${autre.slug}/">${echappe(autre.titre)}</a></li>`).join('\n')}
-          </ul>`;
-};
-
 /** Les entrées de PAGES correspondant aux listes paginées et aux articles. */
 const pagesArticles = () => {
   const listes = Array.from({length: NB_PAGES_LISTE}, (_, i) => i + 1).map((num) => ({
@@ -139,14 +119,12 @@ const pagesArticles = () => {
     noindex: num > 1,
     pageType: 'CollectionPage',
     title: num === 1 ? 'Articles Data, Kubernetes, GitOps et MLOps — Kubotal' : `Articles Data et Kubernetes, page ${num} — Kubotal`,
-    desc: 'Guides et notes de terrain sur OKDP, les plateformes data sur Kubernetes, le GitOps, la migration Hadoop et l’open source, par l’équipe Kubotal.',
-    /* La liste change à chaque publication : sa date suit l'article le plus récent. */
-    lastmod: PUBLISHED_ARTICLES.map((a) => a.modified ?? a.date).sort().at(-1),
+    desc: 'Notes de terrain sur les plateformes data, Kubernetes, le GitOps et l’open source, par l’équipe Kubotal.',
   }));
 
   const articles = PUBLISHED_ARTICLES.map((a) => ({
     id: a.corps,
-    corpsHtml: page(a.corps).replace('<div class="article-end">', `${aLireAussi(a)}\n          <div class="article-end">`),
+    corpsHtml: null,
     out: `articles/${a.slug}/index.html`,
     depth: 2,
     nav: 'articles',
@@ -163,9 +141,7 @@ const pagesArticles = () => {
       {name: 'Articles', url: '/articles/'},
       {name: a.titre, url: `/articles/${a.slug}/`},
     ],
-    /* `titreSeo` : titre complet de l'onglet quand « titre — Kubotal » dépasse 60 caractères. */
-    title: a.titreSeo ?? `${a.titre} — Kubotal`,
-    headline: a.titre,
+    title: `${a.titre} — Kubotal`,
     desc: a.resume,
   }));
 
@@ -233,7 +209,6 @@ const PAGES = [
     nav: null,
     url: '/',
     flow: true,
-    lastmod: '2026-11-14',
     title: 'Kubotal — Plateformes Data et IA sur Kubernetes',
     desc: 'Kubotal conçoit, déploie et opère des plateformes Data et IA ouvertes sur Kubernetes, avec GitOps, MLOps, sécurité et gouvernance.',
   },
@@ -245,7 +220,6 @@ const PAGES = [
     nav: 'expertise',
     url: '/expertise/',
     flow: true,
-    lastmod: '2026-11-14',
     service: 'Architecture de plateformes Data et IA',
     breadcrumb: [
       {name: 'Accueil', url: '/'},
@@ -267,8 +241,7 @@ const PAGES = [
       {name: 'Open source', url: '/open-source/'},
     ],
     title: 'Open source : OKDP et KuboCD — Kubotal',
-    lastmod: '2026-11-15',
-    desc: 'L’open source chez Kubotal : OKDP, la plateforme Data sur Kubernetes à laquelle nous contribuons, et KuboCD, notre outil de livraison GitOps avec Flux.',
+    desc: 'Kubotal présente OKDP et KuboCD pour les plateformes Data et la livraison GitOps sur Kubernetes.',
   },
   {
     id: 'okdp',
@@ -310,8 +283,7 @@ const PAGES = [
       {name: 'Accompagnement', url: '/accompagnement/'},
     ],
     title: 'Accompagnement plateforme Data et IA — Kubotal',
-    lastmod: '2026-11-15',
-    desc: 'Cadrage, build, run et transfert : quatre modes d’accompagnement Kubotal pour concevoir, déployer et opérer votre plateforme Data et IA sur Kubernetes.',
+    desc: 'Cadrage, build, run et transfert : quatre modes d’accompagnement Kubotal pour les plateformes Data et IA.',
   },
   {
     id: 'contact',
@@ -325,43 +297,10 @@ const PAGES = [
       {name: 'Accueil', url: '/'},
       {name: 'Contact', url: '/contact/'},
     ],
-    lastmod: '2026-11-14',
     title: 'Contacter Kubotal — Projet Data, IA ou Kubernetes',
     desc: 'Un échange de 30 minutes pour cadrer un besoin de plateforme Data, IA ou Kubernetes avec Kubotal, sans engagement.',
   },
   ...pagesArticles(),
-  /* GitHub Pages sert 404.html pour toute adresse inconnue, quelle que soit sa
-     profondeur : ses ressources sont donc appelées en chemins absolus. */
-  {
-    id: 'erreur-404',
-    corpsHtml: `  <section class="section" id="introuvable">
-    <div class="wrap">
-      <div class="section-head">
-        <h1>Page introuvable</h1>
-        <p class="lead">Cette adresse n'existe pas ou a changé. Voici les pages les plus consultées.</p>
-      </div>
-      <div class="article-body">
-        <ul>
-          <li><a href="/">Accueil Kubotal</a></li>
-          <li><a href="/okdp/">Le guide d'OKDP, la plateforme Data open source sur Kubernetes</a></li>
-          <li><a href="/articles/">Tous les articles</a></li>
-          <li><a href="/accompagnement/">Accompagnement</a></li>
-          <li><a href="/contact/">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-  </section>`,
-    out: '404.html',
-    depth: 0,
-    absolu: true,
-    erreur: true,
-    noindex: true,
-    nav: null,
-    url: '/404.html',
-    flow: true,
-    title: 'Page introuvable — Kubotal',
-    desc: 'Cette page n’existe pas ou a changé d’adresse. Retrouvez le guide d’OKDP, les articles et le contact de Kubotal.',
-  },
 ];
 
 /* Sur la landing, les ancres restent locales : aucun nouveau document n'est chargé.
@@ -378,13 +317,8 @@ const navFor = (p) => {
 };
 
 /* Les chemins d'assets sont relatifs dans les partiels : on les préfixe selon la profondeur. */
-const rebase = (html, depth, absolu = false) =>
-  depth === 0 && !absolu
-    ? html
-    : html.replace(/(href|src)="assets\//g, `$1="${absolu ? '/' : '../'.repeat(depth)}assets/`);
-
-/* Image de partage : la même sert à Open Graph, à X et aux données structurées. */
-const IMAGE_PARTAGE = {url: `${SITE}/kubotal-logo-hero.png`, width: 1200, height: 630};
+const rebase = (html, depth) =>
+  depth === 0 ? html : html.replace(/(href|src)="assets\//g, `$1="${'../'.repeat(depth)}assets/`);
 
 const ORGANIZATION_ID = `${SITE}/#organization`;
 const WEBSITE_ID = `${SITE}/#website`;
@@ -438,9 +372,8 @@ const articleNode = (p) => ({
   '@type': 'BlogPosting',
   '@id': `${canonicalUrl(p)}#article`,
   url: canonicalUrl(p),
-  headline: p.headline ?? p.title.replace(/ — Kubotal$/, ''),
+  headline: p.title.replace(/ — Kubotal$/, ''),
   description: p.desc,
-  image: {'@type': 'ImageObject', ...IMAGE_PARTAGE},
   datePublished: p.article.published,
   dateModified: p.article.modified,
   articleSection: p.article.section,
@@ -514,28 +447,20 @@ const render = (p) => `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${p.title}</title>
 <meta name="description" content="${p.desc}">
-${p.erreur ? '' : `<link rel="canonical" href="${SITE}${p.url}">`}${p.noindex ? '\n<meta name="robots" content="noindex,follow">' : ''}
+<link rel="canonical" href="${SITE}${p.url}">${p.noindex ? '\n<meta name="robots" content="noindex,follow">' : ''}
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="${p.article ? 'article' : 'website'}">
 <meta property="og:site_name" content="Kubotal">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:title" content="${p.title}">
 <meta property="og:description" content="${p.desc}">
-${p.erreur ? '' : `<meta property="og:url" content="${SITE}${p.url}">\n`}<meta property="og:image" content="${IMAGE_PARTAGE.url}">
-<meta property="og:image:width" content="${IMAGE_PARTAGE.width}">
-<meta property="og:image:height" content="${IMAGE_PARTAGE.height}">
-<meta property="og:image:alt" content="Kubotal — plateformes Data et IA sur Kubernetes">
+<meta property="og:url" content="${SITE}${p.url}">
+<meta property="og:image" content="${SITE}/kubotal-logo-hero.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${p.title}">
-<meta name="twitter:description" content="${p.desc}">
-<meta name="twitter:image" content="${IMAGE_PARTAGE.url}">${p.article ? `
-<meta property="article:published_time" content="${p.article.published}">
-<meta property="article:modified_time" content="${p.article.modified}">
-<meta property="article:section" content="${p.article.section}">` : ''}${p.erreur ? '' : `
-<script type="application/ld+json">${jsonLd(p)}</script>`}
+<script type="application/ld+json">${jsonLd(p)}</script>
 <link rel="preload" href="/assets/fonts/dm-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="${p.absolu ? '/' : '../'.repeat(p.depth)}assets/styles.css">
+<link rel="stylesheet" href="${'../'.repeat(p.depth)}assets/styles.css">
 </head>
 <body>
 
@@ -544,10 +469,10 @@ ${SPRITE}
 ${navFor(p)}
 
 <main id="top" data-page="${p.id}"${p.flow ? ' data-flow' : ''}>
-${rebase(p.corpsHtml ?? page(p.id), p.depth, p.absolu)}
+${rebase(p.corpsHtml ?? page(p.id), p.depth)}
 </main>
 
-${rebase(SCRIPTS, p.depth, p.absolu)}
+${rebase(SCRIPTS, p.depth)}
 </body>
 </html>
 `;

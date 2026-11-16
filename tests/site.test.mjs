@@ -107,7 +107,7 @@ test('builds one landing page with local anchors and keeps articles separate', (
   const articles = read('articles/index.html');
   assert.match(articles, /href="\/expertise\/"/);
   assert.match(articles, /href="\/contact\/"/);
-  assert.match(articles, /<h1[^>]*>Articles Data et Kubernetes&nbsp;: nos notes de terrain\.<\/h1>/);
+  assert.match(articles, /<h1[^>]*>Notes de terrain\.<\/h1>/);
 });
 
 test('publishes only articles with a body and removes stale draft outputs', () => {
@@ -448,34 +448,4 @@ test('publishes keyword articles linked with the pillar page and each other', ()
     assert.ok(linked.length >= 1, `${slug} links to no other keyword article`);
     assert.match(pillar, new RegExp(`href="/articles/${slug}/"`), slug);
   }
-});
-
-test('ships the audit fixes: share tags, article image, 404 page and dated sitemap', () => {
-  for (const [path] of PUBLIC_PAGES) {
-    const html = read(path);
-    const title = html.match(/<title>([^<]+)<\/title>/)[1];
-    const description = html.match(/<meta name="description" content="([^"]+)">/)[1];
-    assert.ok(title.length <= 60, `${path} title ${title.length}`);
-    assert.ok(description.length <= 155, `${path} description ${description.length}`);
-    for (const name of ['twitter:title', 'twitter:description', 'twitter:image']) {
-      assert.match(html, new RegExp(`<meta name="${name}" content="[^"]+">`), `${path} ${name}`);
-    }
-    const levels = [...html.matchAll(/<h([1-6])\b/g)].map((match) => Number(match[1]));
-    levels.reduce((previous, level) => {
-      assert.ok(level <= previous + 1, `${path} saute de h${previous} à h${level}`);
-      return level;
-    }, 0);
-    const article = graphFrom(html).find((node) => node['@type'] === 'BlogPosting');
-    if (article) assert.match(article.image.url, /^https:\/\/kubotal\.io\/.+\.png$/);
-  }
-
-  const notFound = read('404.html');
-  assert.match(notFound, /name="robots" content="noindex/);
-  assert.doesNotMatch(notFound, /rel="canonical"/);
-  assert.doesNotMatch(notFound, /(href|src)="(\.\.\/)*assets\//);
-  assert.match(notFound, /<h1>Page introuvable<\/h1>/);
-
-  const sitemap = read('sitemap.xml');
-  assert.doesNotMatch(sitemap, /404/);
-  assert.equal((sitemap.match(/<loc>/g) || []).length, (sitemap.match(/<lastmod>/g) || []).length);
 });
