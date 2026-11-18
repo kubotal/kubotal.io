@@ -191,6 +191,22 @@ const OKDP_FAQ = [
     q: 'Peut-on installer un seul composant d’OKDP ?',
     a: 'Oui. Les modules sont utilisables séparément avec Helm, sans le Control Plane. Le Control Plane devient utile quand plusieurs équipes partagent la plateforme.',
   },
+  {
+    q: 'Quelle est la dernière version d’OKDP ?',
+    a: 'La version 1.0.0 d’OKDP est sortie en septembre 2026. Le sandbox de référence a suivi avec une version 1.1.0 le 5 octobre 2026. La feuille de route officielle est publiée sur okdp.io.',
+  },
+  {
+    q: 'Quelle est la différence entre OKDP et TDP ?',
+    a: 'Les deux projets sont hébergés par TOSIT. TDP (Trunk Data Platform) est une distribution Hadoop open source, avec HDFS et YARN. OKDP s’exécute sur Kubernetes et s’appuie sur un stockage objet compatible S3.',
+  },
+  {
+    q: 'OKDP prend-il en charge Apache Iceberg ?',
+    a: 'Oui. OKDP intègre Apache Polaris comme catalogue Iceberg, relié à Trino et à Spark, avec une authentification OIDC et des autorisations gérées par Open Policy Agent.',
+  },
+  {
+    q: 'Comment contribuer à OKDP ?',
+    a: 'La participation est ouverte à tous. Le code est sur GitHub dans l’organisation OKDP, et une réunion technique a lieu chaque mercredi à 10 h, heure de Paris. L’invitation se demande dans les discussions GitHub du projet.',
+  },
 ];
 
 const faqHtml = (faq) => faq.map((item) => `          <h3>${echappe(item.q)}</h3>
@@ -251,7 +267,7 @@ const PAGES = [
     nav: 'okdp',
     url: '/okdp/',
     flow: true,
-    lastmod: '2026-11-12',
+    lastmod: '2026-11-18',
     faq: OKDP_FAQ,
     software: {
       name: 'OKDP',
